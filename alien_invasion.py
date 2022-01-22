@@ -15,6 +15,8 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode(
                 (self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
+        self.background_image = pygame.image.load("images/parallax_scrolling_background.png")
+        self.sprite_background_image = self.background_image.subsurface((0, 0, 960, 540))
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         
@@ -51,6 +53,7 @@ class AlienInvasion:
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         self.screen.fill(self.settings.bg_color)
+        self.screen.blit(self.sprite_background_image, (0, 0))
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
