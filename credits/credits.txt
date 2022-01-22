@@ -1,4 +1,7 @@
 Art:
+-- Ship, Missles, and Enemies are from Matt Walkden (mattwalkden.itch.io)
+-- Parallaxing Background image by Ansimuz licensed under Creative Commons CC BY 4.0. 
+   (https://creativecommons.org/licenses/by/4.0/#). Image has been scaled up in Gimp to 4x the original resolution for my game. 
 
 Code:
 -- Python Crash Course by Eric Matthes for general project idea and base code
