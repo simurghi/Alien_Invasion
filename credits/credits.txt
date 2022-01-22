@@ -6,4 +6,5 @@ Art:
 Code:
 -- Python Crash Course by Eric Matthes for general project idea and base code
 -- code.Pylet for background parallax image scrolling
+-- ScriptLine Studios for Xbox Controller support
 
