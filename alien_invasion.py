@@ -120,7 +120,6 @@ class AlienInvasion:
 
     def _check_joyhatmotion_events(self, event):
         """respond to dpad presses on the gamepad.""" 
-        print(event)
         if event.value[0] == 1:
             self.ship.moving_right = True
         elif event.value[0] == -1:
@@ -147,20 +146,28 @@ class AlienInvasion:
         # Make an alien and find the number of aliens in a row.
         # Spacing between each alien is equal to one alien height
         alien = Alien(self)
-        alien_height = alien.rect.height
+        alien_width, alien_height = alien.rect.size
         available_space_y = self.settings.screen_height - (1.50 * alien_height)
         number_aliens_y = int(available_space_y // (1.50 * alien_height))
 
-        # Create the first column of aliens.
-        for alien_number in range(number_aliens_y):
-            self._create_alien(alien_number)
+        # Determine the number of columns of aliens that fit on the screen.
+        ship_width = self.ship.rect.width
+        available_space_x = (self.settings.screen_height - 
+                (3 * alien_width) - ship_width)
+        number_cols = available_space_x // (2 * alien_width)
 
-    def _create_alien(self, alien_number):
+        # Create the first column of aliens.
+        for col_number in range(number_cols):
+            for alien_number in range(number_aliens_y):
+                self._create_alien(alien_number, col_number)
+
+    def _create_alien(self, alien_number, col_number):
         """Create an alien and place it in a column."""
         alien = Alien(self)
-        alien_height = alien.rect.height
+        alien_width, alien_height = alien.rect.size
         alien.y = alien_height + (1.5 * alien_height * alien_number) + alien.random_y
         alien.rect.y = alien.y
+        alien.rect.x = (self.settings.screen_width / 2) + alien_width + 2 * alien.rect.width * col_number
         self.aliens.add(alien)
 
 if __name__ == '__main__':
