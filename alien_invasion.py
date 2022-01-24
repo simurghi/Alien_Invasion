@@ -15,7 +15,7 @@ class AlienInvasion:
         pygame.mixer.music.play(-1)
         pygame.joystick.init()
         pygame.display.set_caption("Alien Invasion")
-        self.gamepad = pygame.joystick.Joystick(0)
+        self._check_gamepad()
         self.settings = Settings()
         self.screen = pygame.display.set_mode(
                 (self.settings.screen_width, self.settings.screen_height))
@@ -25,7 +25,14 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        
+    
+    def _check_gamepad(self):
+        """Checks if a gamepad is connected and assigns it to the first one if it is."""
+        if pygame.joystick.get_count() > 0:
+            self.gamepad = pygame.joystick.Joystick(0)
+        else: 
+            print("No gamepad detected.")
+
     def run_game(self):
         """Start the main loop for the game."""
         while True: 
@@ -75,7 +82,7 @@ class AlienInvasion:
         if self.rel_background_x < self.settings.screen_width:
             self.screen.blit(self.background_image, (self.rel_background_x, 0))
         self.background_x -=0.75
-
+    
     def _check_keydown_events(self, event):
         """respond to keypresses.""" 
         if event.key == pygame.K_UP:
