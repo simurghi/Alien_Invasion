@@ -30,8 +30,6 @@ class Ship:
         """Draw the ship at its current location."""
         self.screen.blit(self.image, self.rect) 
 
-
-
     def update(self):
         """Update the ship's position based on the movement flag."""
         # Update the ship's x and y values, not the rect.
@@ -46,3 +44,10 @@ class Ship:
 
         self.rect.y = self.y 
         self.rect.x = self.x 
+
+
+    def position_ship(self):
+        """Position the ship on the midleft portion of the screen."""
+        self.rect.midleft = self.screen_rect.midleft
+        self.y = float(self.rect.y)
+        self.x = float(self.rect.x)
