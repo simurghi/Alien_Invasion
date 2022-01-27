@@ -84,6 +84,7 @@ class AlienInvasion:
         self._create_fleet()
         self.ship.position_ship()
 
+
     def _play_combat_music(self):
         if not self.combat_music:
             pygame.mixer.music.load("audio/battle.wav")
@@ -268,6 +269,8 @@ class AlienInvasion:
             sleep(0.25)
         else: 
             self.stats.game_active = False
+            pygame.mixer.music.fadeout(100)
+            self.combat_music = False
             pygame.mouse.set_visible(True)
 if __name__ == '__main__':
     # make a game instance and run the game. 
