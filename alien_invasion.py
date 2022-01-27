@@ -5,6 +5,7 @@ from settings import Settings
 from ship import Ship 
 from bullet import Bullet 
 from alien import Alien
+from button import Button
 from game_stats import GameStats
 
 class AlienInvasion:
@@ -13,7 +14,7 @@ class AlienInvasion:
     def __init__(self): 
         """Initialize the game and create game resources."""
         pygame.init()
-        pygame.mixer.music.load("audio/battle.wav")
+        pygame.mixer.music.load("audio/menu.wav")
         pygame.mixer.music.play(-1)
         pygame.joystick.init()
         pygame.display.set_caption("Alien Invasion")
@@ -25,9 +26,11 @@ class AlienInvasion:
         self.background_x = 0
         self.stats = GameStats(self)
         self.ship = Ship(self)
+        self.combat_music = False
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
+        self.play_button = Button(self, "Start")
     
     def _check_gamepad(self):
         """Checks if a gamepad is connected and assigns it to the first one if it is."""
@@ -41,6 +44,7 @@ class AlienInvasion:
         while True: 
             self._check_events()
             if self.stats.game_active: 
+                self._play_combat_music()
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
@@ -59,6 +63,35 @@ class AlienInvasion:
                 self._check_joybuttondown_events(event)
             elif event.type == pygame.JOYHATMOTION:
                 self._check_joyhatmotion_events(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_play_button(mouse_pos)
+
+    def _check_play_button(self, mouse_pos):
+        """ Start a new game when the player clicks Play"""
+        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        if button_clicked and not self.stats.game_active:
+            self._clear_state()
+            self.stats.game_active = True
+
+    def _clear_state(self):
+        """ Resets the stats for the game on play/restart."""
+        self.stats.reset_stats()
+        self.aliens.empty()
+        self.bullets.empty()
+        pygame.mouse.set_visible(False)
+        # Create a new fleet and center the ship
+        self._create_fleet()
+        self.ship.position_ship()
+
+    def _play_combat_music(self):
+        if not self.combat_music:
+            pygame.mixer.music.load("audio/battle.wav")
+            pygame.mixer.music.play(-1)
+            self.combat_music = True
+        else:
+            pass
+
 
     def _update_bullets(self):
         """Update position of the bullets and get rid of the old bullets."""
@@ -101,6 +134,9 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+        # Draw the start button if the game is inactive.
+        if not self.stats.game_active:
+            self.play_button.draw_button()
         pygame.display.flip()
     
     def _scroll_background(self):
@@ -143,9 +179,13 @@ class AlienInvasion:
         # 0 Corresponds to the "A" Button on an Xbox Controller
         if event.button == 0: 
             self._fire_bullet()
-        # 7 Corresponds to the "Start" Button on an Xbox Controller 
-        elif event.button == 7: 
+        # 6 Corresponds to the 'Back/Select" Button on an Xbox Controller
+        elif event.button == 6: 
             sys.exit()
+        # 7 Corresponds to the "Start" Button on an Xbox Controller 
+        elif event.button == 7 and not self.stats.game_active: 
+            self._clear_state()
+            self.stats.game_active = True
 
     def _check_joyhatmotion_events(self, event):
         """respond to dpad presses on the gamepad.""" 
@@ -228,6 +268,7 @@ class AlienInvasion:
             sleep(0.25)
         else: 
             self.stats.game_active = False
+            pygame.mouse.set_visible(True)
 if __name__ == '__main__':
     # make a game instance and run the game. 
     ai = AlienInvasion()
