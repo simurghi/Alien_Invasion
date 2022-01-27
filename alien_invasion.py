@@ -39,6 +39,7 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self._update_bullets()
+            self._update_aliens()
             self._update_screen()
 
     def _check_events(self):
@@ -63,6 +64,10 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.right > self.settings.screen_width: 
                 self.bullets.remove(bullet)
+
+    def _update_aliens(self):
+        self._check_alien_collision()
+        self.aliens.update()
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
@@ -169,6 +174,19 @@ class AlienInvasion:
         alien.rect.y = alien.y
         alien.rect.x = (self.settings.screen_width / 2) + alien_width + 2 * alien.rect.width * col_number
         self.aliens.add(alien)
+
+
+    def _check_alien_collision(self):
+        """Checks to see if alien sprites are overlapping."""
+        for alien in self.aliens:
+            for other_alien in self.aliens:
+                if pygame.sprite.collide_rect(other_alien, alien) and other_alien != alien:
+                    other_alien.is_colliding = True
+                else:
+                    other_alien.is_colliding = False
+
+
+
 
 if __name__ == '__main__':
     # make a game instance and run the game. 
