@@ -18,7 +18,7 @@ class Alien(Sprite):
 
 
         # Start each new alien alined to the right of the screen at a random height
-        self.rect.x = ai_game.settings.screen_width - 70
+        self.rect.x = ai_game.settings.screen_width - 50
         self.rect.y = ai_game.settings.screen_height
 
         # Store the alien's exact vertical position

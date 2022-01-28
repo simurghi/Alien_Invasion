@@ -22,6 +22,7 @@ class AlienInvasion:
         self.settings = Settings()
         self.screen = pygame.display.set_mode(
                 (self.settings.screen_width, self.settings.screen_height))
+        self.menu_image = pygame.image.load("images/background.png").convert()
         self.background_image = pygame.image.load("images/parallax_scrolling_background.png").convert()
         self.background_x = 0
         self.stats = GameStats(self)
@@ -137,6 +138,7 @@ class AlienInvasion:
         self.aliens.draw(self.screen)
         # Draw the start button if the game is inactive.
         if not self.stats.game_active:
+            self.screen.blit(self.menu_image, (0, 0)) 
             self.play_button.draw_button()
         pygame.display.flip()
     
