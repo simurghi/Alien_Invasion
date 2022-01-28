@@ -14,8 +14,6 @@ class AlienInvasion:
     def __init__(self): 
         """Initialize the game and create game resources."""
         pygame.init()
-        pygame.mixer.music.load("audio/menu.wav")
-        pygame.mixer.music.play(-1)
         pygame.joystick.init()
         pygame.display.set_caption("Alien Invasion")
         self._check_gamepad()
@@ -28,10 +26,14 @@ class AlienInvasion:
         self.stats = GameStats(self)
         self.ship = Ship(self)
         self.combat_music = False
+        self.menu_music = False
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        self.play_button = Button(self, "Start")
+        self.play_button = Button(self, "Start", 100, 50)
+        self.mute_button = Button(self, "Music", 100, -50)
+        self.exit_button = Button(self, "Quit", 100, -150)
+
     
     def _check_gamepad(self):
         """Checks if a gamepad is connected and assigns it to the first one if it is."""
@@ -44,6 +46,7 @@ class AlienInvasion:
         """Start the main loop for the game."""
         while True: 
             self._check_events()
+            self._play_menu_music()
             if self.stats.game_active: 
                 self._play_combat_music()
                 self.ship.update()
@@ -67,6 +70,8 @@ class AlienInvasion:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
+                self._check_mute_button(mouse_pos)
+                self._check_exit_button(mouse_pos)
 
     def _check_play_button(self, mouse_pos):
         """ Start a new game when the player clicks Play"""
@@ -74,6 +79,20 @@ class AlienInvasion:
         if button_clicked and not self.stats.game_active:
             self._clear_state()
             self.stats.game_active = True
+
+    def _check_mute_button(self, mouse_pos):
+        """ Toggles music when the player clicks 'Toggle Music'"""
+        button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
+        if button_clicked: 
+            self.settings.play_music = not self.settings.play_music 
+            print(self.settings.play_music)
+
+    def _check_exit_button(self, mouse_pos):
+        """ Exits the game from the main menu once clicked."""
+        button_clicked = self.exit_button.rect.collidepoint(mouse_pos)
+        if button_clicked: 
+            sys.exit()
+
 
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
@@ -85,12 +104,27 @@ class AlienInvasion:
         self._create_fleet()
         self.ship.position_ship()
 
+    def _play_menu_music(self):
+        if not self.menu_music and not self.combat_music and self.settings.play_music:
+            pygame.mixer.music.load("audio/menu.wav")
+            pygame.mixer.music.play(-1)
+            self.menu_music = True
+        elif not self.settings.play_music:
+            pygame.mixer.music.stop()
+            self.menu_music = False
+        else: 
+            pass
 
     def _play_combat_music(self):
-        if not self.combat_music:
+        """If the game is running, plays battle music."""
+        if not self.combat_music and self.settings.play_music:
             pygame.mixer.music.load("audio/battle.wav")
             pygame.mixer.music.play(-1)
             self.combat_music = True
+            self.menu_music = False
+        elif not self.settings.play_music:
+            pygame.mixer.music.stop()
+            self.combat_music = False
         else:
             pass
 
@@ -140,6 +174,8 @@ class AlienInvasion:
         if not self.stats.game_active:
             self.screen.blit(self.menu_image, (0, 0)) 
             self.play_button.draw_button()
+            self.mute_button.draw_button()
+            self.exit_button.draw_button()
         pygame.display.flip()
     
     def _scroll_background(self):
@@ -271,7 +307,7 @@ class AlienInvasion:
             sleep(0.25)
         else: 
             self.stats.game_active = False
-            pygame.mixer.music.fadeout(100)
+            pygame.mixer.music.fadeout(500)
             self.combat_music = False
             pygame.mouse.set_visible(True)
 if __name__ == '__main__':
