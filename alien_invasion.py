@@ -34,8 +34,9 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        self.play_button = Button(self, "Start", 100, 50)
-        self.mute_button = Button(self, "Music", 100, -50)
+        self.play_button = Button(self, "Start", 100, 150)
+        self.mute_button = Button(self, "Music", 100, 50)
+        self.cinematic_button = Button(self, "Movie FX", 100, -50)
         self.exit_button = Button(self, "Quit", 100, -150)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
@@ -79,6 +80,7 @@ class AlienInvasion:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
                 self._check_mute_button(mouse_pos)
+                self._check_cinematic_button(mouse_pos)
                 self._check_exit_button(mouse_pos)
 
     def _update_screen(self):
@@ -95,7 +97,9 @@ class AlienInvasion:
             self.screen.blit(self.menu_image, (0, 0)) 
             self.play_button.draw_button()
             self.mute_button.toggle_color(self.settings.play_music)
+            self.cinematic_button.toggle_color(self.settings.cinematic_bars)
             self.mute_button.draw_button()
+            self.cinematic_button.draw_button()
             self.exit_button.draw_button()
         pygame.display.flip()
 
@@ -107,10 +111,17 @@ class AlienInvasion:
             self.stats.game_active = True
 
     def _check_mute_button(self, mouse_pos):
-        """ Toggles music when the player clicks 'Toggle Music'"""
+        """ Toggles music when the player clicks 'Music'"""
         button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             self.settings.play_music = not self.settings.play_music 
+
+    def _check_cinematic_button(self, mouse_pos):
+        """ Toggles "cinematic" black bars when the player clicks 'Movie Mode'"""
+        button_clicked = self.cinematic_button.rect.collidepoint(mouse_pos)
+        if button_clicked: 
+            self.settings.cinematic_bars = not self.settings.cinematic_bars
+
 
     def _check_exit_button(self, mouse_pos):
         """ Exits the game from the main menu once clicked."""
@@ -239,6 +250,9 @@ class AlienInvasion:
         # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
         elif event.button == 4 and not self.stats.game_active: 
             self.settings.play_music = not self.settings.play_music 
+        # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
+        elif event.button == 5 and not self.stats.game_active: 
+            self.settings.cinematic_bars = not self.settings.cinematic_bars
         # 7 Corresponds to the "Start" Button on an Xbox Controller 
         elif event.button == 7 and not self.stats.game_active: 
             self._clear_state()
@@ -339,8 +353,9 @@ class AlienInvasion:
             self.difficulty_timer -= self.difficulty_increase
 
     def _make_game_cinematic(self):
-        self.top_bar.draw_bar()
-        self.bot_bar.draw_bar()
+        if self.settings.cinematic_bars:
+            self.top_bar.draw_bar()
+            self.bot_bar.draw_bar()
 
 if __name__ == '__main__':
     # make a game instance and run the game. 

@@ -8,6 +8,7 @@ class Settings:
         self.bg_color = (0,0,0)
         self.play_music = True
         self.play_sfx = True
+        self.cinematic_bars = True
 
         #  Ship settings
         self.ship_limit = 3
