@@ -6,6 +6,7 @@ from ship import Ship
 from bullet import Bullet 
 from alien import Alien
 from button import Button
+from aspect_ratio import AspectRatio
 from game_stats import GameStats
 
 class AlienInvasion:
@@ -36,6 +37,8 @@ class AlienInvasion:
         self.play_button = Button(self, "Start", 100, 50)
         self.mute_button = Button(self, "Music", 100, -50)
         self.exit_button = Button(self, "Quit", 100, -150)
+        self.top_bar = AspectRatio(self)
+        self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
 
     
     def _check_gamepad(self):
@@ -78,6 +81,24 @@ class AlienInvasion:
                 self._check_mute_button(mouse_pos)
                 self._check_exit_button(mouse_pos)
 
+    def _update_screen(self):
+        """Update images on the screen, and flip to the new screen."""
+        #self.screen.fill(self.settings.bg_color)
+        self._scroll_background()
+        self._make_game_cinematic()
+        self.ship.blitme()
+        for bullet in self.bullets.sprites():
+            bullet.draw_bullet()
+        self.aliens.draw(self.screen)
+        # Draw the start button if the game is inactive.
+        if not self.stats.game_active:
+            self.screen.blit(self.menu_image, (0, 0)) 
+            self.play_button.draw_button()
+            self.mute_button.toggle_color(self.settings.play_music)
+            self.mute_button.draw_button()
+            self.exit_button.draw_button()
+        pygame.display.flip()
+
     def _check_play_button(self, mouse_pos):
         """ Start a new game when the player clicks Play"""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
@@ -110,6 +131,7 @@ class AlienInvasion:
         self.ship.position_ship()
 
     def _play_menu_music(self):
+        """Plays menu music if not in game."""
         if not self.menu_music and not self.combat_music and self.settings.play_music:
             pygame.mixer.music.load("audio/menu.wav")
             pygame.mixer.music.play(-1)
@@ -157,6 +179,9 @@ class AlienInvasion:
 
 
     def _update_aliens(self):
+        """Checks if anliens are collision with each other, 
+        then if any bullets are colliding with aliens, 
+        then deletes aliens if they go offscreen.""" 
         self._check_alien_collision()
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
@@ -167,22 +192,6 @@ class AlienInvasion:
         
 
 
-    def _update_screen(self):
-        """Update images on the screen, and flip to the new screen."""
-        #self.screen.fill(self.settings.bg_color)
-        self._scroll_background()
-        self.ship.blitme()
-        for bullet in self.bullets.sprites():
-            bullet.draw_bullet()
-        self.aliens.draw(self.screen)
-        # Draw the start button if the game is inactive.
-        if not self.stats.game_active:
-            self.screen.blit(self.menu_image, (0, 0)) 
-            self.play_button.draw_button()
-            self.mute_button.toggle_color(self.settings.play_music)
-            self.mute_button.draw_button()
-            self.exit_button.draw_button()
-        pygame.display.flip()
     
     def _scroll_background(self):
         """Smoothly scrolls the background image on the screen to give illusion of movement."""
@@ -313,7 +322,7 @@ class AlienInvasion:
             self.ship.position_ship()
 
             # Pause.
-            sleep(0.25)
+            sleep(0.10)
         else: 
             self.stats.game_active = False
             pygame.mixer.music.fadeout(500)
@@ -328,11 +337,10 @@ class AlienInvasion:
         if self.difficulty_timer > self.difficulty_increase:
             self.settings.increase_speed()
             self.difficulty_timer -= self.difficulty_increase
-            print(f"""Difficulty increased! 
-            Ship speed: {self.settings.ship_speed} 
-            Bullet Speed: {self.settings.bullet_speed} 
-            Alien Speed: {self.settings.alien_speed}
-            """)
+
+    def _make_game_cinematic(self):
+        self.top_bar.draw_bar()
+        self.bot_bar.draw_bar()
 
 if __name__ == '__main__':
     # make a game instance and run the game. 

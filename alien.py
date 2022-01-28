@@ -8,7 +8,7 @@ class Alien(Sprite):
         """Initialize the alien and set its starting position."""
         super().__init__()
         self.screen = ai_game.screen
-        self.random_y = random.randint(-4, 4)*5
+        self.random_y = random.randint(-5, 5)*5
         self.settings = ai_game.settings
         self.is_colliding = False
 
