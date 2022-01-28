@@ -23,6 +23,9 @@ class AlienInvasion:
         self.menu_image = pygame.image.load("images/background.png").convert()
         self.background_image = pygame.image.load("images/parallax_scrolling_background.png").convert()
         self.background_x = 0
+        self.clock = pygame.time.Clock()
+        self.difficulty_timer = 0
+        self.difficulty_increase = 60000
         self.stats = GameStats(self)
         self.ship = Ship(self)
         self.combat_music = False
@@ -48,10 +51,12 @@ class AlienInvasion:
             self._check_events()
             self._play_menu_music()
             if self.stats.game_active: 
+                delta_time = self.clock.tick()
                 self._play_combat_music()
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
+                self._adjust_difficulty(delta_time)
             self._update_screen()
 
     def _check_events(self):
@@ -313,6 +318,21 @@ class AlienInvasion:
             pygame.mixer.music.fadeout(500)
             self.combat_music = False
             pygame.mouse.set_visible(True)
+
+
+
+    def _adjust_difficulty(self, delta_time):
+        """Gradually increases the game speed as time elapses."""
+        self.difficulty_timer += delta_time
+        if self.difficulty_timer > self.difficulty_increase:
+            self.settings.increase_speed()
+            self.difficulty_timer -= self.difficulty_increase
+            print(f"""Difficulty increased! 
+            Ship speed: {self.settings.ship_speed} 
+            Bullet Speed: {self.settings.bullet_speed} 
+            Alien Speed: {self.settings.alien_speed}
+            """)
+
 if __name__ == '__main__':
     # make a game instance and run the game. 
     ai = AlienInvasion()

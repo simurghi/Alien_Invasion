@@ -28,7 +28,6 @@ class Alien(Sprite):
     def update(self):
         """Move the alien to the left."""
         if not self.is_colliding:
-            self.x += (self.settings.alien_speed *
-                    self.settings.fleet_direction)
+            self.x -= (self.settings.alien_speed)
             self.rect.x = self.x
 
