@@ -100,6 +100,7 @@ class AlienInvasion:
 
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
+        self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
         self.aliens.empty()
         self.bullets.empty()
