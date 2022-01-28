@@ -85,7 +85,6 @@ class AlienInvasion:
         button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             self.settings.play_music = not self.settings.play_music 
-            print(self.settings.play_music)
 
     def _check_exit_button(self, mouse_pos):
         """ Exits the game from the main menu once clicked."""
@@ -174,6 +173,7 @@ class AlienInvasion:
         if not self.stats.game_active:
             self.screen.blit(self.menu_image, (0, 0)) 
             self.play_button.draw_button()
+            self.mute_button.toggle_color(self.settings.play_music)
             self.mute_button.draw_button()
             self.exit_button.draw_button()
         pygame.display.flip()
@@ -221,6 +221,9 @@ class AlienInvasion:
         # 6 Corresponds to the 'Back/Select" Button on an Xbox Controller
         elif event.button == 6: 
             sys.exit()
+        # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
+        elif event.button == 4 and not self.stats.game_active: 
+            self.settings.play_music = not self.settings.play_music 
         # 7 Corresponds to the "Start" Button on an Xbox Controller 
         elif event.button == 7 and not self.stats.game_active: 
             self._clear_state()

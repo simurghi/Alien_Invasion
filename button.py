@@ -12,6 +12,7 @@ class Button:
         self.button_color = (34, 139, 34)
         self.text_color = (255, 255, 255)
         self.font = pygame.font.Font('fonts/m5x7.ttf', 48)
+        self.msg = msg
 
 
         # Build the button's rect object and center it.
@@ -31,3 +32,15 @@ class Button:
         """ Draw blank button and then draw message."""
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)
+
+    def toggle_color(self, color_switch):
+        """Receives a boolean and adjusts the color of the button based on the values."""
+        if color_switch:
+            self.button_color = (34, 139, 34)
+            self._prep_msg(self.msg)
+        elif not color_switch:
+            self.button_color = (178, 34, 34)
+            self._prep_msg(self.msg)
+
+
+
