@@ -8,6 +8,7 @@ from alien import Alien
 from button import Button
 from aspect_ratio import AspectRatio
 from game_stats import GameStats
+from scoreboard import Scoreboard 
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -40,8 +41,8 @@ class AlienInvasion:
         self.exit_button = Button(self, "Quit", 100, -150)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
+        self.scoreboard = Scoreboard(self)
 
-    
     def _check_gamepad(self):
         """Checks if a gamepad is connected and assigns it to the first one if it is."""
         if pygame.joystick.get_count() > 0:
@@ -88,6 +89,7 @@ class AlienInvasion:
         #self.screen.fill(self.settings.bg_color)
         self._scroll_background()
         self._make_game_cinematic()
+        self.scoreboard.show_score()
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
@@ -122,18 +124,18 @@ class AlienInvasion:
         if button_clicked: 
             self.settings.cinematic_bars = not self.settings.cinematic_bars
 
-
     def _check_exit_button(self, mouse_pos):
         """ Exits the game from the main menu once clicked."""
         button_clicked = self.exit_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             sys.exit()
 
-
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
         self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
+        self.scoreboard.prep_score()
+        self.scoreboard.prep_ships()
         self.aliens.empty()
         self.bullets.empty()
         pygame.mouse.set_visible(False)
@@ -166,7 +168,6 @@ class AlienInvasion:
         else:
             pass
 
-
     def _update_bullets(self):
         """Update position of the bullets and get rid of the old bullets."""
         # Update bullet positions
@@ -182,12 +183,16 @@ class AlienInvasion:
         #Remove and bullets and aliens that have collided.
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.aliens, True, True)
+
+        if collisions:
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.scoreboard.prep_score()
+            self.scoreboard.check_high_score()
         if not self.aliens:
             # Destroy existing bullets and make a new fleet. 
             self.bullets.empty()
             self._create_fleet()
-
-
 
     def _update_aliens(self):
         """Checks if anliens are collision with each other, 
@@ -202,8 +207,6 @@ class AlienInvasion:
                 self.aliens.remove(alien)
         
 
-
-    
     def _scroll_background(self):
         """Smoothly scrolls the background image on the screen to give illusion of movement."""
         self.rel_background_x = self.background_x % self.background_image.get_rect().width
@@ -314,18 +317,18 @@ class AlienInvasion:
     def _check_alien_collision(self):
         """Checks to see if alien sprites are overlapping."""
         for alien in self.aliens:
-            for other_alien in self.aliens:
-                if pygame.sprite.collide_rect(other_alien, alien) and other_alien != alien:
-                    other_alien.is_colliding = True
-                else:
-                    other_alien.is_colliding = False
-
+            if pygame.sprite.spritecollideany(alien, self.aliens) is not None:
+                alien.is_colliding = True
+                alien.update_left()
+            else:
+                alien.is_colliding = False
 
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
         # Decrement lives
         if self.stats.ships_remaining > 0:
             self.stats.ships_remaining -= 1
+            self.scoreboard.prep_ships()
 
             # Get rid of any remaining aliens and bullets
             self.aliens.empty()
@@ -342,8 +345,6 @@ class AlienInvasion:
             pygame.mixer.music.fadeout(500)
             self.combat_music = False
             pygame.mouse.set_visible(True)
-
-
 
     def _adjust_difficulty(self, delta_time):
         """Gradually increases the game speed as time elapses."""

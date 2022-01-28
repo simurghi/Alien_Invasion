@@ -31,3 +31,10 @@ class Alien(Sprite):
             self.x -= (self.settings.alien_speed)
             self.rect.x = self.x
 
+
+    def update_left(self):
+        """Move the alien to the right in case of collision."""
+        if self.is_colliding:
+            self.x -= (self.settings.alien_speed)
+            self.rect.x = self.x
+
