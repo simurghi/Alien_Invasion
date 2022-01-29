@@ -18,23 +18,15 @@ class Alien(Sprite):
 
 
         # Start each new alien alined to the right of the screen at a random height
-        self.rect.x = ai_game.settings.screen_width - 50
-        self.rect.y = ai_game.settings.screen_height
+        self.rect.x = 0 #ai_game.settings.screen_width + 50
+        self.rect.y = 0 #ai_game.settings.screen_height
 
         # Store the alien's exact vertical position
-        self.y = float(self.rect.y)
-        self.x = float(self.rect.x)
+        #self.y = float(self.rect.y)
+        #self.x = float(self.rect.x)
 
     def update(self):
         """Move the alien to the left."""
         if not self.is_colliding:
-            self.x -= (self.settings.alien_speed)
-            self.rect.x = self.x
-
-
-    def update_left(self):
-        """Move the alien to the right in case of collision."""
-        if self.is_colliding:
-            self.x -= (self.settings.alien_speed)
-            self.rect.x = self.x
-
+            self.rect.x -= (self.settings.alien_speed)
+            #self.rect.x = self.x

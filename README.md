@@ -19,8 +19,11 @@ Keyboard and Mouse:
 
 
 > Start: Enters the game 
+
 > Music: Toggles in-game and menu music. Disabled when the button is red, enabled when the button is green.
+
 > Movie FX: Toggles cinematic black bars on the top and bottom of the screen, forcing a 16:9 aspect ratio instead of 3:2
+
 > Quit: Exits the game
 
 <b><i>REQUIREMENTS:</i></b> 

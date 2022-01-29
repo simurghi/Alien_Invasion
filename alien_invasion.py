@@ -198,7 +198,6 @@ class AlienInvasion:
         """Checks if anliens are collision with each other, 
         then if any bullets are colliding with aliens, 
         then deletes aliens if they go offscreen.""" 
-        self._check_alien_collision()
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
@@ -308,20 +307,10 @@ class AlienInvasion:
         """Create an alien and place it in a column."""
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
-        alien.y = alien_height + (1.5 * alien_height * alien_number) + alien.random_y
-        alien.rect.y = alien.y
-        alien.rect.x = (self.settings.screen_width / 2) + alien_width + 2 * alien.rect.width * col_number
+        alien.rect.y = alien_height + (1.5 * alien_height * alien_number) + alien.random_y
+        #alien.rect.y = alien.y
+        alien.rect.x = (self.settings.screen_width ) + alien_width + (2 * alien_width * col_number)
         self.aliens.add(alien)
-
-
-    def _check_alien_collision(self):
-        """Checks to see if alien sprites are overlapping."""
-        for alien in self.aliens:
-            if pygame.sprite.spritecollideany(alien, self.aliens) is not None:
-                alien.is_colliding = True
-                alien.update_left()
-            else:
-                alien.is_colliding = False
 
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
