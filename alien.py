@@ -13,7 +13,7 @@ class Alien(Sprite):
         self.is_colliding = False
 
         # Load the alien image and set its rect attribute.
-        self.image = pygame.image.load('images/alien.bmp')
+        self.image = pygame.image.load('images/alien_med.bmp')
         self.rect = self.image.get_rect()
 
 

@@ -32,13 +32,16 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.combat_music = False
         self.menu_music = False
+        self.bullet_sfx = pygame.mixer.Sound("audio/MissileFire.wav")
+        self.bullet_sfx.set_volume(0.40)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        self.play_button = Button(self, "Start", 100, 150)
-        self.mute_button = Button(self, "Music", 100, 50)
-        self.cinematic_button = Button(self, "Movie FX", 100, -50)
-        self.exit_button = Button(self, "Quit", 100, -150)
+        self.play_button = Button(self, "Start", 100, 200)
+        self.mute_button = Button(self, "Music", 100, 100)
+        self.sfx_button = Button(self, "Sound", 100, 0)
+        self.cinematic_button = Button(self, "Movie FX", 100, -100)
+        self.exit_button = Button(self, "Quit", 100, -200)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
         self.scoreboard = Scoreboard(self)
@@ -81,6 +84,7 @@ class AlienInvasion:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
                 self._check_mute_button(mouse_pos)
+                self._check_sfx_button(mouse_pos)
                 self._check_cinematic_button(mouse_pos)
                 self._check_exit_button(mouse_pos)
 
@@ -99,8 +103,10 @@ class AlienInvasion:
             self.screen.blit(self.menu_image, (0, 0)) 
             self.play_button.draw_button()
             self.mute_button.toggle_color(self.settings.play_music)
+            self.sfx_button.toggle_color(self.settings.play_sfx)
             self.cinematic_button.toggle_color(self.settings.cinematic_bars)
             self.mute_button.draw_button()
+            self.sfx_button.draw_button()
             self.cinematic_button.draw_button()
             self.exit_button.draw_button()
         pygame.display.flip()
@@ -117,6 +123,13 @@ class AlienInvasion:
         button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             self.settings.play_music = not self.settings.play_music 
+
+    def _check_sfx_button(self, mouse_pos):
+        """ Toggles sound when the player clicks 'Sound'"""
+        button_clicked = self.sfx_button.rect.collidepoint(mouse_pos)
+        if button_clicked: 
+            self.settings.play_sfx = not self.settings.play_sfx 
+
 
     def _check_cinematic_button(self, mouse_pos):
         """ Toggles "cinematic" black bars when the player clicks 'Movie Mode'"""
@@ -246,6 +259,9 @@ class AlienInvasion:
         # 0 Corresponds to the "A" Button on an Xbox Controller
         if event.button == 0: 
             self._fire_bullet()
+        # 3 Corresponds to the "Y" Button on an Xbox Controller
+        elif event.button == 3:
+            self.settings.cinematic_bars = not self.settings.cinematic_bars
         # 6 Corresponds to the 'Back/Select" Button on an Xbox Controller
         elif event.button == 6: 
             sys.exit()
@@ -254,7 +270,7 @@ class AlienInvasion:
             self.settings.play_music = not self.settings.play_music 
         # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
         elif event.button == 5 and not self.stats.game_active: 
-            self.settings.cinematic_bars = not self.settings.cinematic_bars
+            self.settings.play_sfx = not self.settings.play_sfx
         # 7 Corresponds to the "Start" Button on an Xbox Controller 
         elif event.button == 7 and not self.stats.game_active: 
             self._clear_state()
@@ -282,6 +298,8 @@ class AlienInvasion:
         if len(self.bullets) < self.settings.bullets_allowed: 
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            if self.settings.play_sfx and self.stats.game_active:
+                self.bullet_sfx.play()
 
     def _create_fleet(self):
         """Create the fleet of aliens."""
