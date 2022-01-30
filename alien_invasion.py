@@ -9,6 +9,7 @@ from button import Button
 from aspect_ratio import AspectRatio
 from game_stats import GameStats
 from scoreboard import Scoreboard 
+from explosion import Explosion
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -36,6 +37,7 @@ class AlienInvasion:
         self.bullet_sfx.set_volume(0.40)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+        self.explosions = pygame.sprite.Group()
         self._create_fleet()
         self.play_button = Button(self, "Start", 100, 200)
         self.mute_button = Button(self, "Music", 100, 100)
@@ -92,12 +94,12 @@ class AlienInvasion:
         """Update images on the screen, and flip to the new screen."""
         #self.screen.fill(self.settings.bg_color)
         self._scroll_background()
-        self._make_game_cinematic()
-        self.scoreboard.show_score()
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+        self._make_game_cinematic()
+        self.scoreboard.show_score()
         # Draw the start button if the game is inactive.
         if not self.stats.game_active:
             self.screen.blit(self.menu_image, (0, 0)) 
@@ -196,10 +198,11 @@ class AlienInvasion:
         #Remove and bullets and aliens that have collided.
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.aliens, True, True)
+        print(f"Collions: {collisions}")
 
         if collisions:
-            for aliens in collisions.values():
-                self.stats.score += self.settings.alien_points * len(aliens)
+            for alien in collisions.items():
+                self.stats.score += self.settings.alien_points * len(alien)
             self.scoreboard.prep_score()
             self.scoreboard.check_high_score()
         if not self.aliens:
@@ -359,6 +362,7 @@ class AlienInvasion:
         if self.difficulty_timer > self.difficulty_increase:
             self.settings.increase_speed()
             self.difficulty_timer -= self.difficulty_increase
+            print("difficulty up!")
 
     def _make_game_cinematic(self):
         if self.settings.cinematic_bars:
