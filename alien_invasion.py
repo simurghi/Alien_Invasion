@@ -66,6 +66,7 @@ class AlienInvasion:
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
+                self.explosions.update()
                 self._adjust_difficulty(delta_time)
             self._update_screen()
 
@@ -98,6 +99,7 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+        self.explosions.draw(self.screen)
         self._make_game_cinematic()
         self.scoreboard.show_score()
         # Draw the start button if the game is inactive.
@@ -152,6 +154,7 @@ class AlienInvasion:
         self.scoreboard.prep_score()
         self.scoreboard.prep_ships()
         self.aliens.empty()
+        self.explosions.empty()
         self.bullets.empty()
         pygame.mouse.set_visible(False)
         # Create a new fleet and center the ship
@@ -196,9 +199,8 @@ class AlienInvasion:
     def _check_bullet_alien_collision(self):
         """Respond to bullet-alien collisions."""
         #Remove and bullets and aliens that have collided.
-        collisions = pygame.sprite.groupcollide(
-            self.bullets, self.aliens, True, True)
-        print(f"Collions: {collisions}")
+        collisions = pygame.sprite.groupcollide(self.bullets,
+                self.aliens, True, True)
 
         if collisions:
             for alien in collisions.items():
@@ -211,8 +213,7 @@ class AlienInvasion:
             self._create_fleet()
 
     def _update_aliens(self):
-        """Checks if anliens are collision with each other, 
-        then if any bullets are colliding with aliens, 
+        """Checks if any bullets are colliding with aliens, 
         then deletes aliens if they go offscreen.""" 
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
