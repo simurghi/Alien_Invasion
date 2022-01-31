@@ -1,6 +1,6 @@
 # Alien Invasion
 
-Alien Invasion is a challenging sicescrolling Shoot Em' Up inspired by arcade games built in Python using Pygame. The longer you survive, the faster the game becomes, but the greater your score multiplier rises. Inspired by Eric Matthes' Alien Invasion.
+Alien Invasion is a challenging sicescrolling Shoot Em' Up inspired by arcade games.The longer you survive, the faster the game becomes, but the greater your score multiplier rises. Built in Python using PyGame. Heavily inspired by Eric Matthes' Alien Invasion.
 
 
 https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-8d82-ebdda7da0a85.mp4
@@ -18,7 +18,7 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 #### Game
 - Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
 - Spacebar: Fire a missile
-- ESC: Exit game
+- ESC: Exit game (applies to menu too)
 
 ### Controller:
 
@@ -26,11 +26,12 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 - Start: Enter Game
 - LB (Left Bumper): Toggle Music
 - RB (Right Bumper): Toggle Movie FX
-- Select (Back): Exit Game
+- Y: Toggle Movie FX
 
 #### Game
 - D-pad: Move ship
 - A: Fire a missile
+- Select: Exit game (applies to menu too)
 
 
 ### <b>Menu Options:</b>
