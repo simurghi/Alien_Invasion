@@ -7,19 +7,20 @@ class Explosion(Sprite):
         """Initialize explosion coordinates."""
         super().__init__()
         self.explosion_images = []
+        # Create a list of explosion sprites to play in order whenever a ship is blown up
         for num in range(1, 9):
             explosion = pygame.image.load(f"images/explosion_{num}.png").convert_alpha()
             self.explosion_images.append(explosion)
         self.index = 0
+        self.counter = 0
         self.image = self.explosion_images[self.index]
         self.rect = self.image.get_rect()
         self.rect.center = center
-        self.counter = 0
 
     def update(self):
         """Update method for explosions"""
-        animation_speed = 8
-        #update explosion animation
+        # Playback speed at which our explosions cycle through, lower is faster
+        animation_speed = 12
         self.counter += 1
 
         if self.counter >= animation_speed and self.index < len(self.explosion_images) - 1:
