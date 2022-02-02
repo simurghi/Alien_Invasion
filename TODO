@@ -1,4 +1,6 @@
-play explosion sprites when aliens/player blown up
 add 2 new alien type: less mobile mother ship that spams bullets, and super mobile hunter ship
-flip player ship and fire backwards
 Add close combat and backstab score multipliers.
+Remove black boxes around explosions
+Fix game FPS to a locked 60 and scale difficulty based on that
+
+

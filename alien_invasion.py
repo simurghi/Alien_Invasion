@@ -37,7 +37,7 @@ class AlienInvasion:
         self.bullet_sfx = pygame.mixer.Sound("audio/MissileFire.wav")
         self.bullet_sfx.set_volume(0.40)
         self.explosion_sfx = pygame.mixer.Sound("audio/DestroyMonster2.wav")
-        #self.explosion_sfx.set_volume(0.30)
+        self.explosion_sfx.set_volume(0.40)
         self.bullets = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
         self.bullet_direction = 1
@@ -371,12 +371,20 @@ class AlienInvasion:
             self.aliens.empty()
             self.bullets.empty()
 
+            # Play an explosion at the ship's position
+            explosion = Explosion(self.ship.rect.center)
+            self.explosions.add(explosion)
+            if self.settings.play_sfx and self.stats.game_active:
+                self.explosion_sfx.play()
+
+
             # Create a new fleet and reposition the ship.
             self._create_fleet()
             self.ship.position_ship()
 
             # Pause.
             sleep(0.10)
+
         else: 
             self.stats.game_active = False
             pygame.mixer.music.fadeout(500)
