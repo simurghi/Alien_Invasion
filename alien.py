@@ -11,6 +11,7 @@ class Alien(Sprite):
         self.random_y = random.randint(-5, 5)*5
         self.settings = ai_game.settings
         self.is_colliding = False
+        self.radius = 20
 
         # Load the alien image and set its rect attribute.
         self.image = pygame.image.load('images/alien_med.bmp')
