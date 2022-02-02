@@ -10,3 +10,5 @@ Code:
 -- code.Pylet for background parallax image scrolling
 -- ScriptLine Studios for Xbox Controller support
 -- u/iminurnamez for clock/time
+-- KidsCanCode --> circular collision detection
+-- KidsCanCode + Coding With Russ --> explosion sprites

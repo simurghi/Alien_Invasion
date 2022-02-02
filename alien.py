@@ -31,3 +31,7 @@ class Alien(Sprite):
         if not self.is_colliding:
             self.rect.x -= (self.settings.alien_speed)
             #self.rect.x = self.x
+
+
+    def draw_hitbox(self):
+        pygame.draw.circle(self.image, (0, 255, 0), self.rect.center, self.radius)

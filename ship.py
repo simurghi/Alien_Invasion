@@ -11,11 +11,13 @@ class Ship(Sprite):
         self.settings = ai_game.settings
         self.screen_rect = ai_game.screen.get_rect()
         self.is_flipped = False
-        self.radius = 8
+        self.radius = 9
 
         # Load the ship image and get its rect
         self.image = pygame.image.load('images/ship.bmp')
         self.rect = self.image.get_rect()
+        
+        #pygame.draw.circle(self.image, (255, 0, 0), self.rect.center, self.radius)
 
         # Start each new ship at the center left of the screen. 
         self.rect.midleft = self.screen_rect.midleft
@@ -55,3 +57,9 @@ class Ship(Sprite):
         self.rect.midleft = self.screen_rect.midleft
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
+
+    def rotate_ship(self):
+        """Flips the ship across the y-axis."""
+        self.image = pygame.transform.flip(self.image, True, False)
+        self.is_flipped = not self.is_flipped
+

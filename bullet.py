@@ -12,7 +12,7 @@ class Bullet(Sprite):
         self.direction = ai_game.bullet_direction
         self.image = pygame.image.load('images/missile.bmp')
         self.rect = self.image.get_rect()
-        self.rect.midright = ai_game.ship.rect.midright 
+        self.rect.center = ai_game.ship.rect.center
         
         # Store the bullet's position as a decimal vlaue. 
         self.x = float(self.rect.x)
@@ -25,9 +25,9 @@ class Bullet(Sprite):
         # Update the rect position. 
         self.rect.x = self.x
 
+
     def draw_bullet(self):
         """Draw the bullet at the current position."""
         self.screen.blit(self.image, self.rect) 
-
 
 

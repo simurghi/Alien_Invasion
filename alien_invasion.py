@@ -27,6 +27,7 @@ class AlienInvasion:
         self.background_image = pygame.image.load("images/parallax_scrolling_background.png").convert()
         self.background_x = 0
         self.clock = pygame.time.Clock()
+        self.FPS = 60
         self.difficulty_timer = 0
         self.difficulty_increase = 60000
         self.stats = GameStats(self)
@@ -35,10 +36,12 @@ class AlienInvasion:
         self.menu_music = False
         self.bullet_sfx = pygame.mixer.Sound("audio/MissileFire.wav")
         self.bullet_sfx.set_volume(0.40)
+        self.explosion_sfx = pygame.mixer.Sound("audio/DestroyMonster2.wav")
+        #self.explosion_sfx.set_volume(0.30)
         self.bullets = pygame.sprite.Group()
+        self.explosions = pygame.sprite.Group()
         self.bullet_direction = 1
         self.aliens = pygame.sprite.Group()
-        self.explosions = pygame.sprite.Group()
         self._create_fleet()
         self.play_button = Button(self, "Start", 100, 200)
         self.mute_button = Button(self, "Music", 100, 100)
@@ -62,13 +65,12 @@ class AlienInvasion:
             self._check_events()
             self._play_menu_music()
             if self.stats.game_active: 
-                delta_time = self.clock.tick()
                 self._play_combat_music()
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
                 self.explosions.update()
-                self._adjust_difficulty(delta_time)
+                #self._adjust_difficulty(delta_time)
             self._update_screen()
 
     def _check_events(self):
@@ -99,8 +101,8 @@ class AlienInvasion:
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
-        self.aliens.draw(self.screen)
         self.explosions.draw(self.screen)
+        self.aliens.draw(self.screen)
         self._make_game_cinematic()
         self.scoreboard.show_score()
         # Draw the start button if the game is inactive.
@@ -154,8 +156,8 @@ class AlienInvasion:
         self.stats.reset_stats()
         self.scoreboard.prep_score()
         self.scoreboard.prep_ships()
-        self.aliens.empty()
         self.explosions.empty()
+        self.aliens.empty()
         self.bullets.empty()
         pygame.mouse.set_visible(False)
         # Create a new fleet and center the ship
@@ -200,16 +202,22 @@ class AlienInvasion:
     def _check_bullet_alien_collision(self):
         """Respond to bullet-alien collisions."""
         #Remove and bullets and aliens that have collided.
-        collisions = pygame.sprite.groupcollide(self.bullets,
-                self.aliens, True, True)
+        collisions = pygame.sprite.groupcollide(self.aliens,
+                self.bullets, True, True)
         if collisions:
-            for alien in collisions.items():
-                self.stats.score += self.settings.alien_points * len(alien)
+            for alien in collisions:
+                self.stats.score += self.settings.alien_points 
+                explosion = Explosion(alien.rect.center)
+                self.explosions.add(explosion)
+                if self.settings.play_sfx and self.stats.game_active:
+                    self.explosion_sfx.play()
+
             self.scoreboard.prep_score()
             self.scoreboard.check_high_score()
         if not self.aliens:
             # Destroy existing bullets and make a new fleet. 
             self.bullets.empty()
+            self.explosions.empty()
             self._create_fleet()
 
     def _update_aliens(self):
@@ -244,7 +252,7 @@ class AlienInvasion:
             self.ship.moving_right = True
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
-        elif event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
+        elif (event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT) and self.stats.game_active:
             self._flip_ship()
         elif event.key == pygame.K_ESCAPE: 
             sys.exit()
@@ -312,14 +320,16 @@ class AlienInvasion:
 
     def _flip_ship(self):
         """Flips the ship and firing pattens of the bullet."""
-        self.ship.image = pygame.transform.flip(self.ship.image, True, False)
-        self.ship.is_flipped = not self.ship.is_flipped
+        self.ship.rotate_ship()
+        self._adjust_bullet_flipped()
+
+    def _adjust_bullet_flipped(self):
+        """Adjusts the speed and direction of flipped bullets."""
         if self.ship.is_flipped:
             self.settings.bullet_speed *= 1.25
         else: 
             self.settings.bullet_speed *= 0.8
         self.bullet_direction *= -1
-        print(f"Current bullet speed is {self.settings.bullet_speed}")
 
     def _create_fleet(self):
         """Create the fleet of aliens."""
@@ -345,7 +355,7 @@ class AlienInvasion:
         """Create an alien and place it in a column."""
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
-        alien.rect.y = alien_height + (1.5 * alien_height * alien_number) + alien.random_y
+        alien.rect.y = alien_height + (1.65 * alien_height * alien_number) +  alien.random_y
         #alien.rect.y = alien.y
         alien.rect.x = (self.settings.screen_width ) + alien_width + (2 * alien_width * col_number)
         self.aliens.add(alien)

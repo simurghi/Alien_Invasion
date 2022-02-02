@@ -3,7 +3,7 @@ from pygame.sprite import Sprite
 
 class Explosion(Sprite):
 
-    def __init__(self, x, y):
+    def __init__(self, center):
         """Initialize explosion coordinates."""
         super().__init__()
         self.explosion_images = []
@@ -13,12 +13,12 @@ class Explosion(Sprite):
         self.index = 0
         self.image = self.explosion_images[self.index]
         self.rect = self.image.get_rect()
-        self.rect.center = [x, y]
+        self.rect.center = center
         self.counter = 0
 
     def update(self):
         """Update method for explosions"""
-        animation_speed = 4
+        animation_speed = 8
         #update explosion animation
         self.counter += 1
 
