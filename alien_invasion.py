@@ -326,9 +326,9 @@ class AlienInvasion:
     def _adjust_bullet_flipped(self):
         """Adjusts the speed and direction of flipped bullets."""
         if self.ship.is_flipped:
-            self.settings.bullet_speed *= 1.25
+            self.settings.bullet_speed *= 2.00
         else: 
-            self.settings.bullet_speed *= 0.8
+            self.settings.bullet_speed *= 0.5
         self.bullet_direction *= -1
 
     def _create_fleet(self):
