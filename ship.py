@@ -10,6 +10,7 @@ class Ship(Sprite):
         self.screen = ai_game.screen
         self.settings = ai_game.settings
         self.screen_rect = ai_game.screen.get_rect()
+        self.is_flipped = False
 
         # Load the ship image and get its rect
         self.image = pygame.image.load('images/ship.bmp')

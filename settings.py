@@ -9,6 +9,8 @@ class Settings:
         self.play_music = True
         self.play_sfx = True
         self.cinematic_bars = True
+        self.backstack_multiplier = 2
+        self.cqc_multiplier = 2
 
         #  Ship settings
         self.ship_limit = 3

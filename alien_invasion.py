@@ -1,4 +1,4 @@
-import sys, pygame
+import sys, pygame, math
 
 from time import sleep
 from settings import Settings
@@ -36,6 +36,7 @@ class AlienInvasion:
         self.bullet_sfx = pygame.mixer.Sound("audio/MissileFire.wav")
         self.bullet_sfx.set_volume(0.40)
         self.bullets = pygame.sprite.Group()
+        self.bullet_direction = 1
         self.aliens = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
         self._create_fleet()
@@ -192,7 +193,7 @@ class AlienInvasion:
         self.bullets.update()
         # Get rid of bullets that have disappeared.
         for bullet in self.bullets.copy():
-            if bullet.rect.right > self.settings.screen_width: 
+            if bullet.rect.right > self.settings.screen_width or bullet.rect.right < 0: 
                 self.bullets.remove(bullet)
         self._check_bullet_alien_collision()
         
@@ -201,7 +202,6 @@ class AlienInvasion:
         #Remove and bullets and aliens that have collided.
         collisions = pygame.sprite.groupcollide(self.bullets,
                 self.aliens, True, True)
-
         if collisions:
             for alien in collisions.items():
                 self.stats.score += self.settings.alien_points * len(alien)
@@ -244,6 +244,8 @@ class AlienInvasion:
             self.ship.moving_right = True
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
+        elif event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT:
+            self._flip_ship()
         elif event.key == pygame.K_ESCAPE: 
             sys.exit()
 
@@ -263,6 +265,9 @@ class AlienInvasion:
         # 0 Corresponds to the "A" Button on an Xbox Controller
         if event.button == 0: 
             self._fire_bullet()
+        # 0 Corresponds to the "B" Button on an Xbox Controller
+        if event.button == 1: 
+            self._flip_ship()
         # 3 Corresponds to the "Y" Button on an Xbox Controller
         elif event.button == 3:
             self.settings.cinematic_bars = not self.settings.cinematic_bars
@@ -304,6 +309,17 @@ class AlienInvasion:
             self.bullets.add(new_bullet)
             if self.settings.play_sfx and self.stats.game_active:
                 self.bullet_sfx.play()
+
+    def _flip_ship(self):
+        """Flips the ship and firing pattens of the bullet."""
+        self.ship.image = pygame.transform.flip(self.ship.image, True, False)
+        self.ship.is_flipped = not self.ship.is_flipped
+        if self.ship.is_flipped:
+            self.settings.bullet_speed *= 1.25
+        else: 
+            self.settings.bullet_speed *= 0.8
+        self.bullet_direction *= -1
+        print(f"Current bullet speed is {self.settings.bullet_speed}")
 
     def _create_fleet(self):
         """Create the fleet of aliens."""
@@ -369,6 +385,8 @@ class AlienInvasion:
         if self.settings.cinematic_bars:
             self.top_bar.draw_bar()
             self.bot_bar.draw_bar()
+
+
 
 if __name__ == '__main__':
     # make a game instance and run the game. 

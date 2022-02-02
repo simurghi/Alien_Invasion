@@ -9,6 +9,7 @@ class Bullet(Sprite):
         super().__init__()
         self.screen = ai_game.screen
         self.settings = ai_game.settings 
+        self.direction = ai_game.bullet_direction
         self.image = pygame.image.load('images/missile.bmp')
         self.rect = self.image.get_rect()
         self.rect.midright = ai_game.ship.rect.midright 
@@ -20,7 +21,7 @@ class Bullet(Sprite):
     def update(self):
         """Move the bullet to the right of the screen."""
         # Update the decimal position of the bullet. 
-        self.x += self.settings.bullet_speed
+        self.x += self.settings.bullet_speed  * self.direction
         # Update the rect position. 
         self.rect.x = self.x
 
