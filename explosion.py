@@ -8,7 +8,7 @@ class Explosion(Sprite):
         super().__init__()
         self.explosion_images = []
         for num in range(1, 9):
-            explosion = pygame.image.load(f"images/explosion_{num}.png").convert()
+            explosion = pygame.image.load(f"images/explosion_{num}.png").convert_alpha()
             self.explosion_images.append(explosion)
         self.index = 0
         self.image = self.explosion_images[self.index]
