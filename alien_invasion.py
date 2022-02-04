@@ -1,4 +1,4 @@
-import sys, pygame, math, time
+import sys, pygame, math, time, json
 
 from settings import Settings
 from ship import Ship 
@@ -80,6 +80,8 @@ class AlienInvasion:
         """Respond to keypresses, gamepad actions, and mouse events."""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.dump_stats_json()
+                pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
@@ -176,9 +178,11 @@ class AlienInvasion:
         """ Exits the game from the main menu once clicked."""
         button_clicked = self.exit_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
-            sys.exit()
             if self.settings.play_sfx:
                 self.menu_sfx.play()
+            self.dump_stats_json()
+            pygame.quit()
+            sys.exit()
 
 
     def _check_turbo_button(self, mouse_pos):
@@ -200,9 +204,9 @@ class AlienInvasion:
 
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
+        self.scoreboard.prep_score()
         self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
-        self.scoreboard.prep_score()
         self.scoreboard.prep_ships()
         self.explosions.empty()
         self.aliens.empty()
@@ -303,6 +307,8 @@ class AlienInvasion:
         elif (event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT) and self.stats.game_active:
             self._flip_ship()
         elif event.key == pygame.K_ESCAPE: 
+            self.dump_stats_json()
+            pygame.quit()
             sys.exit()
 
     def _check_keyup_events(self, event):
@@ -339,6 +345,8 @@ class AlienInvasion:
         elif event.button == 6: 
             if self.settings.play_sfx:
                 self.menu_sfx.play()
+            self.dump_stats_json()
+            pygame.quit()
             sys.exit()
         # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
         elif event.button == 4 and not self.stats.game_active: 
@@ -470,7 +478,10 @@ class AlienInvasion:
             self.top_bar.draw_bar()
             self.bot_bar.draw_bar()
 
-
+    def dump_stats_json(self):
+        """Dumps score and key game settings to a JSON file."""
+        with open("stats/score.json", 'w') as f:
+            json.dump({"high score" : self.stats.high_score}, f)
 
 if __name__ == '__main__':
     # make a game instance and run the game. 
