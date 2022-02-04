@@ -18,6 +18,7 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 #### Game
 - Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
 - Spacebar: Fire a missile
+- Left/Right Shift: Flip Ship Horizontally
 - ESC: Exit game (applies to menu too)
 
 ### Controller:
@@ -31,6 +32,7 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 #### Game
 - D-pad: Move ship
 - A: Fire a missile
+- B: Flip ship direction horizontally
 - Select: Exit game (applies to menu too)
 
 
@@ -39,8 +41,9 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 
 
 - **Start**: Enters the game 
+- **Game Speed**: Normal is the default game speed. Turbo plays at 1.5x the speed of normal.
 - **Music**: Toggles in-game and menu music. Disabled when the button is red, enabled when the button is green.
-- **Sound**: Toggles in-game sound for missiles. Disabled when the button is red, enabled when the button is green.
+- **Sound**: Toggles in-game sound. Disabled when the button is red, enabled when the button is green.
 - **Movie FX**: Toggles cinematic black bars on the top and bottom of the screen, forcing a 16:9 aspect ratio instead of 3:2 (when red).
 - **Quit**: Exits the game
 
