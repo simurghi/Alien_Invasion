@@ -16,9 +16,9 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 - Left Click: Activate menu option 
 
 #### Game
-- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
-- Spacebar: Fire a missile
-- Left/Right Shift: Flip Ship Horizontally
+- Arrow keys (Left, Right, Up, Down) or WASD: Move the ship in that respective direction
+- X or Spacebar: Fire a missile
+- Left Shift or Z: Flip Ship Horizontally
 - ESC: Exit game (applies to menu too)
 
 ### Controller:
