@@ -53,7 +53,6 @@ class AlienInvasion:
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
         self.scoreboard = Scoreboard(self)
-        self.can_render = False
 
     def _check_gamepad(self):
         """Checks if a gamepad is connected and assigns it to the first one if it is."""
@@ -316,24 +315,39 @@ class AlienInvasion:
         # 0 Corresponds to the "A" Button on an Xbox Controller
         if event.button == 0: 
             self._fire_bullet()
-        # 0 Corresponds to the "B" Button on an Xbox Controller
+        # 1 Corresponds to the "B" Button on an Xbox Controller
         if event.button == 1: 
             self._flip_ship()
+        # 2 Corresponds to the "Y" Button on an Xbox Controller
+        elif event.button == 2:
+            self.settings.turbo_speed = not self.settings.turbo_speed
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
         # 3 Corresponds to the "Y" Button on an Xbox Controller
         elif event.button == 3:
             self.settings.cinematic_bars = not self.settings.cinematic_bars
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
         # 6 Corresponds to the 'Back/Select" Button on an Xbox Controller
         elif event.button == 6: 
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
             sys.exit()
         # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
         elif event.button == 4 and not self.stats.game_active: 
             self.settings.play_music = not self.settings.play_music 
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
         # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
         elif event.button == 5 and not self.stats.game_active: 
             self.settings.play_sfx = not self.settings.play_sfx
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
         # 7 Corresponds to the "Start" Button on an Xbox Controller 
         elif event.button == 7 and not self.stats.game_active: 
             self._clear_state()
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
             self.stats.game_active = True
 
     def _check_joyhatmotion_events(self, event):
