@@ -255,14 +255,17 @@ class AlienInvasion:
         """Respond to bullet-alien collisions."""
         #Remove and bullets and aliens that have collided.
         collisions = pygame.sprite.groupcollide(self.aliens,
-                self.bullets, True, True)
+                self.bullets, False, True)
         if collisions:
             for alien in collisions:
-                self.stats.score += self.settings.alien_points 
+                cqc_mult = self._check_cqc_distance(alien)
+                self.stats.score += self.settings.alien_points * cqc_mult
                 explosion = Explosion(alien.rect.center)
                 self.explosions.add(explosion)
                 if self.settings.play_sfx and self.stats.game_active:
                     self.explosion_sfx.play()
+                alien.kill()
+
 
             self.scoreboard.prep_score()
             self.scoreboard.check_high_score()
@@ -271,6 +274,14 @@ class AlienInvasion:
             self.bullets.empty()
             self.explosions.empty()
             self._create_fleet()
+
+    def _check_cqc_distance(self, alien):
+        """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
+        if math.sqrt((self.ship.rect.x - alien.rect.x)**2 + 
+                (self.ship.rect.x - alien.rect.x)**2) < 101:
+            return 2
+        else:
+            return 1
 
     def _update_aliens(self):
         """Checks if any bullets are colliding with aliens, 

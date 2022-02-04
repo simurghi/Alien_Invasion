@@ -13,3 +13,4 @@ Code:
 -- KidsCanCode --> circular collision detection
 -- KidsCanCode + Coding With Russ --> explosion sprites
 -- CodeSurgeon --> properly capping game FPS
+-- /u/metulburr for distance formula
