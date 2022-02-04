@@ -294,17 +294,17 @@ class AlienInvasion:
     
     def _check_keydown_events(self, event):
         """respond to keypresses.""" 
-        if event.key == pygame.K_UP:
+        if event.key == pygame.K_UP or event.key == pygame.K_w:
             self.ship.moving_up = True 
-        elif event.key == pygame.K_DOWN:
+        elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = True
-        if event.key == pygame.K_LEFT:
+        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
             self.ship.moving_left = True 
-        elif event.key == pygame.K_RIGHT:
+        elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.ship.moving_right = True
-        elif event.key == pygame.K_SPACE:
+        elif event.key == pygame.K_SPACE or event.key == pygame.K_x:
             self._fire_bullet()
-        elif (event.key == pygame.K_LSHIFT or event.key == pygame.K_RSHIFT) and self.stats.game_active:
+        elif (event.key == pygame.K_z or event.key == pygame.K_LSHIFT) and self.stats.game_active:
             self._flip_ship()
         elif event.key == pygame.K_ESCAPE: 
             self.dump_stats_json()
@@ -313,13 +313,13 @@ class AlienInvasion:
 
     def _check_keyup_events(self, event):
         """respond to key releases."""
-        if event.key == pygame.K_UP:
+        if event.key == pygame.K_UP or event.key == pygame.K_w:
             self.ship.moving_up = False
-        elif event.key == pygame.K_DOWN:
+        elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
             self.ship.moving_down = False
-        if event.key == pygame.K_LEFT:
+        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
             self.ship.moving_left = False
-        elif event.key == pygame.K_RIGHT:
+        elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
             self.ship.moving_right = False
 
     def _check_joybuttondown_events(self, event):
