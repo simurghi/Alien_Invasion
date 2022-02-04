@@ -16,7 +16,7 @@ class GameStats:
         self.score = 0
 
     def _read_stats_json(self):
-        """Reads the JSON file and sees if we already have a high score."""
+        """Reads the score.json file and sees if we already have a high score."""
         try: 
             with open('stats/score.json') as f:
                 data = json.load(f)

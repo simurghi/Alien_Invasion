@@ -9,7 +9,7 @@ class Settings:
         self.play_music = True
         self.play_sfx = True
         self.cinematic_bars = True
-        self.backstack_multiplier = 2
+        self.backstab_multiplier = 2
         self.cqc_multiplier = 2
         self.turbo_speed = False
         self.speed_mult = 1.0
@@ -48,3 +48,4 @@ class Settings:
         self.bullet_speed += self.speedup_scale 
         self.alien_speed += self.speedup_scale 
         self.alien_points += self.score_scale
+
