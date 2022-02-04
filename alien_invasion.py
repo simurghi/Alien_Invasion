@@ -35,6 +35,8 @@ class AlienInvasion:
         self.bullet_sfx.set_volume(0.40)
         self.explosion_sfx = pygame.mixer.Sound("audio/DestroyMonster2.wav")
         self.explosion_sfx.set_volume(0.40)
+        self.menu_sfx = pygame.mixer.Sound("audio/OptionSelect.wav")
+        self.menu_sfx.set_volume(0.40)
         self.bullets = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
         self.bullet_direction = 1
@@ -138,18 +140,26 @@ class AlienInvasion:
         if button_clicked and not self.stats.game_active:
             self._clear_state()
             self.stats.game_active = True
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+
 
     def _check_mute_button(self, mouse_pos):
         """ Toggles music when the player clicks 'Music'"""
         button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             self.settings.play_music = not self.settings.play_music 
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+
 
     def _check_sfx_button(self, mouse_pos):
         """ Toggles sound when the player clicks 'Sound'"""
         button_clicked = self.sfx_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             self.settings.play_sfx = not self.settings.play_sfx 
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
 
 
     def _check_cinematic_button(self, mouse_pos):
@@ -157,12 +167,18 @@ class AlienInvasion:
         button_clicked = self.cinematic_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             self.settings.cinematic_bars = not self.settings.cinematic_bars
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+
 
     def _check_exit_button(self, mouse_pos):
         """ Exits the game from the main menu once clicked."""
         button_clicked = self.exit_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             sys.exit()
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+
 
     def _check_turbo_button(self, mouse_pos):
         """Increases the game speed by 1.5x if active."""
@@ -173,6 +189,9 @@ class AlienInvasion:
                 self.speed_state = "Normal"
             else:
                 self.speed_state = "Turbo"
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+
 
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
