@@ -37,6 +37,8 @@ class AlienInvasion:
         self.explosion_sfx.set_volume(0.40)
         self.menu_sfx = pygame.mixer.Sound("audio/OptionSelect.wav")
         self.menu_sfx.set_volume(0.40)
+        self.flip_sfx = pygame.mixer.Sound("audio/UnitFlip.wav")
+        self.flip_sfx.set_volume(0.25)
         self.bullets = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
         self.bullet_direction = 1
@@ -184,12 +186,16 @@ class AlienInvasion:
         button_clicked = self.turbo_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             self.settings.turbo_speed = not self.settings.turbo_speed
-            if not self.settings.turbo_speed:
-                self.speed_state = "Normal"
-            else:
-                self.speed_state = "Turbo"
+            self._change_turbo_text()
             if self.settings.play_sfx:
                 self.menu_sfx.play()
+
+    def _change_turbo_text(self):
+        """Helper method that changes what text is displayed on the turbo button"""
+        if not self.settings.turbo_speed:
+            self.speed_state = "Normal"
+        else:
+            self.speed_state = "Turbo"
 
 
     def _clear_state(self):
@@ -321,6 +327,7 @@ class AlienInvasion:
         # 2 Corresponds to the "Y" Button on an Xbox Controller
         elif event.button == 2:
             self.settings.turbo_speed = not self.settings.turbo_speed
+            self._change_turbo_text()
             if self.settings.play_sfx:
                 self.menu_sfx.play()
         # 3 Corresponds to the "Y" Button on an Xbox Controller
@@ -379,6 +386,8 @@ class AlienInvasion:
         """Flips the ship and firing pattens of the bullet."""
         self.ship.rotate_ship()
         self._adjust_bullet_flipped()
+        if self.settings.play_sfx and self.stats.game_active:
+            self.flip_sfx.play()
 
     def _adjust_bullet_flipped(self):
         """Adjusts the speed and direction of flipped bullets."""
