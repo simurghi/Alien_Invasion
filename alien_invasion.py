@@ -1,6 +1,5 @@
-import sys, pygame, math
+import sys, pygame, math, time
 
-from time import sleep
 from settings import Settings
 from ship import Ship 
 from bullet import Bullet 
@@ -26,10 +25,8 @@ class AlienInvasion:
         self.menu_image = pygame.image.load("images/background.png").convert()
         self.background_image = pygame.image.load("images/parallax_scrolling_background.png").convert()
         self.background_x = 0
-        self.clock = pygame.time.Clock()
         self.FPS = 60
-        self.difficulty_timer = 0
-        self.difficulty_increase = 60000
+        self.time = time.time()
         self.stats = GameStats(self)
         self.ship = Ship(self)
         self.combat_music = False
@@ -43,21 +40,23 @@ class AlienInvasion:
         self.bullet_direction = 1
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
-        self.play_button = Button(self, "Start", 100, 200)
-        self.mute_button = Button(self, "Music", 100, 100)
-        self.sfx_button = Button(self, "Sound", 100, 0)
-        self.cinematic_button = Button(self, "Movie FX", 100, -100)
-        self.exit_button = Button(self, "Quit", 100, -200)
+        self.difficulty_counter = 0
+        self.speed_state = "Normal"
+        self.play_button = Button(self, "Start", 100, 250)
+        self.turbo_button = Button(self, self.speed_state, 100, 150)
+        self.mute_button = Button(self, "Music", 100, 50)
+        self.sfx_button = Button(self, "Sound", 100, -50)
+        self.cinematic_button = Button(self, "Movie FX", 100, -150)
+        self.exit_button = Button(self, "Quit", 100, -250)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
         self.scoreboard = Scoreboard(self)
+        self.can_render = False
 
     def _check_gamepad(self):
         """Checks if a gamepad is connected and assigns it to the first one if it is."""
         if pygame.joystick.get_count() > 0:
             self.gamepad = pygame.joystick.Joystick(0)
-        else: 
-            print("No gamepad detected.")
 
     def run_game(self):
         """Start the main loop for the game."""
@@ -70,8 +69,9 @@ class AlienInvasion:
                 self._update_bullets()
                 self._update_aliens()
                 self.explosions.update()
-                #self._adjust_difficulty(delta_time)
+                self._adjust_difficulty()
             self._update_screen()
+            self._adjust_fps_cap()
 
     def _check_events(self):
         """Respond to keypresses, gamepad actions, and mouse events."""
@@ -89,6 +89,7 @@ class AlienInvasion:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self._check_play_button(mouse_pos)
+                self._check_turbo_button(mouse_pos)
                 self._check_mute_button(mouse_pos)
                 self._check_sfx_button(mouse_pos)
                 self._check_cinematic_button(mouse_pos)
@@ -112,11 +113,24 @@ class AlienInvasion:
             self.mute_button.toggle_color(self.settings.play_music)
             self.sfx_button.toggle_color(self.settings.play_sfx)
             self.cinematic_button.toggle_color(self.settings.cinematic_bars)
+            self.turbo_button.toggle_color(not self.settings.turbo_speed, self.speed_state)
             self.mute_button.draw_button()
             self.sfx_button.draw_button()
             self.cinematic_button.draw_button()
+            self.turbo_button.draw_button()
             self.exit_button.draw_button()
         pygame.display.flip()
+
+    def _adjust_fps_cap(self):
+        """Sets the internal FPS cap for the game."""
+        #Current time after all other events in the while loop have elapsed.
+        current_time = time.time() 
+        #How long our frame took to process, substracting from the init 
+        time_diff = current_time - self.time 
+        # delay the game based on the target FPS if we finish early, otherwise don't delay
+        delay = max(1.0/self.FPS - time_diff, 0)
+        time.sleep(delay)
+        self.time = current_time
 
     def _check_play_button(self, mouse_pos):
         """ Start a new game when the player clicks Play"""
@@ -149,6 +163,16 @@ class AlienInvasion:
         button_clicked = self.exit_button.rect.collidepoint(mouse_pos)
         if button_clicked: 
             sys.exit()
+
+    def _check_turbo_button(self, mouse_pos):
+        """Increases the game speed by 1.5x if active."""
+        button_clicked = self.turbo_button.rect.collidepoint(mouse_pos)
+        if button_clicked: 
+            self.settings.turbo_speed = not self.settings.turbo_speed
+            if not self.settings.turbo_speed:
+                self.speed_state = "Normal"
+            else:
+                self.speed_state = "Turbo"
 
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
@@ -227,7 +251,7 @@ class AlienInvasion:
         if pygame.sprite.spritecollide(self.ship, self.aliens, False, pygame.sprite.collide_circle):
             self._ship_hit()
         for alien in self.aliens.copy():
-            if alien.rect.left < -70: 
+            if alien.rect.left < -100: 
                 self.aliens.remove(alien)
         
 
@@ -326,9 +350,9 @@ class AlienInvasion:
     def _adjust_bullet_flipped(self):
         """Adjusts the speed and direction of flipped bullets."""
         if self.ship.is_flipped:
-            self.settings.bullet_speed *= 2.00
+            self.settings.bullet_speed *= 2.50
         else: 
-            self.settings.bullet_speed *= 0.5
+            self.settings.bullet_speed *= 0.4
         self.bullet_direction *= -1
 
     def _create_fleet(self):
@@ -383,7 +407,7 @@ class AlienInvasion:
             self.ship.position_ship()
 
             # Pause.
-            sleep(0.10)
+            time.sleep(0.10)
 
         else: 
             self.stats.game_active = False
@@ -391,15 +415,15 @@ class AlienInvasion:
             self.combat_music = False
             pygame.mouse.set_visible(True)
 
-    def _adjust_difficulty(self, delta_time):
+    def _adjust_difficulty(self):
         """Gradually increases the game speed as time elapses."""
-        self.difficulty_timer += delta_time
-        if self.difficulty_timer > self.difficulty_increase:
+        self.difficulty_counter+=1 
+        if self.difficulty_counter % 5400 == 0:
             self.settings.increase_speed()
-            self.difficulty_timer -= self.difficulty_increase
             print("difficulty up!")
 
     def _make_game_cinematic(self):
+        """Draws cinematic black bars around the top and bottom of the screen, forcing a 16:9 aspect ratio."""
         if self.settings.cinematic_bars:
             self.top_bar.draw_bar()
             self.bot_bar.draw_bar()

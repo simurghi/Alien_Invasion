@@ -12,3 +12,4 @@ Code:
 -- u/iminurnamez for clock/time
 -- KidsCanCode --> circular collision detection
 -- KidsCanCode + Coding With Russ --> explosion sprites
+-- CodeSurgeon --> properly capping game FPS

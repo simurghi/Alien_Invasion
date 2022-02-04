@@ -33,14 +33,20 @@ class Button:
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)
 
-    def toggle_color(self, color_switch):
+    def toggle_color(self, color_switch, msg=''):
         """Receives a boolean and adjusts the color of the button based on the values."""
         if color_switch:
             self.button_color = (34, 139, 34)
-            self._prep_msg(self.msg)
+            if msg =='':
+                self._prep_msg(self.msg)
+            else:
+                self._prep_msg(msg)
         elif not color_switch:
             self.button_color = (178, 34, 34)
-            self._prep_msg(self.msg)
+            if msg =='':
+                self._prep_msg(self.msg)
+            else:
+                self._prep_msg(msg)
 
 
 

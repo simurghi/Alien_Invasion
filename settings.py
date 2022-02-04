@@ -11,6 +11,9 @@ class Settings:
         self.cinematic_bars = True
         self.backstack_multiplier = 2
         self.cqc_multiplier = 2
+        self.turbo_speed = False
+        self.speed_mult = 1.0
+
 
         #  Ship settings
         self.ship_limit = 3
@@ -20,24 +23,28 @@ class Settings:
         
 
         # How quickly the game speeds up.
-        self.speedup_scale = 1.05
-        self.score_scale = 1.1
+        self.speedup_scale = 1.00
+        self.score_scale = 1.25
 
         self.initialize_dynamic_settings()
 
 
     def initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
-        self.ship_speed = 1.25
-        self.alien_speed = 1.0
-        self.bullet_speed = 1.2
+        if self.turbo_speed:
+            self.speed_mult = 1.5
+        else: 
+            self.speed_mult = 1
+        self.ship_speed = 4.00 * self.speed_mult
+        self.alien_speed = 4.00 * self.speed_mult
+        self.bullet_speed = 4.00 * self.speed_mult
         # Scoring 
         self.alien_points = 100
 
 
     def increase_speed(self):
         """Increase speed settings."""
-        self.ship_speed *= self.speedup_scale
-        self.bullet_speed *= self.speedup_scale
-        self.alien_speed *= self.speedup_scale
+        self.ship_speed += self.speedup_scale 
+        self.bullet_speed += self.speedup_scale 
+        self.alien_speed += self.speedup_scale 
         self.alien_points = int(self.alien_points * self.score_scale)

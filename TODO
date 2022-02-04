@@ -1,5 +1,7 @@
 add 2 new alien type: less mobile mother ship that spams bullets, and super mobile hunter ship
 Add close combat and backstab score multipliers.
-Fix game FPS to a locked 60 and scale difficulty based on that
+Maybe add in powerups?
+Game over screen when you lose all lives
+Text file to store settings and high score
 
 

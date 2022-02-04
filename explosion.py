@@ -20,7 +20,7 @@ class Explosion(Sprite):
     def update(self):
         """Update method for explosions"""
         # Playback speed at which our explosions cycle through, lower is faster
-        animation_speed = 12
+        animation_speed = 8
         self.counter += 1
 
         if self.counter >= animation_speed and self.index < len(self.explosion_images) - 1:
