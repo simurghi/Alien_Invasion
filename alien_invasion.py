@@ -241,6 +241,7 @@ class AlienInvasion:
         self.aliens.empty()
         self.bullets.empty()
         # Create a new fleet and center the ship
+        self.difficulty_counter = 0
         self._create_fleet()
         self.ship.position_ship()
 
@@ -340,7 +341,6 @@ class AlienInvasion:
                 multiplier += 2
             else:
                 multiplier += 1 if not multiplier else 0
-        print(f"MULTIPLIER: {multiplier}")
         return multiplier
         
 

@@ -18,7 +18,7 @@ class Settings:
         self.ship_limit = 3
 
         # Bullet settings
-        self.bullets_allowed = 4
+        self.bullets_allowed = 5
         
 
         # How quickly the game speeds up.

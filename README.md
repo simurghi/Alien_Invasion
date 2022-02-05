@@ -56,17 +56,17 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 
 ### <b>Tips:</b>
 
-- While your ship is flipped, your bullets move at 2.5x speed
-- You can only have 4 missiles out at once. Missiles disappear if they fly offscreen or hit an enemy
+- While your ship is flipped, your bullets move at 2.5x speed. This affects existing bullets.
+- You can only have 5 missiles out at once. Missiles disappear if they fly offscreen or hit an enemy.
 - You have 3 lives, this is displayed by the current amount of ships on your HUD
 - Base score is 100 points per ship. This is increased to 150 if playing on Turbo Mode. 
-- Killing an enemy in close range (150 pixels or less distance) has a 2x score multiplier
+- Killing an enemy in close range has a 2x score multiplier. (150 pixels or less --> calculated using pythagorean theorem) 
 - Shooting an enemy in their back has a 2x score multiplier.
-- If both multipliers are active, you receive a larger score multiplier (5x instead of 4x)
+- If both multipliers are active, you instead receive a larger score multiplier (5x instead of 4x)
 - If on normal speed, the game will speed up by 25% (base) every 90 seconds and increase score by 25 points.
 - If on turbo speed, the game will speed up by 50% (base, 33% turbo) every 90 seconds and increases by 50 points.
-- Hitboxes are circular, not rectangular, so you have some room to dodge enemies.
-- Movement is restricted in the top and bottom of the screen. Cinematic Bars will cover this up.
+- Hitboxes are circular, not rectangular, so you have some room to dodge and flank enemies.
+- Movement is restricted in the top and bottom of the screen (60 pixels for each). Cinematic Bars will help cover this up.
 
 
 ## <b>REQUIREMENTS:</b> 
