@@ -2,6 +2,6 @@ v1.4: add  new alien type: less mobile mother ship that spams bullets
 v1.5? --> super mobile hunter ship
 v1.3: Add backstab score multipliers
 v1.4?: Maybe add in powerups?
-
+v1.3: Fix visual bug where old current score is at the top of the screen (doesn't affect actual score)
 
 

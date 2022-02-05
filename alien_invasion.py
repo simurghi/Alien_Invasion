@@ -302,17 +302,18 @@ class AlienInvasion:
         collisions = pygame.sprite.groupcollide(self.aliens,
                 self.bullets, False, False)
         if collisions:
-            for alien, bullet in collisions.copy().items():
-                cqc_mult = self._check_cqc_distance(alien)
-                #backstab_mult = self._check_backstab(bullet, alien)
-                self.stats.score += self.settings.alien_points * cqc_mult #* backstab_mult
-                explosion = Explosion(alien.rect.center)
+            for alien_index, bullet_indexes in collisions.items():
+                cqc_mult = self._check_cqc_distance(alien_index)
+                backstab_mult = self._check_backstab(bullet_indexes)
+                bonus_mult = 1.25 if (cqc_mult > 1 and backstab_mult > 1) else 1
+                self.stats.score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult)
+                explosion = Explosion(alien_index.rect.center)
                 self.explosions.add(explosion)
                 if (self.settings.play_sfx and self.stats.game_active
                         and not self.stats.game_over):
                     self.explosion_sfx.play()
-                self.bullets.remove(bullet)
-                alien.kill()
+                self.bullets.remove(bullet_indexes)
+                alien_index.kill()
 
             self.scoreboard.prep_score()
             self.scoreboard.check_high_score()
@@ -324,19 +325,24 @@ class AlienInvasion:
 
     def _check_cqc_distance(self, alien):
         """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
-        if math.sqrt((self.ship.rect.x - alien.rect.x)**2 + 
-                (self.ship.rect.x - alien.rect.x)**2) < 101:
+        formula = math.sqrt((self.ship.rect.x - alien.rect.x)**2 + 
+                (self.ship.rect.x - alien.rect.x)**2)
+        if formula < 151:
             return 2
         else:
             return 1
 
-    '''def _check_backstab(self, bullet, alien):
-        """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
-        if pygame.sprite.groupcollide(bullet, alien, False, False):
-            return 2
-            print("BACKSTAB!")
-        else:
-            return 1 '''
+    def _check_backstab(self, bullet_indexes):
+        """Checks to see if the bullet hit the alien from behind for a score bonus."""
+        multiplier = 0
+        for bullet_index in bullet_indexes:
+            if bullet_index.direction < 0: 
+                multiplier += 2
+            else:
+                multiplier += 1 if not multiplier else 0
+        print(f"MULTIPLIER: {multiplier}")
+        return multiplier
+        
 
     def _update_aliens(self):
         """Checks if any bullets are colliding with aliens, 
@@ -370,7 +376,8 @@ class AlienInvasion:
             self.ship.moving_right = True
         elif event.key == pygame.K_SPACE or event.key == pygame.K_x:
             self._fire_bullet()
-        elif (event.key == pygame.K_z or event.key == pygame.K_LSHIFT) and self.stats.game_active:
+        elif ((event.key == pygame.K_z or event.key == pygame.K_LSHIFT)
+                and self.stats.game_active and not self.stats.game_over):
             self._flip_ship()
         elif event.key == pygame.K_ESCAPE: 
             self.dump_stats_json()
