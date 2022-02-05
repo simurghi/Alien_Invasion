@@ -30,9 +30,9 @@ class AlienInvasion:
         self.time = time.time()
         self.stats = GameStats(self)
         self.ship = Ship(self)
-        self.combat_music = False
+        self.game_music = False
         self.menu_music = False
-        self.game_over_music = False
+        self.go_music = False
         self.bullet_sfx = pygame.mixer.Sound("audio/MissileFire.wav")
         self.bullet_sfx.set_volume(0.40)
         self.explosion_sfx = pygame.mixer.Sound("audio/DestroyMonster2.wav")
@@ -70,9 +70,8 @@ class AlienInvasion:
         while True: 
             self._check_mouse_visible()
             self._check_events()
-            self._play_menu_music()
+            self._play_music()
             if self.stats.game_active and not self.stats.game_over: 
-                self._play_combat_music()
                 self.ship.update()
                 self._update_bullets()
                 self._update_aliens()
@@ -122,7 +121,7 @@ class AlienInvasion:
             self._render_game_over()
             self.restart_button.draw_button()
             self.menu_button.draw_button()
-            self.scoreboard.show_score_game_over()
+            self.scoreboard.show_scores_go()
         # Draw the start button if the game is inactive but not in a game over.
         elif not self.stats.game_active and not self.stats.game_over:
             self.screen.blit(self.menu_image, (0, 0)) 
@@ -245,31 +244,47 @@ class AlienInvasion:
         self._create_fleet()
         self.ship.position_ship()
 
-    def _play_menu_music(self):
-        """Plays menu music if not in game."""
-        if (not self.menu_music and not self.combat_music and not self.stats.game_over 
-                and self.settings.play_music):
-            pygame.mixer.music.load("audio/menu.wav")
-            pygame.mixer.music.play(-1)
-            self.menu_music = True
-        elif not self.settings.play_music:
-            pygame.mixer.music.stop()
-            self.menu_music = False
-        else: 
-            pass
-
-    def _play_combat_music(self):
-        """If the game is running, plays battle music."""
-        if not self.combat_music and self.settings.play_music:
-            pygame.mixer.music.load("audio/battle.wav")
-            pygame.mixer.music.play(-1)
-            self.combat_music = True
-            self.menu_music = False
-        elif not self.settings.play_music:
-            pygame.mixer.music.stop()
-            self.combat_music = False
-        else:
-            pass
+    def _play_music(self):
+        """Selects which music to play based on the state of the game."""
+        #Menu Music
+        if not self.stats.game_active:
+            if not self.menu_music and self.settings.play_music:
+                pygame.mixer.music.load("audio/menu.wav")
+                pygame.mixer.music.play(-1)
+                self.game_music = False
+                self.menu_music = True
+                self.go_music = False
+            elif not self.settings.play_music:
+                pygame.mixer.music.stop()
+                self.menu_music = False
+            else: 
+                pass
+        #Combat Music
+        elif self.stats.game_active and not self.stats.game_over:
+            if not self.game_music and self.settings.play_music:
+                pygame.mixer.music.load("audio/battle.wav")
+                pygame.mixer.music.play(-1)
+                self.game_music = True
+                self.menu_music = False
+                self.go_music = False
+            elif not self.settings.play_music:
+                pygame.mixer.music.stop()
+                self.game_music = False
+            else:
+                pass
+        #Game Over Music
+        elif self.stats.game_active and self.stats.game_over:
+            if not self.go_music and self.settings.play_music:
+                pygame.mixer.music.load("audio/loading.wav")
+                pygame.mixer.music.play(-1)
+                self.game_music = False
+                self.menu_music = False
+                self.go_music = True
+            elif not self.settings.play_music:
+                pygame.mixer.music.stop()
+                self.go_music = False
+            else:
+                pass
 
     def _update_bullets(self):
         """Update position of the bullets and get rid of the old bullets."""
@@ -409,8 +424,7 @@ class AlienInvasion:
             if self.settings.play_sfx and not self.stats.game_over:
                 self.menu_sfx.play()
         # 6 Corresponds to the 'Back/Select" Button on an Xbox Controller
-        elif (event.button == 6 and 
-                (not self.stats.game_active or self.stats.game_over)): 
+        elif event.button == 6: 
             if self.settings.play_sfx and not self.stats.game_over:
                 self.menu_sfx.play()
             self.dump_stats_json()
@@ -422,7 +436,7 @@ class AlienInvasion:
             if self.settings.play_sfx and not self.stats.game_over:
                 self.menu_sfx.play()
             self.stats.game_active = True
-        # Special button press if in game over screen
+        # Special button press if in game over screen, goes to the menu
         elif (event.button == 4 and 
                 self.stats.game_over and self.stats.game_active): 
             self._clear_state()
@@ -430,7 +444,7 @@ class AlienInvasion:
                 self.menu_sfx.play()
             self.stats.game_over = False
             self.stats.game_active = False
-        # Special button press if in game over screen.
+        # Special button press if in game over screen, restarts game
         elif (event.button == 5 and 
                 self.stats.game_over and self.stats.game_active): 
             self._clear_state()
@@ -510,7 +524,7 @@ class AlienInvasion:
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
         # Decrement lives
-        if self.stats.ships_remaining > 0:
+        if self.stats.ships_remaining > 1:
             self.stats.ships_remaining -= 1
             self.scoreboard.prep_ships()
 
@@ -534,6 +548,8 @@ class AlienInvasion:
 
         else: 
             self.enter_game_over()
+            self.scoreboard.prep_score_game_over()
+            self.scoreboard.prep_high_score_game_over()
 
     def _adjust_difficulty(self):
         """Gradually increases the game speed as time elapses."""
@@ -557,7 +573,6 @@ class AlienInvasion:
         """Game Over Screen that plays when the player dies."""
         self.stats.game_over = True
         pygame.mixer.music.fadeout(500)
-        self.combat_music = False
 
     def _render_game_over(self):
         """Renders and displays the game over message."""

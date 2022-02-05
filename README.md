@@ -54,6 +54,18 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 - **Movie FX**: Toggles cinematic black bars on the top and bottom of the screen, forcing a 16:9 aspect ratio instead of 3:2 (when red).
 - **Quit**: Exits the game
 
+### <b>Tips:</b>
+
+- While your ship is flipped, your bullets move at 2.5x speed
+- You can only have 4 missiles out at once. Missiles disappear if they fly offscreen or hit an enemy
+- You have 3 lives, this is displayed by the current amount of ships on your HUD
+- Base score is 100 points per ship. This is increased to 150 if playing on Turbo Mode. 
+- Killing an enemy in close range (less than 100 pixels distance) has a 2x score multiplier
+- If on normal speed, the game will speed up by 25% (base) every 90 seconds and increase score by 25 points.
+- If on turbo speed, the game will speed up by 50% (base, 33% turbo) every 90 seconds.
+- Hitboxes are circular, not rectangular, so you have some room to dodge enemies.
+- Cinematic Bars don't restrict your movement, you cannot go to the top/bottom portions of the screen normally.
+
 
 ## <b>REQUIREMENTS:</b> 
 
