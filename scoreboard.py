@@ -65,4 +65,16 @@ class Scoreboard:
             ship.rect.y = 10
             self.ships.add(ship)
 
+    def show_score_game_over(self):
+        """Draw score on the game over screen."""
+        end_font = pygame.font.Font("fonts/m5x7.ttf", 64)
+        max_score = str(self.stats.high_score)
+        high_score_image_go = end_font.render(f"BEST: {max_score}", True, self.text_color)
+
+        # Center the high score at the top of the screen
+        high_score_rect_go = high_score_image_go.get_rect()
+        high_score_rect_go.centerx = self.screen_rect.centerx
+        high_score_rect_go.bottom = self.screen_rect.bottom - 100
+
+        self.screen.blit(high_score_image_go, high_score_rect_go)
 

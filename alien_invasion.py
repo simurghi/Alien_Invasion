@@ -54,8 +54,8 @@ class AlienInvasion:
         self.sfx_button = Button(self, "Sound", 100, -50)
         self.cinematic_button = Button(self, "Movie FX", 100, -150)
         self.exit_button = Button(self, "Quit", 100, -250)
-        self.menu_button = Button(self, "Menu", 150, -150)
-        self.restart_button = Button(self, "Restart", -150,-150)
+        self.menu_button = Button(self, "Menu", 150, -50)
+        self.restart_button = Button(self, "Restart", -150,-50)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
         self.scoreboard = Scoreboard(self)
@@ -122,7 +122,7 @@ class AlienInvasion:
             self._render_game_over()
             self.restart_button.draw_button()
             self.menu_button.draw_button()
-            self.scoreboard.show_score()
+            self.scoreboard.show_score_game_over()
         # Draw the start button if the game is inactive but not in a game over.
         elif not self.stats.game_active and not self.stats.game_over:
             self.screen.blit(self.menu_image, (0, 0)) 
@@ -376,34 +376,41 @@ class AlienInvasion:
     def _check_joybuttondown_events(self, event):
         """respond to gamepad face button presses.""" 
         # 0 Corresponds to the "A" Button on an Xbox Controller
-        if event.button == 0: 
+        if (event.button == 0 and self.stats.game_active
+                and not self.stats.game_over): 
             self._fire_bullet()
         # 1 Corresponds to the "B" Button on an Xbox Controller
-        if event.button == 1: 
+        if (event.button == 1 and self.stats.game_active
+                and not self.stats.game_over): 
             self._flip_ship()
         # 2 Corresponds to the "Y" Button on an Xbox Controller
-        elif event.button == 2 and not self.stats.game_active: 
+        elif (event.button == 2 and not self.stats.game_active
+                and not self.stats.game_over): 
             self.settings.turbo_speed = not self.settings.turbo_speed
             self._change_turbo_text()
             if self.settings.play_sfx and not self.stats.game_over:
                 self.menu_sfx.play()
         # 3 Corresponds to the "Y" Button on an Xbox Controller
-        elif event.button == 3 and not self.stats.game_active: 
+        elif (event.button == 3 and not self.stats.game_active
+                and not self.stats.game_over): 
             self.settings.cinematic_bars = not self.settings.cinematic_bars
             if self.settings.play_sfx and not self.stats.game_over:
                 self.menu_sfx.play()
         # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
-        elif event.button == 4 and not self.stats.game_active: 
+        elif (event.button == 4 and not self.stats.game_active
+                and not self.stats.game_over): 
             self.settings.play_music = not self.settings.play_music 
             if self.settings.play_sfx and not self.stats.game_over:
                 self.menu_sfx.play()
         # 5 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
-        elif event.button == 5 and not self.stats.game_active: 
+        elif (event.button == 5 and not self.stats.game_active
+                and not self.stats.game_over): 
             self.settings.play_sfx = not self.settings.play_sfx
             if self.settings.play_sfx and not self.stats.game_over:
                 self.menu_sfx.play()
         # 6 Corresponds to the 'Back/Select" Button on an Xbox Controller
-        elif event.button == 6 and not self.stats.game_active: 
+        elif (event.button == 6 and 
+                (not self.stats.game_active or self.stats.game_over)): 
             if self.settings.play_sfx and not self.stats.game_over:
                 self.menu_sfx.play()
             self.dump_stats_json()
@@ -415,6 +422,21 @@ class AlienInvasion:
             if self.settings.play_sfx and not self.stats.game_over:
                 self.menu_sfx.play()
             self.stats.game_active = True
+        # Special button press if in game over screen
+        elif (event.button == 4 and 
+                self.stats.game_over and self.stats.game_active): 
+            self._clear_state()
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+            self.stats.game_over = False
+            self.stats.game_active = False
+        # Special button press if in game over screen.
+        elif (event.button == 5 and 
+                self.stats.game_over and self.stats.game_active): 
+            self._clear_state()
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+            self.stats.game_over = False
 
     def _check_joyhatmotion_events(self, event):
         """respond to dpad presses on the gamepad.""" 
@@ -545,7 +567,7 @@ class AlienInvasion:
                 (255,255,255))
         # Display the message at the center of the screen.
         game_over_rect = game_over_image.get_rect()
-        game_over_rect.center = self.screen_rect.center
+        game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
         self.screen.blit(game_over_image, game_over_rect)
 
     def _check_mouse_visible(self):

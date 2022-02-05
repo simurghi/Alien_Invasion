@@ -21,6 +21,9 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 - Left Shift or Z: Flip Ship Horizontally
 - ESC: Exit game (applies to menu too)
 
+#### Game Over
+- Left Click: Activate menu option
+
 ### Controller:
 
 #### Menu
@@ -34,6 +37,10 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 - A: Fire a missile
 - B: Flip ship direction horizontally
 - Select: Exit game (applies to menu too)
+
+#### Game Over
+- LB: Go to Main Menu
+- RB: Restart Game
 
 
 ### <b>Menu Options:</b>
