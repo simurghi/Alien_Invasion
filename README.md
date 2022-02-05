@@ -44,7 +44,8 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 
 
 ### <b>Menu Options:</b>
-![menu](https://user-images.githubusercontent.com/85529046/151690177-74b32484-37cf-4b91-abae-15e43358c68c.png)
+![menu](![menu](https://user-images.githubusercontent.com/85529046/152646746-f338293e-800c-4258-9b09-8d802ab49a4b.png)
+
 
 
 - **Start**: Enters the game 
