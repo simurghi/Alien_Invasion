@@ -60,11 +60,13 @@ https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-
 - You can only have 4 missiles out at once. Missiles disappear if they fly offscreen or hit an enemy
 - You have 3 lives, this is displayed by the current amount of ships on your HUD
 - Base score is 100 points per ship. This is increased to 150 if playing on Turbo Mode. 
-- Killing an enemy in close range (less than 100 pixels distance) has a 2x score multiplier
+- Killing an enemy in close range (150 pixels or less distance) has a 2x score multiplier
+- Shooting an enemy in their back has a 2x score multiplier.
+- If both multipliers are active, you receive a larger score multiplier (5x instead of 4x)
 - If on normal speed, the game will speed up by 25% (base) every 90 seconds and increase score by 25 points.
-- If on turbo speed, the game will speed up by 50% (base, 33% turbo) every 90 seconds.
+- If on turbo speed, the game will speed up by 50% (base, 33% turbo) every 90 seconds and increases by 50 points.
 - Hitboxes are circular, not rectangular, so you have some room to dodge enemies.
-- Cinematic Bars don't restrict your movement, you cannot go to the top/bottom portions of the screen normally.
+- Movement is restricted in the top and bottom of the screen. Cinematic Bars will cover this up.
 
 
 ## <b>REQUIREMENTS:</b> 

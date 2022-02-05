@@ -46,8 +46,10 @@ class Settings:
         """Increase speed settings."""
         if self.turbo_speed:
             self.speed_add = 2
+            self.score_scale = 50
         else:
             self.speed_add = 1
+            self.score_scale = 25
         self.ship_speed += self.speedup_scale * self.speed_add
         self.bullet_speed += self.speedup_scale * self.speed_add
         self.alien_speed += self.speedup_scale * self.speed_add
