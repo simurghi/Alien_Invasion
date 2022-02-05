@@ -3,7 +3,11 @@
 Alien Invasion is a challenging sicescrolling Shoot Em' Up inspired by arcade games.The longer you survive, the faster the game becomes, but the greater your score multiplier rises. Programmed in Python using PyGame and built using PyInstaller. Heavily inspired by Eric Matthes' Alien Invasion.
 
 
-https://user-images.githubusercontent.com/85529046/151690152-6b1584fe-a471-499d-8d82-ebdda7da0a85.mp4
+
+
+https://user-images.githubusercontent.com/85529046/152647041-b6f0b2b9-0c6d-4bb0-b980-54453182fb8f.mp4
+
+
 
 
 
