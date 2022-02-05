@@ -8,6 +8,7 @@ class GameStats:
         self.settings = ai_game.settings
         self.reset_stats()
         self.game_active = False
+        self.game_over = False
         self.high_score = self._read_stats_json()
 
     def reset_stats(self):
