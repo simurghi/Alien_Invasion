@@ -5,10 +5,8 @@ Art:
 -- Daniel Linssen for m5x7 ttf font
 -- GameSupplyGuy for Missle SFX
 -- Space Music Pack by Goose Ninja
-[Track Name] by Studio Meow Meow (CC BY)
-https://thricedotted.itch.io/looptober-2021-variety-pack
-[Track Name] by Studio Meow Meow (CC BY)
-https://thricedotted.itch.io/looptober-2021-variety-pack
+-- [Disengage] by Studio Meow Meow (CC BY)
+	https://thricedotted.itch.io/looptober-2021-variety-pack
 Code:
 -- Python Crash Course by Eric Matthes for general project idea and base code
 -- code.Pylet for background parallax image scrolling

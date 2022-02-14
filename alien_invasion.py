@@ -254,55 +254,50 @@ class AlienInvasion:
 
     def _play_music(self):
         """Selects which music to play based on the state of the game."""
+        self._toggle_mute()
         #Menu Music
         if self.stats.state is self.stats.MAINMENU:
-            if not self.music_state["MENU"] and self.settings.play_music:
+            if not self.music_state["MENU"]:
                 pygame.mixer.music.load("audio/menu.wav")
-                pygame.mixer.music.set_volume(1.0)
                 pygame.mixer.music.play(-1)
-                for music in self.music_state:
-                    self.music_state[music] = False
+                self._clear_music_state()
                 self.music_state["MENU"] = True
-            elif not self.settings.play_music:
-                pygame.mixer.music.stop()
-                self.music_state["MENU"] = False
         #Combat Music
         elif self.stats.state is self.stats.GAMEPLAY:
-            if not self.music_state["GAMEPLAY"] and self.settings.play_music:
+            if not self.music_state["GAMEPLAY"]:
                 pygame.mixer.music.load("audio/battle.wav")
-                pygame.mixer.music.set_volume(1.0)
                 pygame.mixer.music.play(-1)
-                for music in self.music_state:
-                    self.music_state[music] = False
+                self._clear_music_state()
                 self.music_state["GAMEPLAY"] = True
-            elif not self.settings.play_music:
-                pygame.mixer.music.stop()
-                self.music_state["GAMEPLAY"] = False
         #Pause Music
         elif self.stats.state is self.stats.PAUSE:
-            if not self.music_state["PAUSE"] and self.settings.play_music:
+            if not self.music_state["PAUSE"]:
                 pygame.mixer.music.load("audio/loading.wav")
-                pygame.mixer.music.set_volume(1.0)
                 pygame.mixer.music.play(-1)
-                for music in self.music_state:
-                    self.music_state[music] = False
+                self._clear_music_state()
                 self.music_state["PAUSE"] = True
-            elif not self.settings.play_music:
-                pygame.mixer.music.stop()
-                self.music_state["PAUSE"] = False
         #Game Over Music
         elif self.stats.state is self.stats.GAMEOVER:
-            if not self.music_state["GAMEOVER"] and self.settings.play_music:
+            if not self.music_state["GAMEOVER"]:
                 pygame.mixer.music.load("audio/Disengage.wav")
-                pygame.mixer.music.set_volume(0.5)
                 pygame.mixer.music.play(-1)
-                for music in self.music_state:
-                    self.music_state[music] = False
+                self._clear_music_state()
                 self.music_state["GAMEOVER"] = True
-            elif not self.settings.play_music:
-                pygame.mixer.music.stop()
-                self.music_state["GAMEOVER"] = False
 
+
+    def _toggle_mute(self):
+        """Helper methods that sets volume of a track based on state and if option enabled."""
+        if not self.settings.play_music:
+            pygame.mixer.music.set_volume(0.0)
+        elif self.music_state["GAMEOVER"] and self.settings.play_music:
+            pygame.mixer.music.set_volume(0.5)
+        elif self.settings.play_music:
+            pygame.mixer.music.set_volume(1.0)
+
+    def _clear_music_state(self):
+        """Helper method that clears the music state dictionary to False values."""
+        for music in self.music_state:
+            self.music_state[music] = False
 
     def _update_bullets(self):
         """Update position of the bullets and get rid of the old bullets."""
