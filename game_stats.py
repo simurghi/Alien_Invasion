@@ -1,5 +1,7 @@
 import json
 
+from enum import Enum, unique 
+
 class GameStats:
     """Track statistics for Alien Invasion."""
 
@@ -10,6 +12,11 @@ class GameStats:
         self.game_active = False
         self.game_over = False
         self.high_score = self._read_stats_json()
+        self.MAINMENU = 1
+        self.GAMEPLAY = 2
+        self.PAUSE = 3
+        self.GAMEOVER = 4
+
 
     def reset_stats(self):
         """Initialize stats that can change during the game."""
