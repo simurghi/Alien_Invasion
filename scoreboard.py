@@ -2,6 +2,7 @@ import pygame.font
 from pygame.sprite import Group
 
 from ship import Ship
+from beam import Beam
 
 class Scoreboard:
     """A class to report scoring information."""
@@ -22,6 +23,7 @@ class Scoreboard:
         self.prep_score()
         self.prep_high_score()
         self.prep_ships()
+        self.prep_beams()
 
     def prep_score(self):
         """Turn the score into a rendered image. For non-cinematic mode."""
@@ -49,6 +51,7 @@ class Scoreboard:
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.ships.draw(self.screen)
+        self.beams.draw(self.screen)
 
     def check_high_score(self):
         """Check to see if there's a new high score."""
@@ -64,6 +67,15 @@ class Scoreboard:
             ship.rect.x = 10 + life * ship.rect.width
             ship.rect.y = 10
             self.ships.add(ship)
+
+    def prep_beams(self):
+        """Show how many beams the player has left."""
+        self.beams = Group()
+        for charge in range (self.stats.charges_remaining):
+            beam = Beam(self.ai_game)
+            beam.rect.x = 10 + charge * beam.rect.width
+            beam.rect.y = self.screen_rect.bottom - 40
+            self.beams.add(beam)
 
     def prep_high_score_game_over(self):
         """For the game over screen, turn the high score into a rendered image."""

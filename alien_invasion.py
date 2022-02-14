@@ -36,6 +36,8 @@ class AlienInvasion:
         self.go_music = False
         self.bullet_sfx = pygame.mixer.Sound("audio/MissileFire.wav")
         self.bullet_sfx.set_volume(0.40)
+        self.beam_sfx = pygame.mixer.Sound("audio/LaserShot.wav")
+        self.beam_sfx.set_volume(0.80)
         self.explosion_sfx = pygame.mixer.Sound("audio/DestroyMonster2.wav")
         self.explosion_sfx.set_volume(0.40)
         self.menu_sfx = pygame.mixer.Sound("audio/OptionSelect.wav")
@@ -241,6 +243,7 @@ class AlienInvasion:
         self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
         self.scoreboard.prep_ships()
+        self.scoreboard.prep_beams()
         self.explosions.empty()
         self.aliens.empty()
         self.bullets.empty()
@@ -527,15 +530,16 @@ class AlienInvasion:
 
     def _fire_beam(self):
         """Create a new beam and add it to the bullets group."""
-        if len(self.beams) < self.settings.beam_limit: 
+        if len(self.beams) < self.stats.charges_remaining: 
             new_beam = Beam(self)
             if self.ship.is_flipped:
                 new_beam.rotate_beam()
             self.beams.add(new_beam)
-            self.settings.beam_limit -= 1
+            self.stats.charges_remaining -= 1
+            self.scoreboard.prep_beams()
             if (self.settings.play_sfx and self.stats.game_active 
                     and not self.stats.game_over):
-                self.bullet_sfx.play()
+                self.beam_sfx.play()
 
     def _flip_ship(self):
         """Flips the ship and firing pattens of the bullet."""

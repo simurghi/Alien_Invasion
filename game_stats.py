@@ -14,6 +14,7 @@ class GameStats:
     def reset_stats(self):
         """Initialize stats that can change during the game."""
         self.ships_remaining = self.settings.ship_limit
+        self.charges_remaining = self.settings.beam_limit
         self.score = 0
 
     def _read_stats_json(self):
