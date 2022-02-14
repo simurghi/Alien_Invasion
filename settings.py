@@ -19,7 +19,7 @@ class Settings:
 
         # Bullet settings
         self.bullets_allowed = 5
-        
+        self.beam_limit = 3
 
         # How quickly the game speeds up.
         self.speedup_scale = 1.00

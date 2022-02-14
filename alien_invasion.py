@@ -9,6 +9,7 @@ from aspect_ratio import AspectRatio
 from game_stats import GameStats
 from scoreboard import Scoreboard 
 from explosion import Explosion
+from beam import Beam
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -42,8 +43,8 @@ class AlienInvasion:
         self.flip_sfx = pygame.mixer.Sound("audio/UnitFlip.wav")
         self.flip_sfx.set_volume(0.25)
         self.bullets = pygame.sprite.Group()
+        self.beams = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
-        self.bullet_direction = 1
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
         self.difficulty_counter = 0
@@ -74,6 +75,7 @@ class AlienInvasion:
             if self.stats.game_active and not self.stats.game_over: 
                 self.ship.update()
                 self._update_bullets()
+                self._update_beams()
                 self._update_aliens()
                 self.explosions.update()
                 self._adjust_difficulty()
@@ -113,6 +115,8 @@ class AlienInvasion:
             self.ship.blitme()
             for bullet in self.bullets.sprites():
                 bullet.draw_bullet()
+            for beam in self.beams.sprites():
+                beam.draw_beam()
             self.explosions.draw(self.screen)
             self.aliens.draw(self.screen)
             self._make_game_cinematic()
@@ -240,6 +244,7 @@ class AlienInvasion:
         self.explosions.empty()
         self.aliens.empty()
         self.bullets.empty()
+        self.beams.empty()
         # Create a new fleet and center the ship
         self.difficulty_counter = 0
         self._create_fleet()
@@ -297,32 +302,60 @@ class AlienInvasion:
                 self.bullets.remove(bullet)
         self._check_bullet_alien_collision()
         
+    def _update_beams(self):
+        """Update position of the beams and get rid of the old beams."""
+        # Update bullet positions
+        self.beams.update()
+        # Get rid of beams that have disappeared.
+        for beam in self.beams.copy():
+            if beam.rect.right > self.settings.screen_width or beam.rect.right < 0: 
+                self.beams.remove(beam)
+        self._check_bullet_alien_collision()
+
     def _check_bullet_alien_collision(self):
         """Respond to bullet-alien collisions."""
         #Remove and bullets and aliens that have collided.
         collisions = pygame.sprite.groupcollide(self.aliens,
                 self.bullets, False, False)
+        collisions_beam = pygame.sprite.groupcollide(self.aliens,
+                self.beams, False, False)
         if collisions:
             for alien_index, bullet_indexes in collisions.items():
-                cqc_mult = self._check_cqc_distance(alien_index)
-                backstab_mult = self._check_backstab(bullet_indexes)
-                bonus_mult = 1.25 if (cqc_mult > 1 and backstab_mult > 1) else 1
-                self.stats.score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult)
-                explosion = Explosion(alien_index.rect.center)
-                self.explosions.add(explosion)
-                if (self.settings.play_sfx and self.stats.game_active
-                        and not self.stats.game_over):
-                    self.explosion_sfx.play()
+                self._calculate_score(alien_index, bullet_indexes)
+                self._play_explosion(alien_index)
                 self.bullets.remove(bullet_indexes)
                 alien_index.kill()
+                self.scoreboard.prep_score()
+                self.scoreboard.check_high_score()
 
-            self.scoreboard.prep_score()
-            self.scoreboard.check_high_score()
+        if collisions_beam:
+            for alien_index, beam_indexes in collisions_beam.items():
+                self._calculate_score(alien_index, beam_indexes)
+                self._play_explosion(alien_index)
+                alien_index.kill()
+                self.scoreboard.prep_score()
+                self.scoreboard.check_high_score()
+
         if not self.aliens:
             # Destroy existing bullets and make a new fleet. 
             self.bullets.empty()
             self.explosions.empty()
             self._create_fleet()
+    
+    def _calculate_score(self, alien_index, projectile_index):
+        """Calculates score multipliers for killed enemies."""
+        cqc_mult = self._check_cqc_distance(alien_index)
+        backstab_mult = self._check_backstab(projectile_index)
+        bonus_mult = 1.25 if (cqc_mult > 1 and backstab_mult > 1) else 1
+        self.stats.score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult)
+
+    def _play_explosion(self, alien_index):
+        """Plays explosions and sounds if enabled."""
+        explosion = Explosion(alien_index.rect.center)
+        self.explosions.add(explosion)
+        if (self.settings.play_sfx and self.stats.game_active
+                and not self.stats.game_over):
+            self.explosion_sfx.play()
 
     def _check_cqc_distance(self, alien):
         """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
@@ -345,7 +378,7 @@ class AlienInvasion:
         
 
     def _update_aliens(self):
-        """Checks if any bullets are colliding with aliens, 
+        """Checks if the player ship collides with aliens, 
         then deletes aliens if they go offscreen.""" 
         self.aliens.update()
         if pygame.sprite.spritecollide(self.ship, self.aliens, False, pygame.sprite.collide_circle):
@@ -376,6 +409,8 @@ class AlienInvasion:
             self.ship.moving_right = True
         elif event.key == pygame.K_SPACE or event.key == pygame.K_x:
             self._fire_bullet()
+        elif event.key == pygame.K_c:
+            self._fire_beam()
         elif ((event.key == pygame.K_z or event.key == pygame.K_LSHIFT)
                 and self.stats.game_active and not self.stats.game_over):
             self._flip_ship()
@@ -405,7 +440,10 @@ class AlienInvasion:
         if (event.button == 1 and self.stats.game_active
                 and not self.stats.game_over): 
             self._flip_ship()
-        # 2 Corresponds to the "Y" Button on an Xbox Controller
+        if (event.button == 2 and self.stats.game_active
+                and not self.stats.game_over): 
+            self._fire_beam()
+        # 2 Corresponds to the "X" Button on an Xbox Controller
         elif (event.button == 2 and not self.stats.game_active
                 and not self.stats.game_over): 
             self.settings.turbo_speed = not self.settings.turbo_speed
@@ -480,8 +518,23 @@ class AlienInvasion:
         """Create a new bullet and add it to the bullets group."""
         if len(self.bullets) < self.settings.bullets_allowed: 
             new_bullet = Bullet(self)
+            if self.ship.is_flipped:
+                new_bullet.rotate_bullet()
             self.bullets.add(new_bullet)
-            if self.settings.play_sfx and self.stats.game_active:
+            if (self.settings.play_sfx and self.stats.game_active 
+                    and not self.stats.game_over):
+                self.bullet_sfx.play()
+
+    def _fire_beam(self):
+        """Create a new beam and add it to the bullets group."""
+        if len(self.beams) < self.settings.beam_limit: 
+            new_beam = Beam(self)
+            if self.ship.is_flipped:
+                new_beam.rotate_beam()
+            self.beams.add(new_beam)
+            self.settings.beam_limit -= 1
+            if (self.settings.play_sfx and self.stats.game_active 
+                    and not self.stats.game_over):
                 self.bullet_sfx.play()
 
     def _flip_ship(self):
@@ -497,7 +550,6 @@ class AlienInvasion:
             self.settings.bullet_speed *= 2.50
         else: 
             self.settings.bullet_speed *= 0.4
-        self.bullet_direction *= -1
 
     def _create_fleet(self):
         """Create the fleet of aliens."""

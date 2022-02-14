@@ -9,7 +9,7 @@ class Bullet(Sprite):
         super().__init__()
         self.screen = ai_game.screen
         self.settings = ai_game.settings 
-        self.direction = ai_game.bullet_direction
+        self.direction = 1
         self.image = pygame.image.load('images/missile.bmp')
         self.rect = self.image.get_rect()
         self.rect.center = ai_game.ship.rect.center
@@ -24,6 +24,11 @@ class Bullet(Sprite):
         self.x += self.settings.bullet_speed  * self.direction
         # Update the rect position. 
         self.rect.x = self.x
+
+    def rotate_bullet(self):
+        """Flips the bullet across the y-axis."""
+        self.direction *= -1
+        self.image = pygame.transform.flip(self.image, True, False)
 
 
     def draw_bullet(self):
