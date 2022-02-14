@@ -251,6 +251,7 @@ class AlienInvasion:
         self.difficulty_counter = 0
         self._create_fleet()
         self.ship.position_ship()
+        self.ship.reset_ship_flip()
 
     def _play_music(self):
         """Selects which music to play based on the state of the game."""

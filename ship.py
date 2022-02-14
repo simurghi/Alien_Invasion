@@ -63,3 +63,8 @@ class Ship(Sprite):
         self.image = pygame.transform.flip(self.image, True, False)
         self.is_flipped = not self.is_flipped
 
+    def reset_ship_flip(self):
+        """Resets the orientation of the ship on each new game."""
+        self.image = pygame.image.load('images/ship.bmp')
+        self.is_flipped = False
+
