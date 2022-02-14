@@ -9,13 +9,12 @@ class GameStats:
         """Initialize stats."""
         self.settings = ai_game.settings
         self.reset_stats()
-        self.game_active = False
-        self.game_over = False
         self.high_score = self._read_stats_json()
         self.MAINMENU = 1
         self.GAMEPLAY = 2
         self.PAUSE = 3
         self.GAMEOVER = 4
+        self.state = self.MAINMENU
 
 
     def reset_stats(self):
