@@ -14,6 +14,7 @@ class GameStats:
         self.GAMEPLAY = 2
         self.PAUSE = 3
         self.GAMEOVER = 4
+        self.OPTIONSMENU = 5
         self.state = self.MAINMENU
 
 

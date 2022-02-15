@@ -5,6 +5,7 @@ from ship import Ship
 from bullet import Bullet 
 from alien import Alien
 from button import Button
+from menu import MainMenu, OptionsMenu
 from aspect_ratio import AspectRatio
 from game_stats import GameStats
 from scoreboard import Scoreboard 
@@ -48,13 +49,8 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
         self.difficulty_counter = 0
-        self.speed_state = "Normal"
-        self.play_button = Button(self, "Start", 100, 250)
-        self.turbo_button = Button(self, self.speed_state, 100, 150)
-        self.mute_button = Button(self, "Music", 100, 50)
-        self.sfx_button = Button(self, "Sound", 100, -50)
-        self.cinematic_button = Button(self, "Movie FX", 100, -150)
-        self.exit_button = Button(self, "Quit", 100, -250)
+        self.main_menu = MainMenu(self)
+        self.options_menu = OptionsMenu(self)
         self.menu_button = Button(self, "Menu", 150, -50)
         self.restart_button = Button(self, "Restart", -150,-50)
         self.top_bar = AspectRatio(self)
@@ -100,14 +96,11 @@ class AlienInvasion:
                 self._check_joyhatmotion_events(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                self._check_play_button(mouse_pos)
-                self._check_turbo_button(mouse_pos)
-                self._check_mute_button(mouse_pos)
-                self._check_sfx_button(mouse_pos)
-                self._check_cinematic_button(mouse_pos)
-                self._check_exit_button(mouse_pos)
+                self.options_menu.check_options_menu_buttons(mouse_pos)
+                self.main_menu.check_main_menu_buttons(mouse_pos)
                 self._check_menu_button(mouse_pos)
                 self._check_restart_button(mouse_pos)
+
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
@@ -129,19 +122,11 @@ class AlienInvasion:
             self.restart_button.draw_button()
             self.menu_button.draw_button()
             self.scoreboard.show_scores_go()
-        # Draw the start button if the game is inactive but not in a game over.
         elif self.stats.state is self.stats.MAINMENU:
-            self.screen.blit(self.menu_image, (0, 0)) 
-            self.play_button.draw_button()
-            self.mute_button.toggle_color(self.settings.play_music)
-            self.sfx_button.toggle_color(self.settings.play_sfx)
-            self.cinematic_button.toggle_color(self.settings.cinematic_bars)
-            self.turbo_button.toggle_color(not self.settings.turbo_speed, self.speed_state)
-            self.mute_button.draw_button()
-            self.sfx_button.draw_button()
-            self.cinematic_button.draw_button()
-            self.turbo_button.draw_button()
-            self.exit_button.draw_button()
+            self.main_menu.draw_buttons()
+        elif self.stats.state is self.stats.OPTIONSMENU:
+            self.options_menu.draw_buttons()
+
         pygame.display.flip()
 
     def _adjust_fps_cap(self):
@@ -154,69 +139,6 @@ class AlienInvasion:
         delay = max(1.0/self.FPS - time_diff, 0)
         time.sleep(delay)
         self.time = current_time
-
-    def _check_play_button(self, mouse_pos):
-        """ Start a new game when the player clicks Play"""
-        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.stats.state is self.stats.MAINMENU:
-            self._clear_state()
-            self.stats.state = self.stats.GAMEPLAY
-            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
-
-
-    def _check_mute_button(self, mouse_pos):
-        """ Toggles music when the player clicks 'Music'"""
-        button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.stats.state is self.stats.MAINMENU:
-            self.settings.play_music = not self.settings.play_music 
-            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
-
-
-    def _check_sfx_button(self, mouse_pos):
-        """ Toggles sound when the player clicks 'Sound'"""
-        button_clicked = self.sfx_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.stats.state is self.stats.MAINMENU:
-            self.settings.play_sfx = not self.settings.play_sfx 
-            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
-
-
-    def _check_cinematic_button(self, mouse_pos):
-        """ Toggles "cinematic" black bars when the player clicks 'Movie Mode'"""
-        button_clicked = self.cinematic_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.stats.state is self.stats.MAINMENU:
-            self.settings.cinematic_bars = not self.settings.cinematic_bars
-            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
-
-
-    def _check_exit_button(self, mouse_pos):
-        """ Exits the game from the main menu once clicked."""
-        button_clicked = self.exit_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.stats.state is self.stats.MAINMENU:
-            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
-            self.dump_stats_json()
-            pygame.quit()
-            sys.exit()
-
-    def _check_turbo_button(self, mouse_pos):
-        """Increases the game speed by 1.5x if active."""
-        button_clicked = self.turbo_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.stats.state is self.stats.MAINMENU:
-            self.settings.turbo_speed = not self.settings.turbo_speed
-            self._change_turbo_text()
-            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
-
-    def _change_turbo_text(self):
-        """Helper method that changes what text is displayed on the turbo button"""
-        if not self.settings.turbo_speed:
-            self.speed_state = "Normal"
-        else:
-            self.speed_state = "Turbo"
 
     def _check_restart_button(self, mouse_pos):
         """ Enters the game from the game over screen once clicked."""
@@ -235,7 +157,6 @@ class AlienInvasion:
                 self.menu_sfx.play()
             self._clear_state()
             self.stats.state = self.stats.MAINMENU
-
 
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
@@ -258,7 +179,8 @@ class AlienInvasion:
         """Selects which music to play based on the state of the game."""
         self._toggle_mute()
         #Menu Music
-        if self.stats.state is self.stats.MAINMENU:
+        if (self.stats.state is self.stats.MAINMENU 
+                or self.stats.state is self.stats.OPTIONSMENU):
             if not self.music_state["MENU"]:
                 pygame.mixer.music.load("audio/menu.wav")
                 pygame.mixer.music.play(-1)
@@ -469,23 +391,23 @@ class AlienInvasion:
         if (event.button == 2 and self.stats.state is self.stats.GAMEPLAY): 
             self._fire_beam()
         # 2 Corresponds to the "X" Button on an Xbox Controller
-        elif (event.button == 2 and self.stats.state is self.stats.MAINMENU): 
+        elif (event.button == 2 and self.stats.state is self.stats.OPTIONSMENU): 
             self.settings.turbo_speed = not self.settings.turbo_speed
             self._change_turbo_text()
             if self.settings.play_sfx:
                 self.menu_sfx.play()
         # 3 Corresponds to the "Y" Button on an Xbox Controller
-        elif (event.button == 3 and self.stats.state is self.stats.MAINMENU): 
+        elif (event.button == 3 and self.stats.state is self.stats.OPTIONSMENU): 
             self.settings.cinematic_bars = not self.settings.cinematic_bars
             if self.settings.play_sfx:
                 self.menu_sfx.play()
         # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
-        elif (event.button == 4 and self.stats.state is self.stats.MAINMENU): 
+        elif (event.button == 4 and self.stats.state is self.stats.OPTIONSMENU): 
             self.settings.play_music = not self.settings.play_music 
             if self.settings.play_sfx:
                 self.menu_sfx.play()
         # 5 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
-        elif (event.button == 5 and self.stats.state is self.stats.MAINMENU): 
+        elif (event.button == 5 and self.stats.state is self.stats.OPTIONSMENU): 
             self.settings.play_sfx = not self.settings.play_sfx
             if self.settings.play_sfx:
                 self.menu_sfx.play()
@@ -582,8 +504,10 @@ class AlienInvasion:
         """Adjusts the speed and direction of flipped bullets."""
         if self.ship.is_flipped:
             self.settings.bullet_speed *= 2.50
+            self.settings.ship_speed *= 1.25
         else: 
             self.settings.bullet_speed *= 0.4
+            self.settings.ship_speed *= 0.80
 
     def _create_fleet(self):
         """Create the fleet of aliens."""
