@@ -22,6 +22,7 @@ class GameStats:
         self.ships_remaining = self.settings.ship_limit
         self.charges_remaining = self.settings.beam_limit
         self.score = 0
+        self.hidden_score = 0
 
     def _read_stats_json(self):
         """Reads the score.json file and sees if we already have a high score."""

@@ -60,6 +60,7 @@ class AlienInvasion:
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
         self.scoreboard = Scoreboard(self)
+        self.adjust_beams = False
 
     def _check_gamepad(self):
         """Checks if a gamepad is connected and assigns it to the first one if it is."""
@@ -332,30 +333,49 @@ class AlienInvasion:
                 self._calculate_score(alien_index, bullet_indexes)
                 self._play_explosion(alien_index)
                 self.bullets.remove(bullet_indexes)
-                alien_index.kill()
-                self.scoreboard.prep_score()
-                self.scoreboard.check_high_score()
+                self._collision_cleanup_and_score(alien_index)
 
         if collisions_beam:
             for alien_index, beam_indexes in collisions_beam.items():
                 self._calculate_score(alien_index, beam_indexes)
                 self._play_explosion(alien_index)
-                alien_index.kill()
-                self.scoreboard.prep_score()
-                self.scoreboard.check_high_score()
-
+                self._collision_cleanup_and_score(alien_index)
+        
         if not self.aliens:
             # Destroy existing bullets and make a new fleet. 
             self.bullets.empty()
             self.explosions.empty()
             self._create_fleet()
     
+    def _collision_cleanup_and_score(self,alien_index):
+        """Removes collided aliens and adjusts score."""
+        alien_index.kill()
+        self.scoreboard.prep_score()
+        self.scoreboard.check_high_score()
+
     def _calculate_score(self, alien_index, projectile_index):
         """Calculates score multipliers for killed enemies."""
         cqc_mult = self._check_cqc_distance(alien_index)
         backstab_mult = self._check_backstab(projectile_index)
         bonus_mult = 1.25 if (cqc_mult > 1 and backstab_mult > 1) else 1
         self.stats.score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult)
+        self.stats.hidden_score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult)
+        self._calculate_beam_addition()
+
+    def _calculate_beam_addition(self):
+        """Calculates if the player should received an additional beam charge or 1000 points
+        If they hit the score threshold."""
+        if self.stats.hidden_score / 5000 >= 1 and not self.adjust_beams:
+            if self.stats.charges_remaining < self.settings.beam_limit:
+                self.stats.charges_remaining += 1
+                self.scoreboard.prep_beams()
+            elif self.stats.charges_remaining == self.settings.beam_limit:
+                self.stats.score += 1000
+            self.stats.hidden_score -= 5000
+            self.adjust_beams = True
+        else:
+            self.adjust_beams = False
+
 
     def _play_explosion(self, alien_index):
         """Plays explosions and sounds if enabled."""
@@ -367,9 +387,9 @@ class AlienInvasion:
 
     def _check_cqc_distance(self, alien):
         """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
-        formula = math.sqrt((self.ship.rect.x - alien.rect.x)**2 + 
-                (self.ship.rect.x - alien.rect.x)**2)
-        if formula < 151:
+        formula = math.sqrt((self.ship.rect.centerx - alien.rect.centerx)**2 + 
+                (self.ship.rect.centerx - alien.rect.centerx)**2)
+        if formula < 201:
             return 2
         else:
             return 1
@@ -627,9 +647,8 @@ class AlienInvasion:
     def _adjust_difficulty(self):
         """Gradually increases the game speed as time elapses."""
         self.difficulty_counter+=1 
-        if self.difficulty_counter % 5400 == 0:
+        if self.difficulty_counter % (self.FPS * 90) == 0:
             self.settings.increase_speed()
-            print("difficulty up!")
 
     def _make_game_cinematic(self):
         """Draws cinematic black bars around the top and bottom of the screen, forcing a 16:9 aspect ratio."""
