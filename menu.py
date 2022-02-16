@@ -93,8 +93,12 @@ class OptionsMenu:
         """Helper method that changes what text is displayed on the control button"""
         if self.game.keybinds.current_scheme is self.game.keybinds.ARROWS:
             self.control_state = "ARROWS" 
-        else:
+        elif self.game.keybinds.current_scheme is self.game.keybinds.WASD:
             self.control_state = "WASD"
+        elif self.game.keybinds.current_scheme is self.game.keybinds.ESDF:
+            self.control_state = "ESDF"
+        elif self.game.keybinds.current_scheme is self.game.keybinds.VIM:
+            self.control_state = "VIMLIKE"
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""
@@ -149,8 +153,12 @@ class OptionsMenu:
         button_clicked = self.controls_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.stats.state is self.game.stats.OPTIONSMENU:
             if self.game.keybinds.current_scheme is self.game.keybinds.ARROWS:
+                self.game.keybinds.current_scheme = self.game.keybinds.VIM
+            elif self.game.keybinds.current_scheme is self.game.keybinds.VIM:
                 self.game.keybinds.current_scheme = self.game.keybinds.WASD
             elif self.game.keybinds.current_scheme is self.game.keybinds.WASD:
+                self.game.keybinds.current_scheme = self.game.keybinds.ESDF
+            elif self.game.keybinds.current_scheme is self.game.keybinds.ESDF:
                 self.game.keybinds.current_scheme = self.game.keybinds.ARROWS
             self._change_controls_text()
             self.game.keybinds.set_movement_scheme()

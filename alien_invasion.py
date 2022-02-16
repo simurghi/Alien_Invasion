@@ -30,7 +30,12 @@ class AlienInvasion:
         self.FPS = 60
         self.pause_state = 0
         self.time = time.time()
+        self.main_menu = MainMenu(self)
+        self.options_menu = OptionsMenu(self)
+        self.go_menu = GameOverMenu(self)
+        self.keybinds = Keybinds()
         self.stats = GameStats(self)
+        self.options_menu.draw_buttons()
         self.ship = Ship(self)
         self.music_state = {"GAMEPLAY": False, "MENU": False, "GAMEOVER": False, "PAUSE": False}
         self.bullet_sfx = pygame.mixer.Sound("audio/MissileFire.wav")
@@ -49,10 +54,6 @@ class AlienInvasion:
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
         self.difficulty_counter = 0
-        self.main_menu = MainMenu(self)
-        self.options_menu = OptionsMenu(self)
-        self.go_menu = GameOverMenu(self)
-        self.keybinds = Keybinds()
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
         self.scoreboard = Scoreboard(self)
@@ -344,7 +345,8 @@ class AlienInvasion:
         if event.key == pygame.K_ESCAPE:
             self._check_pause()
             self._check_exit()
-        if self.keybinds.current_scheme is self.keybinds.ARROWS:
+        if (self.keybinds.current_scheme is self.keybinds.ARROWS 
+                or self.keybinds.current_scheme is self.keybinds.VIM):
             if event.key == self.keybinds.MISSILEATTACK and not self.keybinds.use_mouse:
                 self._fire_bullet()
             if event.key == self.keybinds.BEAMATTACK and not self.keybinds.use_mouse:
@@ -354,7 +356,8 @@ class AlienInvasion:
 
     def _check_mousedown_events(self):
         """respond to keypresses.""" 
-        if self.keybinds.current_scheme is self.keybinds.WASD:
+        if (self.keybinds.current_scheme is self.keybinds.WASD 
+                or self.keybinds.current_scheme is self.keybinds.ESDF):
             mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
             if mouse_buttons[0]:
                 self._fire_bullet()
@@ -367,13 +370,13 @@ class AlienInvasion:
 
     def _check_keyup_events(self, event):
         """respond to key releases."""
-        if event.key == pygame.K_UP or event.key == pygame.K_w:
+        if event.key == self.keybinds.MOVEUP:
             self.ship.moving_up = False
-        elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+        elif event.key == self.keybinds.MOVEDOWN:
             self.ship.moving_down = False
-        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+        if event.key == self.keybinds.MOVELEFT:
             self.ship.moving_left = False
-        elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+        elif event.key == self.keybinds.MOVERIGHT:
             self.ship.moving_right = False
 
     def _check_joybuttondown_events(self, event):
@@ -563,7 +566,12 @@ class AlienInvasion:
     def dump_stats_json(self):
         """Dumps score and key game settings to a JSON file."""
         with open("stats/score.json", 'w') as f:
-            json.dump({"high score" : self.stats.high_score}, f)
+            json.dump({"high_score" : self.stats.high_score}, f)
+        with open("stats/settings.json", 'w') as f:
+            json.dump({"game_speed" : self.settings.turbo_speed, "control_scheme": 
+                self.keybinds.current_scheme, "play_music": self.settings.play_music,
+                "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars}, f)
+
 
     def enter_game_over(self):
         """Game Over Screen that plays when the player dies."""
