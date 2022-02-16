@@ -1,5 +1,7 @@
-import sys, pygame, math, time, json
+import sys, pygame, time, json
 
+from random import randint
+from math import sqrt
 from settings import Settings
 from ship import Ship 
 from bullet import Bullet 
@@ -293,7 +295,7 @@ class AlienInvasion:
 
     def _check_cqc_distance(self, alien):
         """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
-        formula = math.sqrt((self.ship.rect.centerx - alien.rect.centerx)**2 + 
+        formula = sqrt((self.ship.rect.centerx - alien.rect.centerx)**2 + 
                 (self.ship.rect.centerx - alien.rect.centerx)**2)
         if formula < 201:
             return 2
@@ -366,8 +368,6 @@ class AlienInvasion:
             if mouse_buttons[2]:
                 self._flip_ship()
 
-
-
     def _check_keyup_events(self, event):
         """respond to key releases."""
         if event.key == self.keybinds.MOVEUP:
@@ -381,34 +381,73 @@ class AlienInvasion:
 
     def _check_joybuttondown_events(self, event):
         """respond to gamepad face button presses.""" 
+        # COMBAT CONTROLS: 
         # 0 Corresponds to the "A" Button on an Xbox Controller
         if (event.button == 0 and self.stats.state is self.stats.GAMEPLAY): 
             self._fire_bullet()
         # 1 Corresponds to the "B" Button on an Xbox Controller
         if (event.button == 1 and self.stats.state is self.stats.GAMEPLAY): 
             self._flip_ship()
+        # 2 Corresponds to the "X" Button on an Xbox Controller
         if (event.button == 2 and self.stats.state is self.stats.GAMEPLAY): 
             self._fire_beam()
-        # 6 Corresponds to the 'Back/Select" Button on an Xbox Controller
-        elif event.button == 6: 
+        # 7 Corresponds to the 'Start" Button on an Xbox Controller
+        elif event.button == 7: 
             if self.settings.play_sfx and self.stats.state is self.stats.GAMEPLAY: 
                 self.menu_sfx.play()
             self._check_pause()
-            self._check_exit()
-        # 7 Corresponds to the "Start" Button on an Xbox Controller 
-        elif event.button == 7 and self.stats.state is self.stats.MAINMENU: 
+        # MENU CONTROLS: 
+        # 0 Corresponds to the "A" Button on an Xbox Controller 
+        elif event.button == 0 and self.stats.state is self.stats.MAINMENU: 
             self._clear_state()
             if self.settings.play_sfx:
                 self.menu_sfx.play()
             self.stats.state = self.stats.GAMEPLAY
+        # 1 Corresponds to the "B" Button on an Xbox Controller
+        elif event.button == 1 and self.stats.state is self.stats.MAINMENU: 
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+            self._check_exit()
+        # 2 Corresponds to the "X" Button on an Xbox Controller
+        elif event.button == 2 and self.stats.state is self.stats.MAINMENU: 
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+            self.stats.state = self.stats.OPTIONSMENU
+        # OPTIONSMENU CONTROLS:
+        # 1 Corresponds to the "B" Button on an Xbox controller
+        elif event.button == 1 and self.stats.state is self.stats.OPTIONSMENU: 
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+            self._check_exit()
+        # 2 Corresponds to the "X" Button on an Xbox Controller
+        elif event.button == 2 and self.stats.state is self.stats.OPTIONSMENU: 
+            self.settings.turbo_speed = not self.settings.turbo_speed
+            self.options_menu._change_turbo_text()
+            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
+                self.menu_sfx.play()
+        # 3 Corresponds to the "Y" Button on an Xbox Controller
+        elif event.button == 3 and self.stats.state is self.stats.OPTIONSMENU: 
+            self.settings.cinematic_bars = not self.settings.cinematic_bars
+            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
+                self.menu_sfx.play()
+        # 4 Corresponds to the "LB" (Left Bumper) on an Xbox Controller
+        elif event.button == 4 and self.stats.state is self.stats.OPTIONSMENU: 
+            self.settings.play_music = not self.settings.play_music 
+            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
+                self.menu_sfx.play()
+        # 5 Corresponds to the "RB" (Right Bumper) on an Xbox Controller
+        elif event.button == 5 and self.stats.state is self.stats.OPTIONSMENU: 
+            self.settings.play_sfx = not self.settings.play_sfx
+            if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
+                self.menu_sfx.play()
         # Special button press if in game over screen, goes to the menu
-        elif (event.button == 4 and self.stats.state is self.stats.GAMEOVER): 
+        elif (event.button == 1 and self.stats.state is self.stats.GAMEOVER): 
             self._clear_state()
             if self.settings.play_sfx:
                 self.menu_sfx.play()
             self.stats.state = self.stats.MAINMENU
         # Special button press if in game over screen, restarts game
-        elif (event.button == 5 and self.stats.state is self.stats.GAMEOVER): 
+        elif (event.button == 0 and self.stats.state is self.stats.GAMEOVER): 
             self._clear_state()
             if self.settings.play_sfx:
                 self.menu_sfx.play()
@@ -505,7 +544,7 @@ class AlienInvasion:
         ship_width = self.ship.rect.width
         available_space_x = (self.settings.screen_height - 
                 (3 * alien_width) - ship_width)
-        number_cols = available_space_x // (2 * alien_width)
+        number_cols = (available_space_x // (2 * alien_width)) + randint(0,2)
 
         # Create the first column of aliens.
         for col_number in range(number_cols):

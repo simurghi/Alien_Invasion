@@ -50,19 +50,27 @@ https://user-images.githubusercontent.com/85529046/152647041-b6f0b2b9-0c6d-4bb0-
 ### Controller:
 
 #### Menu
-- Start: Enter Game
-- Select: Exit Game
+- A: Enter Game
+- B: Exit Game 
+- X: Enter Options Menu
+
+#### Options Menu
+- B: Return to Main Menu 
+- X: Toggle Game Speed
+- Y: Toggle Cinematic VFX
+- Left Bumper (LB): Toggle Music
+- Right Bumper (RG): Toggle Sound
 
 #### Game
 - D-pad: Move ship
 - A: Fire a missile
 - B: Flip ship direction horizontally
 - X: Fire Beam Charge
-- Select: Exit game (applies to menu too)
+- Start: Pauses game
 
 #### Game Over
-- LB: Go to Main Menu
-- RB: Restart Game
+- B: Go to Main Menu
+- A: Restart Game
 
 
 ### <b>Menu Options:</b>
