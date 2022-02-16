@@ -14,6 +14,9 @@ class GameStats:
         self.game.settings.turbo_speed = self._read_turbo_json()
         self.game.settings.cinematic_bars = self._read_vfx_json()
         self.game.keybinds.current_scheme = self._read_controls_json()
+        self.game.keybinds.set_movement_scheme()
+        self.game.keybinds.set_combat_scheme()
+        self.game.options_menu._change_controls_text()
         self.MAINMENU = 1
         self.GAMEPLAY = 2
         self.PAUSE = 3
