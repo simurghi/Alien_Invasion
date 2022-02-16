@@ -64,16 +64,19 @@ class OptionsMenu:
         self.game = ai_game
         self.screen = ai_game.screen
         self.speed_state = "Normal"
-        self.turbo_button = Button(self, self.speed_state, 100, 225)
-        self.mute_button = Button(self, "Music", 100, 125)
-        self.sfx_button = Button(self, "Sound", 100, 25)
-        self.cinematic_button = Button(self, "Movie FX", 100, -75)
-        self.back_button = Button(self, "Back", 100, -175)
+        self.control_state =  "ARROWS" 
+        self.turbo_button = Button(self, self.speed_state, 100, 250)
+        self.controls_button = Button(self, self.control_state, 100, 150)
+        self.mute_button = Button(self, "Music", 100, 50)
+        self.sfx_button = Button(self, "Sound", 100, -50)
+        self.cinematic_button = Button(self, "Movie VFX", 100, -150)
+        self.back_button = Button(self, "Back", 100, -250)
 
 
     def check_options_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         self._check_turbo_button(mouse_pos)
+        self._check_controls_button(mouse_pos)
         self._check_mute_button(mouse_pos)
         self._check_sfx_button(mouse_pos)
         self._check_cinematic_button(mouse_pos)
@@ -86,6 +89,13 @@ class OptionsMenu:
         else:
             self.speed_state = "Turbo"
 
+    def _change_controls_text(self):
+        """Helper method that changes what text is displayed on the control button"""
+        if self.game.keybinds.current_scheme is self.game.keybinds.ARROWS:
+            self.control_state = "ARROWS" 
+        else:
+            self.control_state = "WASD"
+
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
@@ -93,9 +103,11 @@ class OptionsMenu:
         self.sfx_button.toggle_color(self.game.settings.play_sfx)
         self.cinematic_button.toggle_color(self.game.settings.cinematic_bars)
         self.turbo_button.toggle_color(not self.game.settings.turbo_speed, self.speed_state)
+        self.controls_button._prep_msg(self.control_state)
         self.mute_button.draw_button()
         self.sfx_button.draw_button()
         self.cinematic_button.draw_button()
+        self.controls_button.draw_button()
         self.turbo_button.draw_button()
         self.back_button.draw_button()
 
@@ -129,6 +141,20 @@ class OptionsMenu:
         if button_clicked and self.game.stats.state is self.game.stats.OPTIONSMENU:
             self.game.settings.turbo_speed = not self.game.settings.turbo_speed
             self._change_turbo_text()
+            if self.game.settings.play_sfx and self.game.stats.state is not self.game.stats.GAMEOVER:
+                self.game.menu_sfx.play()
+
+    def _check_controls_button(self, mouse_pos):
+        """Changes the control scheme based on the current option."""
+        button_clicked = self.controls_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.stats.state is self.game.stats.OPTIONSMENU:
+            if self.game.keybinds.current_scheme is self.game.keybinds.ARROWS:
+                self.game.keybinds.current_scheme = self.game.keybinds.WASD
+            elif self.game.keybinds.current_scheme is self.game.keybinds.WASD:
+                self.game.keybinds.current_scheme = self.game.keybinds.ARROWS
+            self._change_controls_text()
+            self.game.keybinds.set_movement_scheme()
+            self.game.keybinds.set_combat_scheme()
             if self.game.settings.play_sfx and self.game.stats.state is not self.game.stats.GAMEOVER:
                 self.game.menu_sfx.play()
 

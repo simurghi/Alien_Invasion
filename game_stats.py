@@ -1,7 +1,5 @@
 import json
 
-from enum import Enum, unique 
-
 class GameStats:
     """Track statistics for Alien Invasion."""
 

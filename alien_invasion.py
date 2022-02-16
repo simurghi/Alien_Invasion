@@ -4,13 +4,13 @@ from settings import Settings
 from ship import Ship 
 from bullet import Bullet 
 from alien import Alien
-from button import Button
 from menu import MainMenu, OptionsMenu, GameOverMenu
 from aspect_ratio import AspectRatio
 from game_stats import GameStats
 from scoreboard import Scoreboard 
 from explosion import Explosion
 from beam import Beam
+from keybinds import Keybinds
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -52,6 +52,7 @@ class AlienInvasion:
         self.main_menu = MainMenu(self)
         self.options_menu = OptionsMenu(self)
         self.go_menu = GameOverMenu(self)
+        self.keybinds = Keybinds()
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
         self.scoreboard = Scoreboard(self)
@@ -98,6 +99,7 @@ class AlienInvasion:
                 self.options_menu.check_options_menu_buttons(mouse_pos)
                 self.main_menu.check_main_menu_buttons(mouse_pos)
                 self.go_menu.check_game_over_buttons(mouse_pos)
+                self._check_mousedown_events()
 
 
     def _update_screen(self):
@@ -212,6 +214,7 @@ class AlienInvasion:
             if bullet.rect.right > self.settings.screen_width or bullet.rect.right < 0: 
                 self.bullets.remove(bullet)
         self._check_bullet_alien_collision()
+
         
     def _update_beams(self):
         """Update position of the beams and get rid of the old beams."""
@@ -236,13 +239,13 @@ class AlienInvasion:
                 self._play_explosion(alien_index)
                 self.bullets.remove(bullet_indexes)
                 self._collision_cleanup_and_score(alien_index)
-
+        
         if collisions_beam:
             for alien_index, beam_indexes in collisions_beam.items():
                 self._calculate_score(alien_index, beam_indexes)
                 self._play_explosion(alien_index)
                 self._collision_cleanup_and_score(alien_index)
-        
+
         if not self.aliens:
             # Destroy existing bullets and make a new fleet. 
             self.bullets.empty()
@@ -330,24 +333,37 @@ class AlienInvasion:
     
     def _check_keydown_events(self, event):
         """respond to keypresses.""" 
-        if event.key == pygame.K_UP or event.key == pygame.K_w:
+        if event.key == self.keybinds.MOVEUP:
             self.ship.moving_up = True 
-        elif event.key == pygame.K_DOWN or event.key == pygame.K_s:
+        elif event.key == self.keybinds.MOVEDOWN:
             self.ship.moving_down = True
-        if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+        if event.key == self.keybinds.MOVELEFT:
             self.ship.moving_left = True 
-        elif event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+        elif event.key == self.keybinds.MOVERIGHT:
             self.ship.moving_right = True
-        elif event.key == pygame.K_SPACE or event.key == pygame.K_x:
-            self._fire_bullet()
-        elif event.key == pygame.K_c:
-            self._fire_beam()
-        elif ((event.key == pygame.K_z or event.key == pygame.K_LSHIFT)
-                and self.stats.state is self.stats.GAMEPLAY):
-            self._flip_ship()
-        elif event.key == pygame.K_ESCAPE:
+        if event.key == pygame.K_ESCAPE:
             self._check_pause()
             self._check_exit()
+        if self.keybinds.current_scheme is self.keybinds.ARROWS:
+            if event.key == self.keybinds.MISSILEATTACK and not self.keybinds.use_mouse:
+                self._fire_bullet()
+            if event.key == self.keybinds.BEAMATTACK and not self.keybinds.use_mouse:
+                self._fire_beam()
+            if event.key == self.keybinds.FLIPSHIP and not self.keybinds.use_mouse:
+                self._flip_ship()
+
+    def _check_mousedown_events(self):
+        """respond to keypresses.""" 
+        if self.keybinds.current_scheme is self.keybinds.WASD:
+            mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
+            if mouse_buttons[0]:
+                self._fire_bullet()
+            if mouse_buttons[1]:
+                self._fire_beam()
+            if mouse_buttons[2]:
+                self._flip_ship()
+
+
 
     def _check_keyup_events(self, event):
         """respond to key releases."""
@@ -370,27 +386,6 @@ class AlienInvasion:
             self._flip_ship()
         if (event.button == 2 and self.stats.state is self.stats.GAMEPLAY): 
             self._fire_beam()
-        # 2 Corresponds to the "X" Button on an Xbox Controller
-        elif (event.button == 2 and self.stats.state is self.stats.OPTIONSMENU): 
-            self.settings.turbo_speed = not self.settings.turbo_speed
-            self._change_turbo_text()
-            if self.settings.play_sfx:
-                self.menu_sfx.play()
-        # 3 Corresponds to the "Y" Button on an Xbox Controller
-        elif (event.button == 3 and self.stats.state is self.stats.OPTIONSMENU): 
-            self.settings.cinematic_bars = not self.settings.cinematic_bars
-            if self.settings.play_sfx:
-                self.menu_sfx.play()
-        # 4 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
-        elif (event.button == 4 and self.stats.state is self.stats.OPTIONSMENU): 
-            self.settings.play_music = not self.settings.play_music 
-            if self.settings.play_sfx:
-                self.menu_sfx.play()
-        # 5 Corresponds to the "LB" Button (Left Bumper) on an Xbox Controller 
-        elif (event.button == 5 and self.stats.state is self.stats.OPTIONSMENU): 
-            self.settings.play_sfx = not self.settings.play_sfx
-            if self.settings.play_sfx:
-                self.menu_sfx.play()
         # 6 Corresponds to the 'Back/Select" Button on an Xbox Controller
         elif event.button == 6: 
             if self.settings.play_sfx and self.stats.state is self.stats.GAMEPLAY: 
@@ -452,35 +447,38 @@ class AlienInvasion:
 
     def _fire_bullet(self):
         """Create a new bullet and add it to the bullets group."""
-        if len(self.bullets) < self.settings.bullets_allowed: 
-            new_bullet = Bullet(self)
-            if self.ship.is_flipped:
-                new_bullet.rotate_bullet()
-            self.bullets.add(new_bullet)
-            if (self.settings.play_sfx and 
-                self.stats.state is self.stats.GAMEPLAY):
-                self.bullet_sfx.play()
+        if self.stats.state == self.stats.GAMEPLAY:
+            if len(self.bullets) < self.settings.bullets_allowed: 
+                new_bullet = Bullet(self)
+                if self.ship.is_flipped:
+                    new_bullet.rotate_bullet()
+                self.bullets.add(new_bullet)
+                if (self.settings.play_sfx and 
+                    self.stats.state is self.stats.GAMEPLAY):
+                    self.bullet_sfx.play()
 
     def _fire_beam(self):
         """Create a new beam and add it to the bullets group."""
-        if len(self.beams) < self.stats.charges_remaining: 
-            new_beam = Beam(self)
-            if self.ship.is_flipped:
-                new_beam.rotate_beam()
-            self.beams.add(new_beam)
-            self.stats.charges_remaining -= 1
-            self.scoreboard.prep_beams()
-            if (self.settings.play_sfx and 
-                self.stats.state is self.stats.GAMEPLAY):
-                self.beam_sfx.play()
+        if self.stats.state == self.stats.GAMEPLAY:
+            if len(self.beams) < self.stats.charges_remaining: 
+                new_beam = Beam(self)
+                if self.ship.is_flipped:
+                    new_beam.rotate_beam()
+                self.beams.add(new_beam)
+                self.stats.charges_remaining -= 1
+                self.scoreboard.prep_beams()
+                if (self.settings.play_sfx and 
+                    self.stats.state is self.stats.GAMEPLAY):
+                    self.beam_sfx.play()
 
     def _flip_ship(self):
         """Flips the ship and firing pattens of the bullet."""
-        self.ship.rotate_ship()
-        self._adjust_bullet_flipped()
-        if (self.settings.play_sfx and 
-                self.stats.state is self.stats.GAMEPLAY):
-            self.flip_sfx.play()
+        if self.stats.state == self.stats.GAMEPLAY:
+            self.ship.rotate_ship()
+            self._adjust_bullet_flipped()
+            if (self.settings.play_sfx and 
+                    self.stats.state is self.stats.GAMEPLAY):
+                self.flip_sfx.play()
 
     def _adjust_bullet_flipped(self):
         """Adjusts the speed and direction of flipped bullets."""
