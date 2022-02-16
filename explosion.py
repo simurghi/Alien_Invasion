@@ -5,7 +5,7 @@ class Explosion(Sprite):
 
     def __init__(self, center):
         """Initialize explosion coordinates."""
-        Sprite.__init__(self)
+        super().__init__()
         self.explosion_images = []
         # Create a list of explosion sprites to play in order whenever a ship is blown up
         for num in range(1, 9):

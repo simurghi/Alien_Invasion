@@ -6,7 +6,7 @@ class Alien(Sprite):
 
     def __init__(self, ai_game):
         """Initialize the alien and set its starting position."""
-        Sprite.__init__(self)
+        super().__init__()
         self.screen = ai_game.screen
         self.random_y = random.randint(-5, 5)*5
         self.settings = ai_game.settings

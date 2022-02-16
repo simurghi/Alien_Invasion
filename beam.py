@@ -6,7 +6,7 @@ class Beam(Sprite):
 
     def __init__(self, ai_game):
         """Create a beam object at the ship's current position."""
-        Sprite.__init__(self)
+        super().__init__()
         self.beam_images = []
         # Create a list of beam sprites to play in order whenever a super round is fired
         for num in range(1, 5):
