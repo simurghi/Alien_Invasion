@@ -5,7 +5,7 @@ from ship import Ship
 from bullet import Bullet 
 from alien import Alien
 from button import Button
-from menu import MainMenu, OptionsMenu
+from menu import MainMenu, OptionsMenu, GameOverMenu
 from aspect_ratio import AspectRatio
 from game_stats import GameStats
 from scoreboard import Scoreboard 
@@ -51,8 +51,7 @@ class AlienInvasion:
         self.difficulty_counter = 0
         self.main_menu = MainMenu(self)
         self.options_menu = OptionsMenu(self)
-        self.menu_button = Button(self, "Menu", 150, -50)
-        self.restart_button = Button(self, "Restart", -150,-50)
+        self.go_menu = GameOverMenu(self)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
         self.scoreboard = Scoreboard(self)
@@ -98,8 +97,7 @@ class AlienInvasion:
                 mouse_pos = pygame.mouse.get_pos()
                 self.options_menu.check_options_menu_buttons(mouse_pos)
                 self.main_menu.check_main_menu_buttons(mouse_pos)
-                self._check_menu_button(mouse_pos)
-                self._check_restart_button(mouse_pos)
+                self.go_menu.check_game_over_buttons(mouse_pos)
 
 
     def _update_screen(self):
@@ -118,9 +116,8 @@ class AlienInvasion:
         elif self.stats.state is self.stats.PAUSE:
             self._render_pause()
         elif self.stats.state is self.stats.GAMEOVER:
-            self._render_game_over()
-            self.restart_button.draw_button()
-            self.menu_button.draw_button()
+            self.go_menu.render_game_over()
+            self.go_menu.draw_buttons()
             self.scoreboard.show_scores_go()
         elif self.stats.state is self.stats.MAINMENU:
             self.main_menu.draw_buttons()
@@ -140,29 +137,12 @@ class AlienInvasion:
         time.sleep(delay)
         self.time = current_time
 
-    def _check_restart_button(self, mouse_pos):
-        """ Enters the game from the game over screen once clicked."""
-        button_clicked = self.restart_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.stats.state is self.stats.GAMEOVER:
-            if self.settings.play_sfx:
-                self.menu_sfx.play()
-            self._clear_state()
-            self.stats.state = self.stats.GAMEPLAY
-
-    def _check_menu_button(self, mouse_pos):
-        """Enters the main menu from the game over screen once clicked."""
-        button_clicked = self.menu_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.stats.state is self.stats.GAMEOVER:
-            if self.settings.play_sfx: 
-                self.menu_sfx.play()
-            self._clear_state()
-            self.stats.state = self.stats.MAINMENU
 
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
-        self.scoreboard.prep_score()
         self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
+        self.scoreboard.prep_score()
         self.scoreboard.prep_ships()
         self.scoreboard.prep_beams()
         self.explosions.empty()
@@ -463,7 +443,9 @@ class AlienInvasion:
 
     def _check_exit(self):
         """Checks to see if hitting ESC should exit the game."""
-        if self.stats.state == self.stats.MAINMENU or self.stats.state == self.stats.GAMEOVER:
+        if self.stats.state == self.stats.OPTIONSMENU:
+            self.stats.state = self.stats.MAINMENU
+        elif self.stats.state == self.stats.MAINMENU or self.stats.state == self.stats.GAMEOVER:
             self.dump_stats_json()
             pygame.quit()
             sys.exit()
@@ -589,17 +571,6 @@ class AlienInvasion:
         """Game Over Screen that plays when the player dies."""
         self.stats.state = self.stats.GAMEOVER
         pygame.mixer.music.fadeout(500)
-
-    def _render_game_over(self):
-        """Renders and displays the game over message."""
-        self.screen.fill(self.settings.bg_color)
-        game_over_font = pygame.font.Font("fonts/m5x7.ttf", 128)
-        game_over_image = game_over_font.render("GAME OVER", True,
-                (255,255,255))
-        # Display the message at the center of the screen.
-        game_over_rect = game_over_image.get_rect()
-        game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
-        self.screen.blit(game_over_image, game_over_rect)
 
     def _render_pause(self):
         """Renders and displays the pause message."""

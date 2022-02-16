@@ -58,6 +58,7 @@ class MainMenu:
         self.exit_button.draw_button()
 
 class OptionsMenu:
+    """Class that holds state and behaviour for the options menu."""
     def __init__(self, ai_game):
         """Initialize button attributes."""
         self.game = ai_game
@@ -138,4 +139,56 @@ class OptionsMenu:
             self.game.stats.state = self.game.stats.MAINMENU
             if self.game.settings.play_sfx: 
                 self.game.menu_sfx.play()
+
+class GameOverMenu:
+    """Class that holds the state and behavior for the game over screen."""
+
+    def __init__(self, ai_game):
+        """Initialize button attributes."""
+        self.game = ai_game
+        self.screen = ai_game.screen
+        self.screen_rect = self.screen.get_rect()
+        self.menu_button = Button(self, "Menu", 150, -50)
+        self.restart_button = Button(self, "Restart", -150,-50)
+
+    def check_game_over_buttons(self, mouse_pos):
+        """Check main menu buttons for clicks."""
+        self._check_menu_button(mouse_pos)
+        self._check_restart_button(mouse_pos)
+
+    def _check_restart_button(self, mouse_pos):
+        """ Enters the game from the game over screen once clicked."""
+        button_clicked = self.restart_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.stats.state is self.game.stats.GAMEOVER:
+            if self.game.settings.play_sfx:
+                self.game.menu_sfx.play()
+            self.game._clear_state()
+            self.game.stats.state = self.game.stats.GAMEPLAY
+
+    def _check_menu_button(self, mouse_pos):
+        """Enters the main menu from the game over screen once clicked."""
+        button_clicked = self.menu_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.stats.state is self.game.stats.GAMEOVER:
+            if self.game.settings.play_sfx: 
+                self.game.menu_sfx.play()
+            self.game._clear_state()
+            self.game.stats.state = self.game.stats.MAINMENU
+
+    def render_game_over(self):
+        """Renders and displays the game over message."""
+        self.screen.fill(self.game.settings.bg_color)
+        game_over_font = pygame.font.Font("fonts/m5x7.ttf", 128)
+        game_over_image = game_over_font.render("GAME OVER", True,
+                (255,255,255))
+        # Display the message at the center of the screen.
+        game_over_rect = game_over_image.get_rect()
+        game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
+        self.screen.blit(game_over_image, game_over_rect)
+
+
+    def draw_buttons(self):
+        """ Draws buttons to the screen."""
+        self.menu_button.draw_button()
+        self.restart_button.draw_button()
+
 
