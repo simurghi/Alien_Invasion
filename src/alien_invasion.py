@@ -27,8 +27,8 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode(
                 (self.settings.screen_width, self.settings.screen_height))
         self.screen_rect = self.screen.get_rect()
-        self.menu_image = pygame.image.load("images/background.png").convert()
-        self.background_image = pygame.image.load("images/parallax_scrolling_background.png").convert()
+        self.menu_image = pygame.image.load("assets/images/background.png").convert()
+        self.background_image = pygame.image.load("assets/images/parallax_scrolling_background.png").convert()
         self.FPS = 60
         self.pause_state = 0
         self.time = time.time()
@@ -40,15 +40,15 @@ class AlienInvasion:
         self.options_menu.draw_buttons()
         self.ship = Ship(self)
         self.music_state = {"GAMEPLAY": False, "MENU": False, "GAMEOVER": False, "PAUSE": False}
-        self.bullet_sfx = pygame.mixer.Sound("audio/MissileFire.wav")
+        self.bullet_sfx = pygame.mixer.Sound("assets/audio/MissileFire.wav")
         self.bullet_sfx.set_volume(0.40)
-        self.beam_sfx = pygame.mixer.Sound("audio/LaserShot.wav")
+        self.beam_sfx = pygame.mixer.Sound("assets/audio/LaserShot.wav")
         self.beam_sfx.set_volume(0.80)
-        self.explosion_sfx = pygame.mixer.Sound("audio/DestroyMonster2.wav")
+        self.explosion_sfx = pygame.mixer.Sound("assets/audio/DestroyMonster2.wav")
         self.explosion_sfx.set_volume(0.40)
-        self.menu_sfx = pygame.mixer.Sound("audio/OptionSelect.wav")
+        self.menu_sfx = pygame.mixer.Sound("assets/audio/OptionSelect.wav")
         self.menu_sfx.set_volume(0.40)
-        self.flip_sfx = pygame.mixer.Sound("audio/UnitFlip.wav")
+        self.flip_sfx = pygame.mixer.Sound("assets/audio/UnitFlip.wav")
         self.flip_sfx.set_volume(0.25)
         self.bullets = pygame.sprite.Group()
         self.beams = pygame.sprite.Group()
@@ -167,28 +167,28 @@ class AlienInvasion:
         if (self.stats.state is self.stats.MAINMENU 
                 or self.stats.state is self.stats.OPTIONSMENU):
             if not self.music_state["MENU"]:
-                pygame.mixer.music.load("audio/menu.wav")
+                pygame.mixer.music.load("assets/audio/menu.wav")
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
                 self.music_state["MENU"] = True
         #Combat Music
         elif self.stats.state is self.stats.GAMEPLAY:
             if not self.music_state["GAMEPLAY"]:
-                pygame.mixer.music.load("audio/battle.wav")
+                pygame.mixer.music.load("assets/audio/battle.wav")
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
                 self.music_state["GAMEPLAY"] = True
         #Pause Music
         elif self.stats.state is self.stats.PAUSE:
             if not self.music_state["PAUSE"]:
-                pygame.mixer.music.load("audio/loading.wav")
+                pygame.mixer.music.load("assets/audio/loading.wav")
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
                 self.music_state["PAUSE"] = True
         #Game Over Music
         elif self.stats.state is self.stats.GAMEOVER:
             if not self.music_state["GAMEOVER"]:
-                pygame.mixer.music.load("audio/Disengage.wav")
+                pygame.mixer.music.load("assets/audio/Disengage.wav")
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
                 self.music_state["GAMEOVER"] = True
@@ -619,7 +619,7 @@ class AlienInvasion:
 
     def _render_pause(self):
         """Renders and displays the pause message."""
-        pause_font = pygame.font.Font("fonts/m5x7.ttf", 128)
+        pause_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
         pause_image = pause_font.render("PAUSED", True,
                 (255,255,255))
         # Display the message at the center of the screen.

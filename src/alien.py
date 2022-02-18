@@ -15,7 +15,7 @@ class Alien(Sprite):
         self.radius = 20
 
         # Load the alien image and set its rect attribute.
-        self.image = pygame.image.load('images/alien_med.bmp')
+        self.image = pygame.image.load('assets/images/alien_med.bmp')
         self.rect = self.image.get_rect()
 
         # Start each new alien alined to the right of the screen at a random height

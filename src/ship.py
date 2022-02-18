@@ -14,7 +14,7 @@ class Ship(Sprite):
         self.radius = 9
 
         # Load the ship image and get its rect
-        self.image = pygame.image.load('images/ship.bmp')
+        self.image = pygame.image.load('assets/images/ship.bmp')
         self.rect = self.image.get_rect()
         
         #pygame.draw.circle(self.image, (255, 0, 0), self.rect.center, self.radius)
@@ -65,6 +65,6 @@ class Ship(Sprite):
 
     def reset_ship_flip(self):
         """Resets the orientation of the ship on each new game."""
-        self.image = pygame.image.load('images/ship.bmp')
+        self.image = pygame.image.load('assets/images/ship.bmp')
         self.is_flipped = False
 

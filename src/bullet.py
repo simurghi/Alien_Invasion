@@ -10,7 +10,7 @@ class Bullet(Sprite):
         self.screen = ai_game.screen
         self.settings = ai_game.settings 
         self.direction = 1
-        self.image = pygame.image.load('images/missile.bmp')
+        self.image = pygame.image.load('assets/images/missile.bmp')
         self.rect = self.image.get_rect()
         self.rect.center = ai_game.ship.rect.center
         

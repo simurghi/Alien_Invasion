@@ -211,7 +211,7 @@ class GameOverMenu:
     def render_game_over(self):
         """Renders and displays the game over message."""
         self.screen.fill(self.game.settings.bg_color)
-        game_over_font = pygame.font.Font("fonts/m5x7.ttf", 128)
+        game_over_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
         game_over_image = game_over_font.render("GAME OVER", True,
                 (255,255,255))
         # Display the message at the center of the screen.

@@ -10,7 +10,7 @@ class Beam(Sprite):
         self.beam_images = []
         # Create a list of beam sprites to play in order whenever a super round is fired
         for num in range(1, 5):
-            bolt = pygame.image.load(f"images/bolt{num}.png").convert_alpha()
+            bolt = pygame.image.load(f"assets/images/bolt{num}.png").convert_alpha()
             self.beam_images.append(bolt)
         self.screen = ai_game.screen
         self.settings = ai_game.settings 

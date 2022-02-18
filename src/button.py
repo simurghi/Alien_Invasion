@@ -11,7 +11,7 @@ class Button:
         self.width, self.height = 200, 50
         self.button_color = (34, 139, 34)
         self.text_color = (255, 255, 255)
-        self.font = pygame.font.Font('fonts/m5x7.ttf', 48)
+        self.font = pygame.font.Font('assets/fonts/m5x7.ttf', 48)
         self.msg = msg
 
 

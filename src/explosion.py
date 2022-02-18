@@ -9,7 +9,7 @@ class Explosion(Sprite):
         self.explosion_images = []
         # Create a list of explosion sprites to play in order whenever a ship is blown up
         for num in range(1, 9):
-            explosion = pygame.image.load(f"images/explosion_{num}.png").convert_alpha()
+            explosion = pygame.image.load(f"assets/images/explosion_{num}.png").convert_alpha()
             self.explosion_images.append(explosion)
         self.index = 0
         self.counter = 0

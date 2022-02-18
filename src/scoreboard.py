@@ -17,7 +17,7 @@ class Scoreboard:
 
         # Font settings for scoring information
         self.text_color = (255, 255, 255)
-        self.font = pygame.font.Font("fonts/m5x7.ttf", 48)
+        self.font = pygame.font.Font("assets/fonts/m5x7.ttf", 48)
 
         # Prepare the initial score image
         self.prep_score()
@@ -79,7 +79,7 @@ class Scoreboard:
 
     def prep_high_score_game_over(self):
         """For the game over screen, turn the high score into a rendered image."""
-        end_font = pygame.font.Font("fonts/m5x7.ttf", 64)
+        end_font = pygame.font.Font("assets/fonts/m5x7.ttf", 64)
         max_score = str(self.stats.high_score)
         self.high_score_image_go = end_font.render(f"BEST: {max_score}", True, self.text_color)
 
@@ -91,7 +91,7 @@ class Scoreboard:
 
     def prep_score_game_over(self):
         """For the game over screen, turn the current run's score into a rendered image."""
-        end_font = pygame.font.Font("fonts/m5x7.ttf", 64)
+        end_font = pygame.font.Font("assets/fonts/m5x7.ttf", 64)
         max_score = str(self.stats.score)
         self.score_image_go = end_font.render(f"CURRENT: {max_score}", True, self.text_color)
 
