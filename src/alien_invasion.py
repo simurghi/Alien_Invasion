@@ -29,6 +29,7 @@ class AlienInvasion:
         self.screen_rect = self.screen.get_rect()
         self.menu_image = pygame.image.load("assets/images/background.png").convert()
         self.background_image = pygame.image.load("assets/images/parallax_scrolling_background.png").convert()
+        self.background_x = 0
         self.FPS = 60
         self.pause_state = 0
         self.time = time.time()
@@ -326,13 +327,12 @@ class AlienInvasion:
 
     def _scroll_background(self):
         """Smoothly scrolls the background image on the screen to give illusion of movement."""
-        background_x = 0
-        self.rel_background_x = background_x % self.background_image.get_rect().width
+        self.rel_background_x = self.background_x % self.background_image.get_rect().width
         self.screen.blit(self.background_image, (
             self.rel_background_x - self.background_image.get_rect().width, 0))
         if self.rel_background_x < self.settings.screen_width:
             self.screen.blit(self.background_image, (self.rel_background_x, 0))
-        background_x -=1.00
+        self.background_x -=1.00
     
     def _check_keydown_events(self, event):
         """respond to keypresses.""" 
