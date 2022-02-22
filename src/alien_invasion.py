@@ -6,6 +6,7 @@ from settings import Settings
 from ship import Ship 
 from bullet import Bullet 
 from alien import Alien
+from mine import Mine
 from menu import MainMenu, OptionsMenu, GameOverMenu
 from aspect_ratio import AspectRatio
 from game_stats import GameStats
@@ -50,10 +51,11 @@ class AlienInvasion:
         self.menu_sfx = pygame.mixer.Sound("assets/audio/OptionSelect.wav")
         self.menu_sfx.set_volume(0.40)
         self.flip_sfx = pygame.mixer.Sound("assets/audio/UnitFlip.wav")
-        self.flip_sfx.set_volume(0.25)
+        self.flip_sfx.set_volume(0.40)
         self.bullets = pygame.sprite.Group()
         self.beams = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
+        self.mines = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_fleet()
         self.difficulty_counter = 0
@@ -116,6 +118,9 @@ class AlienInvasion:
             for beam in self.beams.sprites():
                 beam.draw_beam()
             self.explosions.draw(self.screen)
+            #for mine in self.mines.sprites():
+            #    mine.draw_mine()
+            self.mines.draw(self.screen)
             self.aliens.draw(self.screen)
             self._make_game_cinematic()
             self.scoreboard.show_score()
@@ -152,6 +157,7 @@ class AlienInvasion:
         self.scoreboard.prep_ships()
         self.scoreboard.prep_beams()
         self.explosions.empty()
+        self.mines.empty()
         self.aliens.empty()
         self.bullets.empty()
         self.beams.empty()
@@ -218,7 +224,7 @@ class AlienInvasion:
             if bullet.rect.right > self.settings.screen_width or bullet.rect.right < 0: 
                 self.bullets.remove(bullet)
         self._check_bullet_alien_collision()
-
+        self._check_bullet_mine_collision()
         
     def _update_beams(self):
         """Update position of the beams and get rid of the old beams."""
@@ -229,6 +235,7 @@ class AlienInvasion:
             if beam.rect.right > self.settings.screen_width or beam.rect.right < 0: 
                 self.beams.remove(beam)
         self._check_bullet_alien_collision()
+        self._check_bullet_mine_collision()
 
     def _check_bullet_alien_collision(self):
         """Respond to bullet-alien collisions."""
@@ -250,25 +257,51 @@ class AlienInvasion:
                 self._play_explosion(alien_index)
                 self._collision_cleanup_and_score(alien_index)
 
-        if not self.aliens:
+        if not self.aliens and not self.mines:
             # Destroy existing bullets and make a new fleet. 
             self.bullets.empty()
             self.explosions.empty()
             self._create_fleet()
     
+    def _check_bullet_mine_collision(self):
+        """Respond to bullet-mines collisions."""
+        #Remove and bullets and aliens that have collided.
+        collisions = pygame.sprite.groupcollide(self.mines,
+                self.bullets, False, False)
+        collisions_beam = pygame.sprite.groupcollide(self.mines,
+                self.beams, False, False)
+        if collisions:
+            for mine_index, bullet_indexes in collisions.items():
+                self._calculate_score(mine_index, bullet_indexes, 2)
+                self._play_explosion(mine_index)
+                self.bullets.remove(bullet_indexes)
+                self._collision_cleanup_and_score(mine_index)
+        
+        if collisions_beam:
+            for mine_index, beam_indexes in collisions_beam.items():
+                self._calculate_score(mine_index, beam_indexes, 2)
+                self._play_explosion(mine_index)
+                self._collision_cleanup_and_score(mine_index)
+
+        if not self.aliens and not self.mines:
+            # Destroy existing bullets and make a new fleet. 
+            self.bullets.empty()
+            self.explosions.empty()
+            self._create_fleet()
+
     def _collision_cleanup_and_score(self,alien_index):
         """Removes collided aliens and adjusts score."""
         alien_index.kill()
         self.scoreboard.prep_score()
         self.scoreboard.check_high_score()
 
-    def _calculate_score(self, alien_index, projectile_index):
+    def _calculate_score(self, alien_index, projectile_index, enemy_mult = 1):
         """Calculates score multipliers for killed enemies."""
         cqc_mult = self._check_cqc_distance(alien_index)
         backstab_mult = self._check_backstab(projectile_index)
         bonus_mult = 1.25 if (cqc_mult > 1 and backstab_mult > 1) else 1
-        self.stats.score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult)
-        self.stats.hidden_score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult)
+        self.stats.score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult * enemy_mult)
+        self.stats.hidden_score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult * enemy_mult)
         self._calculate_beam_addition()
 
     def _calculate_beam_addition(self):
@@ -318,7 +351,10 @@ class AlienInvasion:
         """Checks if the player ship collides with aliens, 
         then deletes aliens if they go offscreen.""" 
         self.aliens.update()
+        self.mines.update()
         if pygame.sprite.spritecollide(self.ship, self.aliens, False, pygame.sprite.collide_circle):
+            self._ship_hit()
+        if pygame.sprite.spritecollide(self.ship, self.mines, False, pygame.sprite.collide_circle):
             self._ship_hit()
         for alien in self.aliens.copy():
             if alien.rect.left < -100: 
@@ -551,6 +587,8 @@ class AlienInvasion:
             for alien_number in range(number_aliens_y):
                 self._create_alien(alien_number, col_number)
 
+        self._create_mine()
+
     def _create_alien(self, alien_number, col_number):
         """Create an alien and place it in a column."""
         alien = Alien(self)
@@ -559,6 +597,11 @@ class AlienInvasion:
         #alien.rect.y = alien.y
         alien.rect.x = (self.settings.screen_width ) + alien_width + (2 * alien_width * col_number)
         self.aliens.add(alien)
+
+    def _create_mine(self):
+        """Create an alien and place it in a column."""
+        mine = Mine(self)
+        self.mines.add(mine)
 
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
@@ -569,6 +612,7 @@ class AlienInvasion:
 
             # Get rid of any remaining aliens and bullets
             self.aliens.empty()
+            self.mines.empty()
             self.bullets.empty()
 
             # Play an explosion at the ship's position
