@@ -1,6 +1,7 @@
-import pygame, random
+import pygame
 from pygame.sprite import Sprite
 from math import sqrt
+from random import randint
 
 
 class Mine(Sprite):
@@ -18,7 +19,7 @@ class Mine(Sprite):
 
         self.screen = ai_game.screen
         self.ship = ai_game.ship
-        self.random_pos = random.randint(1, 5)
+        self.random_pos = randint(1, 6)
         self.screen_rect = ai_game.screen.get_rect()
         self.settings = ai_game.settings
         self.stats = ai_game.stats
@@ -33,11 +34,11 @@ class Mine(Sprite):
         self.image = self.mine_images[self.index]
         self.rect = self.image.get_rect()
 
+        self.set_random_position()
         # Store the mine's exact position as a float
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
 
-        self.set_random_position()
 
     def update(self):
         """Update method for mines"""
@@ -77,11 +78,20 @@ class Mine(Sprite):
         if self.random_pos == 1:
             self.rect.topleft = self.screen_rect.topleft
         elif self.random_pos == 2:
-            self.rect.midtop = self.screen_rect.midtop
-        elif self.random_pos == 3:
             self.rect.bottomleft = self.screen_rect.bottomleft
+        elif self.random_pos == 3:
+            self.rect.midtop = self.screen_rect.midtop
         elif self.random_pos == 4:
-            self.rect.midbottom = self.screen_rect.midbottom
+            self.rect.midbottom = self.screen_rect.midtop
+        elif self.random_pos == 5:
+            self.rect.centerx = self.screen_rect.centerx / 2
+            self.rect.y = self.screen_rect.top
+        elif self.random_pos == 6:
+            self.rect.centerx = self.screen_rect.centerx / 2
+            self.rect.y = self.screen_rect.bottom
+
+
+
 
     def draw_mine(self):
         """Draw the mine at the current position."""

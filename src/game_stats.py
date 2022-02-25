@@ -13,10 +13,13 @@ class GameStats:
         self.game.settings.play_sfx = self._read_sfx_json()
         self.game.settings.turbo_speed = self._read_turbo_json()
         self.game.settings.cinematic_bars = self._read_vfx_json()
+        self.game.settings.scaled_gfx = self._read_gfx_json()
         self.game.keybinds.current_scheme = self._read_controls_json()
         self.game.keybinds.set_movement_scheme()
         self.game.keybinds.set_combat_scheme()
         self.game.options_menu._change_controls_text()
+        self.game.options_menu._change_gfx_text()
+        self.game.options_menu._change_window_size()
         self.MAINMENU = 1
         self.GAMEPLAY = 2
         self.PAUSE = 3
@@ -42,6 +45,8 @@ class GameStats:
             return 0
         except json.decoder.JSONDecodeError:
             return 0    
+        except KeyError: 
+            return 0
 
     def _read_music_json(self):
         """Reads the settings.json file and sees if we already have an option for playing music."""
@@ -53,6 +58,8 @@ class GameStats:
             return True
         except json.decoder.JSONDecodeError:
             return True 
+        except KeyError: 
+            return True
 
     def _read_sfx_json(self):
         """Reads the settings.json file and sees if we already have an option for playing SFX."""
@@ -64,6 +71,8 @@ class GameStats:
             return True
         except json.decoder.JSONDecodeError:
             return True 
+        except KeyError: 
+            return True
 
     def _read_vfx_json(self):
         """Reads the settings.json file and sees if we already have an option for cinematic bars."""
@@ -75,9 +84,11 @@ class GameStats:
             return True
         except json.decoder.JSONDecodeError:
             return True 
+        except KeyError: 
+            return True
 
     def _read_turbo_json(self):
-        """Reads the settings.json file and sees if we already have an option for cinematic bars."""
+        """Reads the settings.json file and sees if we already have an option for turbo mode."""
         try: 
             with open('stats/settings.json') as f:
                 data = json.load(f)
@@ -86,9 +97,11 @@ class GameStats:
             return False
         except json.decoder.JSONDecodeError:
             return False
+        except KeyError: 
+            return False
 
     def _read_controls_json(self):
-        """Reads the settings.json file and sees if we already have an option for cinematic bars."""
+        """Reads the settings.json file and sees if we already have an option for controls bars."""
         try: 
             with open('stats/settings.json') as f:
                 data = json.load(f)
@@ -97,4 +110,19 @@ class GameStats:
             return 1
         except json.decoder.JSONDecodeError:
             return 1
+        except KeyError: 
+            return 1
+
+    def _read_gfx_json(self):
+        """Reads the settings.json file and sees if we already have an option for window size."""
+        try: 
+            with open('stats/settings.json') as f:
+                data = json.load(f)
+                return data["window_mode"]
+        except FileNotFoundError:
+            return False
+        except json.decoder.JSONDecodeError:
+            return False
+        except KeyError: 
+            return True
 

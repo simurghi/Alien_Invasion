@@ -8,6 +8,7 @@ class Keybinds:
         self.VIM = 2
         self.WASD = 3
         self.ESDF = 4 
+        self.CUSTOM = 5
         self.current_scheme = 1
         self.set_movement_scheme()
         self.set_combat_scheme()

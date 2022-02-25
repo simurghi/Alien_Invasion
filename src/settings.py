@@ -10,8 +10,7 @@ class Settings:
         self.play_sfx = True
         self.cinematic_bars = True
         self.turbo_speed = False
-        self.speed_mult = 1.0
-        self.speed_add = 1.0
+        self.scaled_gfx = True 
 
 
         #  Ship settings
@@ -40,6 +39,7 @@ class Settings:
         self.alien_speed = 4.00 * self.speed_mult
         self.bullet_speed = 4.00 * self.speed_mult
         self.mine_speed = 1.50 * self.speed_mult
+        self.scroll_speed = -1.0
         # Scoring 
 
 
@@ -56,4 +56,5 @@ class Settings:
         self.alien_speed += self.speedup_scale * self.speed_add
         self.mine_speed += (self.speedup_scale - 0.50) * self.speed_add
         self.alien_points += self.score_scale * self.speed_add
+        self.scroll_speed += -1.0
 

@@ -26,7 +26,7 @@ class AlienInvasion:
         self._check_gamepad()
         self.settings = Settings()
         self.screen = pygame.display.set_mode(
-                (self.settings.screen_width, self.settings.screen_height))
+                (self.settings.screen_width, self.settings.screen_height), pygame.SCALED)
         self.screen_rect = self.screen.get_rect()
         self.menu_image = pygame.image.load("assets/images/background.png").convert()
         self.background_image = pygame.image.load("assets/images/parallax_scrolling_background.png").convert()
@@ -57,8 +57,8 @@ class AlienInvasion:
         self.explosions = pygame.sprite.Group()
         self.mines = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
-        self._create_fleet()
         self.difficulty_counter = 0
+        self._create_fleet()
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
         self.scoreboard = Scoreboard(self)
@@ -118,10 +118,9 @@ class AlienInvasion:
             for beam in self.beams.sprites():
                 beam.draw_beam()
             self.explosions.draw(self.screen)
-            #for mine in self.mines.sprites():
-            #    mine.draw_mine()
-            self.mines.draw(self.screen)
             self.aliens.draw(self.screen)
+            for mine in self.mines.sprites():
+                mine.draw_mine()
             self._make_game_cinematic()
             self.scoreboard.show_score()
         elif self.stats.state is self.stats.PAUSE:
@@ -147,7 +146,6 @@ class AlienInvasion:
         delay = max(1.0/self.FPS - time_diff, 0)
         time.sleep(delay)
         self.time = current_time
-
 
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
@@ -257,7 +255,7 @@ class AlienInvasion:
                 self._play_explosion(alien_index)
                 self._collision_cleanup_and_score(alien_index)
 
-        if not self.aliens and not self.mines:
+        if not self.aliens: 
             # Destroy existing bullets and make a new fleet. 
             self.bullets.empty()
             self.explosions.empty()
@@ -272,18 +270,18 @@ class AlienInvasion:
                 self.beams, False, False)
         if collisions:
             for mine_index, bullet_indexes in collisions.items():
-                self._calculate_score(mine_index, bullet_indexes, 2)
+                self._calculate_score(mine_index, bullet_indexes, 1.5)
                 self._play_explosion(mine_index)
                 self.bullets.remove(bullet_indexes)
                 self._collision_cleanup_and_score(mine_index)
         
         if collisions_beam:
             for mine_index, beam_indexes in collisions_beam.items():
-                self._calculate_score(mine_index, beam_indexes, 2)
+                self._calculate_score(mine_index, beam_indexes, 1.5)
                 self._play_explosion(mine_index)
                 self._collision_cleanup_and_score(mine_index)
 
-        if not self.aliens and not self.mines:
+        if not self.aliens:
             # Destroy existing bullets and make a new fleet. 
             self.bullets.empty()
             self.explosions.empty()
@@ -312,7 +310,7 @@ class AlienInvasion:
                 self.stats.charges_remaining += 1
                 self.scoreboard.prep_beams()
             elif self.stats.charges_remaining == self.settings.beam_limit:
-                self.stats.score += 1000
+                self.stats.score += 500
             self.stats.hidden_score -= 5000
             self.adjust_beams = True
         else:
@@ -368,7 +366,7 @@ class AlienInvasion:
             self.rel_background_x - self.background_image.get_rect().width, 0))
         if self.rel_background_x < self.settings.screen_width:
             self.screen.blit(self.background_image, (self.rel_background_x, 0))
-        self.background_x -=1.00
+        self.background_x += self.settings.scroll_speed
     
     def _check_keydown_events(self, event):
         """respond to keypresses.""" 
@@ -450,6 +448,14 @@ class AlienInvasion:
                 self.menu_sfx.play()
             self.stats.state = self.stats.OPTIONSMENU
         # OPTIONSMENU CONTROLS:
+        # 0 Corresponds to the "A" button on an Xbox controller
+        elif event.button == 0 and self.stats.state is self.stats.OPTIONSMENU: 
+            self.settings.scaled_gfx = not self.settings.scaled_gfx
+            self.options_menu._change_gfx_text()
+            self.options_menu._change_window_size()
+            if self.settings.play_sfx:
+                self.menu_sfx.play()
+            self._check_exit()
         # 1 Corresponds to the "B" Button on an Xbox controller
         elif event.button == 1 and self.stats.state is self.stats.OPTIONSMENU: 
             if self.settings.play_sfx:
@@ -572,22 +578,50 @@ class AlienInvasion:
         # Make an alien and find the number of aliens in a row.
         # Spacing between each alien is equal to one alien height
         alien = Alien(self)
+        wave_spawn = randint(1,8)
         alien_width, alien_height = alien.rect.size
         available_space_y = self.settings.screen_height - (1.50 * alien_height)
-        number_aliens_y = int(available_space_y // (1.50 * alien_height))
+        number_aliens_y = int(available_space_y // (1.50 * alien_height)) 
 
         # Determine the number of columns of aliens that fit on the screen.
         ship_width = self.ship.rect.width
         available_space_x = (self.settings.screen_height - 
                 (3 * alien_width) - ship_width)
-        number_cols = (available_space_x // (2 * alien_width)) + randint(0,2)
+        number_cols = (available_space_x // (2 * alien_width)) - 1
+        self._select_spawn_pattern(wave_spawn, number_cols, number_aliens_y)
 
+    def _create_mine(self, spawn_number = 1, waves = 1):
+        """Create an alien and place it in a column."""
+        position_list = []
+        for i in range (0,waves):
+            for j in range(0,spawn_number):
+                mine = Mine(self)
+                self.mines.add(mine)
+
+
+
+    def _select_spawn_pattern(self, wave_number, number_cols, number_aliens_y):
+        """Selects a wave spawn pattern based on a random number."""
+        if wave_number == 1: 
+            self._create_mine(5,4)
+        elif wave_number == 2:
+            self._create_mine(4,3)
+            self._create_trash_mobs(number_cols-1, number_aliens_y)
+        elif wave_number == 3:
+            self._create_mine(3,2)
+            self._create_trash_mobs(number_cols, number_aliens_y)
+        else:
+            self._create_mine(2)
+            self._create_trash_mobs(number_cols+1, number_aliens_y)
+
+
+
+    def _create_trash_mobs(self, number_cols, number_aliens_y):
+        """Spawns waves of trash mobs based on wave pattern."""
         # Create the first column of aliens.
         for col_number in range(number_cols):
             for alien_number in range(number_aliens_y):
                 self._create_alien(alien_number, col_number)
-
-        self._create_mine()
 
     def _create_alien(self, alien_number, col_number):
         """Create an alien and place it in a column."""
@@ -597,11 +631,6 @@ class AlienInvasion:
         #alien.rect.y = alien.y
         alien.rect.x = (self.settings.screen_width ) + alien_width + (2 * alien_width * col_number)
         self.aliens.add(alien)
-
-    def _create_mine(self):
-        """Create an alien and place it in a column."""
-        mine = Mine(self)
-        self.mines.add(mine)
 
     def _ship_hit(self):
         """Respond to the ship being hit by an alien."""
@@ -653,7 +682,7 @@ class AlienInvasion:
         with open("stats/settings.json", 'w') as f:
             json.dump({"game_speed" : self.settings.turbo_speed, "control_scheme": 
                 self.keybinds.current_scheme, "play_music": self.settings.play_music,
-                "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars}, f)
+                "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars, "window_mode": self.settings.scaled_gfx}, f)
 
 
     def enter_game_over(self):
