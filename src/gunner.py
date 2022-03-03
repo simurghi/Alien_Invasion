@@ -4,17 +4,13 @@ from math import sqrt
 from random import randint
 
 
-class Mine(Sprite):
-    """A class to represent an elite mine enemy."""
+class Gunner(Sprite):
+    """A class to represent an elite gunner enemy."""
 
     def __init__(self, ai_game):
         """Initialize the mine and set its starting position."""
         super().__init__()
         # Load the mine images 
-        self.mine_images = []
-        for num in range(1, 5):
-            drone = pygame.image.load(f"assets/images/mine{num}.png").convert_alpha()
-            self.mine_images.append(drone)
         self.detect_sound = pygame.mixer.Sound('assets/audio/MineDetected.wav')
 
         self.screen = ai_game.screen

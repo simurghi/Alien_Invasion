@@ -382,7 +382,11 @@ class AlienInvasion:
             self._check_pause()
             self._check_exit()
         if (self.keybinds.current_scheme is self.keybinds.ARROWS 
-                or self.keybinds.current_scheme is self.keybinds.VIM):
+                or self.keybinds.current_scheme is self.keybinds.ARROWS2 
+                or self.keybinds.current_scheme is self.keybinds.VIM
+                or self.keybinds.current_scheme is self.keybinds.SPACE
+                or self.keybinds.current_scheme is self.keybinds.SPACE2
+                or self.keybinds.current_scheme is self.keybinds.QWOP):
             if event.key == self.keybinds.MISSILEATTACK and not self.keybinds.use_mouse:
                 self._fire_bullet()
             if event.key == self.keybinds.BEAMATTACK and not self.keybinds.use_mouse:
@@ -587,32 +591,43 @@ class AlienInvasion:
         ship_width = self.ship.rect.width
         available_space_x = (self.settings.screen_height - 
                 (3 * alien_width) - ship_width)
-        number_cols = (available_space_x // (2 * alien_width)) - 1
+        number_cols = (available_space_x // (2 * alien_width)) 
         self._select_spawn_pattern(wave_spawn, number_cols, number_aliens_y)
 
-    def _create_mine(self, spawn_number = 1, waves = 1):
+    def _create_mine(self, spawn_number = 1):
         """Create an alien and place it in a column."""
         position_list = []
-        for i in range (0,waves):
-            for j in range(0,spawn_number):
-                mine = Mine(self)
-                self.mines.add(mine)
+        for j in range(0,spawn_number):
+            mine = Mine(self)
+            self._check_unique_spawn(mine, position_list)
+            self.mines.add(mine)
 
+
+    def _check_unique_spawn(self, mine, position_list):
+        if not position_list:
+            position_list.append(mine.random_pos)
+        while mine.random_pos in position_list:
+            mine.random_pos = randint(1,10)
+            mine.set_random_position()
 
 
     def _select_spawn_pattern(self, wave_number, number_cols, number_aliens_y):
         """Selects a wave spawn pattern based on a random number."""
         if wave_number == 1: 
-            self._create_mine(5,4)
-        elif wave_number == 2:
-            self._create_mine(4,3)
+            self._create_mine(5)
             self._create_trash_mobs(number_cols-1, number_aliens_y)
-        elif wave_number == 3:
-            self._create_mine(3,2)
+        elif wave_number == 2:
+            self._create_mine(4)
             self._create_trash_mobs(number_cols, number_aliens_y)
+        elif wave_number == 3:
+            self._create_mine(3)
+            self._create_trash_mobs(number_cols+1, number_aliens_y)
+        elif wave_number == 4:
+            self._create_mine(9)
+            self._create_trash_mobs(1,3)
         else:
             self._create_mine(2)
-            self._create_trash_mobs(number_cols+1, number_aliens_y)
+            self._create_trash_mobs(number_cols+2, number_aliens_y)
 
 
 

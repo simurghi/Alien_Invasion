@@ -96,12 +96,21 @@ class OptionsMenu:
         """Helper method that changes what text is displayed on the control button"""
         if self.game.keybinds.current_scheme is self.game.keybinds.ARROWS:
             self.control_state = "ARROWS" 
+        elif self.game.keybinds.current_scheme is self.game.keybinds.ARROWS2:
+            self.control_state = "ARROWS-2" 
         elif self.game.keybinds.current_scheme is self.game.keybinds.WASD:
             self.control_state = "WASD"
         elif self.game.keybinds.current_scheme is self.game.keybinds.ESDF:
             self.control_state = "ESDF"
         elif self.game.keybinds.current_scheme is self.game.keybinds.VIM:
             self.control_state = "VIMLIKE"
+        elif self.game.keybinds.current_scheme is self.game.keybinds.SPACE:
+            self.control_state = "SPAMMER-1"
+        elif self.game.keybinds.current_scheme is self.game.keybinds.SPACE2:
+            self.control_state = "SPAMMER-2"
+        elif self.game.keybinds.current_scheme is self.game.keybinds.QWOP:
+            self.control_state = "QWOP"
+
 
     def _change_gfx_text(self):
         """Helper method that changes what text is displayed on the resolution button"""
@@ -165,6 +174,14 @@ class OptionsMenu:
         button_clicked = self.controls_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.stats.state is self.game.stats.OPTIONSMENU:
             if self.game.keybinds.current_scheme is self.game.keybinds.ARROWS:
+                self.game.keybinds.current_scheme = self.game.keybinds.ARROWS2
+            elif self.game.keybinds.current_scheme is self.game.keybinds.ARROWS2:
+                self.game.keybinds.current_scheme = self.game.keybinds.SPACE
+            elif self.game.keybinds.current_scheme is self.game.keybinds.SPACE:
+                self.game.keybinds.current_scheme = self.game.keybinds.SPACE2
+            elif self.game.keybinds.current_scheme is self.game.keybinds.SPACE2:
+                self.game.keybinds.current_scheme = self.game.keybinds.QWOP
+            elif self.game.keybinds.current_scheme is self.game.keybinds.QWOP:
                 self.game.keybinds.current_scheme = self.game.keybinds.VIM
             elif self.game.keybinds.current_scheme is self.game.keybinds.VIM:
                 self.game.keybinds.current_scheme = self.game.keybinds.WASD
