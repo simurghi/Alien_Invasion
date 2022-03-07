@@ -105,9 +105,9 @@ class OptionsMenu:
         elif self.game.keybinds.current_scheme is self.game.keybinds.VIM:
             self.control_state = "VIMLIKE"
         elif self.game.keybinds.current_scheme is self.game.keybinds.SPACE:
-            self.control_state = "SPAMMER-1"
+            self.control_state = "SPACE-1"
         elif self.game.keybinds.current_scheme is self.game.keybinds.SPACE2:
-            self.control_state = "SPAMMER-2"
+            self.control_state = "SPACE-2"
         elif self.game.keybinds.current_scheme is self.game.keybinds.QWOP:
             self.control_state = "QWOP"
 

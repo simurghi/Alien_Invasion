@@ -3,13 +3,16 @@ from pygame.sprite import Sprite
 
 class Explosion(Sprite):
 
-    def __init__(self, center):
+    def __init__(self, center, size=1):
         """Initialize explosion coordinates."""
         super().__init__()
         self.explosion_images = []
         # Create a list of explosion sprites to play in order whenever a ship is blown up
         for num in range(1, 9):
-            explosion = pygame.image.load(f"assets/images/explosion_{num}.png").convert_alpha()
+            if size == 1:
+                explosion = pygame.image.load(f"assets/images/explosion_{num}.png").convert_alpha()
+            elif size == 2:
+                explosion = pygame.image.load(f"assets/images/explosion_mini_{num}.png").convert_alpha()
             self.explosion_images.append(explosion)
         self.index = 0
         self.counter = 0

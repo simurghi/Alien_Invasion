@@ -7,6 +7,7 @@ from ship import Ship
 from bullet import Bullet 
 from alien import Alien
 from mine import Mine
+from gunner import Gunner
 from menu import MainMenu, OptionsMenu, GameOverMenu
 from aspect_ratio import AspectRatio
 from game_stats import GameStats
@@ -43,20 +44,18 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.music_state = {"GAMEPLAY": False, "MENU": False, "GAMEOVER": False, "PAUSE": False}
         self.bullet_sfx = pygame.mixer.Sound("assets/audio/MissileFire.wav")
-        self.bullet_sfx.set_volume(0.40)
         self.beam_sfx = pygame.mixer.Sound("assets/audio/LaserShot.wav")
-        self.beam_sfx.set_volume(0.80)
         self.explosion_sfx = pygame.mixer.Sound("assets/audio/DestroyMonster2.wav")
-        self.explosion_sfx.set_volume(0.40)
         self.menu_sfx = pygame.mixer.Sound("assets/audio/OptionSelect.wav")
-        self.menu_sfx.set_volume(0.40)
         self.flip_sfx = pygame.mixer.Sound("assets/audio/UnitFlip.wav")
-        self.flip_sfx.set_volume(0.40)
+        self.damage_sfx = pygame.mixer.Sound("assets/audio/MiniHitImpact.wav")
+        self._set_volume()
         self.bullets = pygame.sprite.Group()
         self.beams = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
         self.mines = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+        self.gunners = pygame.sprite.GroupSingle()
         self.difficulty_counter = 0
         self._create_fleet()
         self.top_bar = AspectRatio(self)
@@ -68,6 +67,16 @@ class AlienInvasion:
         """Checks if a gamepad is connected and assigns it to the first one if it is."""
         if pygame.joystick.get_count() > 0:
             self.gamepad = pygame.joystick.Joystick(0)
+
+    def _set_volume(self):
+        """Sets the volumes for the game sounds."""
+        self.bullet_sfx.set_volume(0.40)
+        self.beam_sfx.set_volume(0.80)
+        self.explosion_sfx.set_volume(0.40)
+        self.menu_sfx.set_volume(0.40)
+        self.flip_sfx.set_volume(0.40)
+        self.damage_sfx.set_volume(0.40)
+
 
     def run_game(self):
         """Start the main loop for the game."""
@@ -119,6 +128,8 @@ class AlienInvasion:
                 beam.draw_beam()
             self.explosions.draw(self.screen)
             self.aliens.draw(self.screen)
+            for gunner in self.gunners.sprites():
+                gunner.draw_gunner()
             for mine in self.mines.sprites():
                 mine.draw_mine()
             self._make_game_cinematic()
@@ -156,6 +167,7 @@ class AlienInvasion:
         self.scoreboard.prep_beams()
         self.explosions.empty()
         self.mines.empty()
+        self.gunners.empty()
         self.aliens.empty()
         self.bullets.empty()
         self.beams.empty()
@@ -223,6 +235,7 @@ class AlienInvasion:
                 self.bullets.remove(bullet)
         self._check_bullet_alien_collision()
         self._check_bullet_mine_collision()
+        self._check_bullet_gunner_collision()
         
     def _update_beams(self):
         """Update position of the beams and get rid of the old beams."""
@@ -255,9 +268,9 @@ class AlienInvasion:
                 self._play_explosion(alien_index)
                 self._collision_cleanup_and_score(alien_index)
 
-        if not self.aliens: 
+        if not self.aliens or self.gunners: 
             # Destroy existing bullets and make a new fleet. 
-            self.bullets.empty()
+            #self.bullets.empty()
             self.explosions.empty()
             self._create_fleet()
     
@@ -281,9 +294,39 @@ class AlienInvasion:
                 self._play_explosion(mine_index)
                 self._collision_cleanup_and_score(mine_index)
 
-        if not self.aliens:
+        if not self.aliens or self.gunners:
             # Destroy existing bullets and make a new fleet. 
-            self.bullets.empty()
+            #self.bullets.empty()
+            self.explosions.empty()
+            self._create_fleet()
+
+    def _check_bullet_gunner_collision(self):
+        """Respond to bullet-mines collisions."""
+        #Remove and bullets and aliens that have collided.
+        collisions = pygame.sprite.groupcollide(self.gunners,
+                self.bullets, False, False)
+        collisions_beam = pygame.sprite.groupcollide(self.gunners,
+                self.beams, False, False)
+        if collisions:
+            for gun_index, bullet_indexes in collisions.items():
+                if self.gunners.sprite.hitpoints > 0:
+                    self.gunners.sprite.hitpoints -= 1
+                    self._play_impact(gun_index)
+                    self.bullets.remove(bullet_indexes)
+                else: 
+                    self._calculate_score(gun_index, bullet_indexes, 1.5)
+                    self._play_explosion(gun_index)
+                    self._collision_cleanup_and_score(gun_index)
+        
+        if collisions_beam:
+            for gun_index, beam_indexes in collisions_beam.items():
+                self._calculate_score(gun_index, beam_indexes, 1.5)
+                self._play_explosion(gun_index)
+                self._collision_cleanup_and_score(gun_index)
+
+        if not self.aliens or self.gunners:
+            # Destroy existing bullets and make a new fleet. 
+            #self.bullets.empty()
             self.explosions.empty()
             self._create_fleet()
 
@@ -325,6 +368,14 @@ class AlienInvasion:
                 self.stats.state is self.stats.GAMEPLAY):
             self.explosion_sfx.play()
 
+    def _play_impact(self, alien_index):
+        """Plays impact and sounds if enabled."""
+        explosion = Explosion(alien_index.rect.center, 2)
+        self.explosions.add(explosion)
+        if (self.settings.play_sfx and 
+                self.stats.state is self.stats.GAMEPLAY):
+            self.damage_sfx.play()
+
     def _check_cqc_distance(self, alien):
         """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
         formula = sqrt((self.ship.rect.centerx - alien.rect.centerx)**2 + 
@@ -347,12 +398,15 @@ class AlienInvasion:
 
     def _update_aliens(self):
         """Checks if the player ship collides with aliens, 
-        then deletes aliens if they go offscreen.""" 
+        then deletes chaff aliens if they go offscreen.""" 
         self.aliens.update()
         self.mines.update()
+        self.gunners.update()
         if pygame.sprite.spritecollide(self.ship, self.aliens, False, pygame.sprite.collide_circle):
             self._ship_hit()
         if pygame.sprite.spritecollide(self.ship, self.mines, False, pygame.sprite.collide_circle):
+            self._ship_hit()
+        if pygame.sprite.spritecollide(self.ship, self.gunners, False, pygame.sprite.collide_circle):
             self._ship_hit()
         for alien in self.aliens.copy():
             if alien.rect.left < -100: 
@@ -582,7 +636,7 @@ class AlienInvasion:
         # Make an alien and find the number of aliens in a row.
         # Spacing between each alien is equal to one alien height
         alien = Alien(self)
-        wave_spawn = randint(1,8)
+        wave_spawn = 8#randint(1,8)
         alien_width, alien_height = alien.rect.size
         available_space_y = self.settings.screen_height - (1.50 * alien_height)
         number_aliens_y = int(available_space_y // (1.50 * alien_height)) 
@@ -626,8 +680,11 @@ class AlienInvasion:
             self._create_mine(9)
             self._create_trash_mobs(1,3)
         else:
-            self._create_mine(2)
-            self._create_trash_mobs(number_cols+2, number_aliens_y)
+            #self._create_mine(2)
+            gunner = Gunner(self)
+            if not self.gunners:
+                self.gunners.add(gunner)
+            #self._create_trash_mobs(number_cols+2, number_aliens_y)
 
 
 
