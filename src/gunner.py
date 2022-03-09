@@ -22,7 +22,8 @@ class Gunner(Sprite):
         self.audio_delay = 0
         self.hitpoints = 9
         self.fire_rate = 0
-        self.rect.midright = self.screen_rect.midright
+        self.rect.x = self.screen_rect.right - 100
+        self.rect.y = self.screen_rect.centery
 
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
@@ -40,7 +41,6 @@ class Gunner(Sprite):
             self.y = self.y + self.settings.gunner_speed
         if self.y > self.ship.y:
             self.y = self.y - self.settings.gunner_speed
-
         self.rect.y = self.y 
 
     def draw_gunner(self):

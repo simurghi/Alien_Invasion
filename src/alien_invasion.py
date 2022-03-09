@@ -126,12 +126,12 @@ class AlienInvasion:
                 bullet.draw_bullet()
             for beam in self.beams.sprites():
                 beam.draw_beam()
-            self.explosions.draw(self.screen)
             self.aliens.draw(self.screen)
             for gunner in self.gunners.sprites():
                 gunner.draw_gunner()
             for mine in self.mines.sprites():
                 mine.draw_mine()
+            self.explosions.draw(self.screen)
             self._make_game_cinematic()
             self.scoreboard.show_score()
         elif self.stats.state is self.stats.PAUSE:
@@ -171,7 +171,6 @@ class AlienInvasion:
         self.aliens.empty()
         self.bullets.empty()
         self.beams.empty()
-        # Create a new fleet and center the ship
         self.difficulty_counter = 0
         self._create_fleet()
         self.ship.position_ship()
@@ -268,10 +267,10 @@ class AlienInvasion:
                 self._play_explosion(alien_index)
                 self._collision_cleanup_and_score(alien_index)
 
-        if not self.aliens or self.gunners: 
+        if not self.aliens or not self.gunners: 
             # Destroy existing bullets and make a new fleet. 
             #self.bullets.empty()
-            self.explosions.empty()
+            #self.explosions.empty()
             self._create_fleet()
     
     def _check_bullet_mine_collision(self):
@@ -294,10 +293,10 @@ class AlienInvasion:
                 self._play_explosion(mine_index)
                 self._collision_cleanup_and_score(mine_index)
 
-        if not self.aliens or self.gunners:
+        if not self.aliens or not self.gunners:
             # Destroy existing bullets and make a new fleet. 
             #self.bullets.empty()
-            self.explosions.empty()
+            #self.explosions.empty()
             self._create_fleet()
 
     def _check_bullet_gunner_collision(self):
@@ -314,20 +313,25 @@ class AlienInvasion:
                     self._play_impact(gun_index)
                     self.bullets.remove(bullet_indexes)
                 else: 
-                    self._calculate_score(gun_index, bullet_indexes, 1.5)
-                    self._play_explosion(gun_index)
+                    self._calculate_score(gun_index, bullet_indexes, 3.0)
+                    self._play_explosion(gun_index, is_gunner = True)
                     self._collision_cleanup_and_score(gun_index)
         
         if collisions_beam:
             for gun_index, beam_indexes in collisions_beam.items():
-                self._calculate_score(gun_index, beam_indexes, 1.5)
-                self._play_explosion(gun_index)
-                self._collision_cleanup_and_score(gun_index)
+                if self.gunners.sprite.hitpoints > 0:
+                    self.gunners.sprite.hitpoints -= 1
+                    self._play_impact(gun_index)
+                    self.bullets.remove(beam_indexes)
+                else: 
+                    self._calculate_score(gun_index, beam_indexes, 3.0)
+                    self._play_explosion(gun_index, is_gunner = True)
+                    self._collision_cleanup_and_score(gun_index)
 
-        if not self.aliens or self.gunners:
+        if not self.aliens or not self.gunners:
             # Destroy existing bullets and make a new fleet. 
             #self.bullets.empty()
-            self.explosions.empty()
+            #self.explosions.empty()
             self._create_fleet()
 
     def _collision_cleanup_and_score(self,alien_index):
@@ -360,9 +364,12 @@ class AlienInvasion:
             self.adjust_beams = False
 
 
-    def _play_explosion(self, alien_index):
+    def _play_explosion(self, alien_index, is_gunner = False):
         """Plays explosions and sounds if enabled."""
-        explosion = Explosion(alien_index.rect.center)
+        if not is_gunner:
+            explosion = Explosion(alien_index.rect.center)
+        else:
+            explosion = Explosion(alien_index.rect.center, 3)
         self.explosions.add(explosion)
         if (self.settings.play_sfx and 
                 self.stats.state is self.stats.GAMEPLAY):

@@ -27,18 +27,15 @@ class Mine(Sprite):
         self.radius = 20
         self.audio_delay = 0
 
-
-        # Create a list of explosion sprites to play in order whenever a mine is blown up
         self.index = 0
         self.counter = 0
         self.image = self.mine_images[self.index]
         self.rect = self.image.get_rect()
-
         self.set_random_position()
+
         # Store the mine's exact position as a float
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
-
 
     def update(self):
         """Update method for mines"""
@@ -55,9 +52,6 @@ class Mine(Sprite):
         # Reset animation index if it completes
         if self.index >= len(self.mine_images) - 1 and self.counter >= animation_speed:
             self.index = 0
-
-
-
 
     def _move_mine(self):
         """Updates the position of the mines."""

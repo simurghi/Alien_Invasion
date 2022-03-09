@@ -13,6 +13,8 @@ class Explosion(Sprite):
                 explosion = pygame.image.load(f"assets/images/explosion_{num}.png").convert_alpha()
             elif size == 2:
                 explosion = pygame.image.load(f"assets/images/explosion_mini_{num}.png").convert_alpha()
+            elif size == 3:
+                explosion = pygame.image.load(f"assets/images/explosion_big_{num}.png").convert_alpha()
             self.explosion_images.append(explosion)
         self.index = 0
         self.counter = 0
