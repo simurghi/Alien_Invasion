@@ -175,7 +175,7 @@ class AlienInvasion:
         self.aliens.empty()
         self.bullets.empty()
         self.beams.empty()
-        if self.gunners:
+        if self.gunners and self.gunners.sprite.gunner_bullets:
             self.gunners.sprite.gunner_bullets.empty()
         self.difficulty_counter = 0
         self._create_fleet()
@@ -342,7 +342,7 @@ class AlienInvasion:
 
     def _collision_cleanup_and_score_gunner(self,alien_index):
         """Removes collided gunners and bullets and adjusts score."""
-        if self.gunners.sprite.gunner_bullets:
+        if self.gunners and self.gunners.sprite.gunner_bullets:
             self._explode_missiles()
         alien_index.kill()
         self.scoreboard.prep_score()
@@ -439,8 +439,7 @@ class AlienInvasion:
             self._ship_hit()
         if pygame.sprite.spritecollide(self.ship, self.gunners, False, pygame.sprite.collide_circle):
             self._ship_hit()
-        if self.gunners:
-            if self.gunners.sprite.gunner_bullets:
+        if self.gunners and  self.gunners.sprite.gunner_bullets:
                 if pygame.sprite.spritecollide(self.ship, self.gunners.sprite.gunner_bullets, False, pygame.sprite.collide_circle):
                     self._ship_hit()
         for alien in self.aliens.copy():
@@ -703,13 +702,13 @@ class AlienInvasion:
         """Selects a wave spawn pattern based on a random number."""
         if wave_number == 1: 
             self._create_mine(5)
-            self._create_trash_mobs(number_cols-1, number_aliens_y)
+            self._create_trash_mobs(number_cols, number_aliens_y)
         elif wave_number == 2:
             self._create_mine(4)
-            self._create_trash_mobs(number_cols, number_aliens_y)
+            self._create_trash_mobs(number_cols+1, number_aliens_y)
         elif wave_number == 3:
             self._create_mine(3)
-            self._create_trash_mobs(number_cols+1, number_aliens_y)
+            self._create_trash_mobs(number_cols+2, number_aliens_y)
         elif wave_number == 4:
             self._create_mine(9)
             self._create_trash_mobs(1,3)
@@ -720,25 +719,25 @@ class AlienInvasion:
                 self._create_mine(4)
             else: 
                 self._create_mine(9)
-                self._create_trash_mobs(1,3)
+                self._create_trash_mobs(1,4)
         elif wave_number == 6:
             if not self.gunners:
                 self._create_mine(2)
-                self._create_trash_mobs(number_cols-1, number_aliens_y)
+                self._create_trash_mobs(number_cols, number_aliens_y)
                 gunner = Gunner(self)
                 self.gunners.add(gunner)
             else: 
                 self._create_mine(3)
-                self._create_trash_mobs(number_cols+1, number_aliens_y)
+                self._create_trash_mobs(number_cols+2, number_aliens_y)
         elif wave_number == 7:
             if not self.gunners:
                 gunner = Gunner(self)
                 self.gunners.add(gunner)
-                self._create_mine(1)
-                self._create_trash_mobs(number_cols, number_aliens_y)
+                self._create_mine(2)
+                self._create_trash_mobs(number_cols+1, number_aliens_y)
         elif wave_number == 8:
-            self._create_trash_mobs(number_cols+2, number_aliens_y)
-            self._create_mine(1)
+            self._create_trash_mobs(number_cols+3, number_aliens_y)
+            self._create_mine(2)
 
 
 
@@ -755,8 +754,10 @@ class AlienInvasion:
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
         alien.rect.y = alien_height + (1.65 * alien_height * alien_number) +  alien.random_y
-        #alien.rect.y = alien.y
-        alien.rect.x = (self.settings.screen_width ) + alien_width + (2 * alien_width * col_number)
+        alien.rect.x = (self.settings.screen_width ) + alien_width + int((2.25 * alien_width * col_number))
+        alien.x = float(alien.rect.x) 
+        alien.y = float(alien.rect.y)
+
         self.aliens.add(alien)
 
     def _ship_hit(self):
@@ -770,8 +771,7 @@ class AlienInvasion:
             self.aliens.empty()
             self.mines.empty()
             self.bullets.empty()
-            if self.gunners:
-                if self.gunners.sprite.gunner_bullets:
+            if self.gunners and  self.gunners.sprite.gunner_bullets:
                     self.gunners.sprite.gunner_bullets.empty()
 
             # Play an explosion at the ship's position
