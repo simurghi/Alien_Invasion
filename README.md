@@ -34,6 +34,11 @@ https://user-images.githubusercontent.com/85529046/154772296-d154fe15-096b-4d85-
 - X: Fire a missile
 - Z: Flip Ship across the y-axis
 - C: Fire a beam charge
+##### ARROWS-2:
+- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
+- S: Fire a missile
+- D: Flip Ship across the y-axis
+- A: Fire a beam charge
 ##### VIMLIKE:
 - JKL; (offset to the right of traditional VIM): Move the ship left, down, up, and right, respectively.
 - D: Fire a missile
@@ -44,11 +49,27 @@ https://user-images.githubusercontent.com/85529046/154772296-d154fe15-096b-4d85-
 - Left Mouse (LMB): Fire a missile
 - Right Mouse (RMB): Flip Ship across the y-axis
 - Middle Mouse (MMB): Fire a beam charge
+##### QWOP:
+- QWOP: Move the ship left, right, up, and down, respectively
+- Spacebar: Fire a missile
+- F: Flip ship across the y-axis
+- K: Fire a beam charge
 ##### ESDF:
 - ESDF: Move the ship up, left, down, and right, respectively
 - LMB: Fire a missile
 - RMB: Flip Ship across the y-axis
 - MMB: Fire a beam charge
+##### SPACE:
+- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
+- Spacebar: Fire a missile
+- Left Shift: Flip ship across the y-axis
+- Left Control: Fire a beam charge
+##### SPACE-2:
+- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
+- Spacebar: Fire a missile
+- X: Flip Ship across the y-axis
+- Left Shift: Fire a beam charge
+
 
 #### Game Over
 - Left Click: Activate menu option
@@ -90,23 +111,30 @@ https://user-images.githubusercontent.com/85529046/154772296-d154fe15-096b-4d85-
 - **Music**: Toggles in-game and menu music. Disabled when the button is red, enabled when the button is green.
 - **Sound**: Toggles in-game sound. Disabled when the button is red, enabled when the button is green.
 - **Movie VFX**: Toggles cinematic black bars on the top and bottom of the screen, forcing a 16:9 aspect ratio instead of 3:2 (when red).
+- **Resolution**: Toggles between "Native" resolution (960x640) and "Scaled" (upscales base resolution to fit display).
 - **Quit**: Exits the game
 
 ### <b>Tips:</b>
 
-- While your ship is flipped, your bullets move at 2.5x speed. This affects existing bullets.
+- While your ship is flipped, your bullets move at 2.5x speed and your ship moves at 1.25x speed. This affects existing bullets.
 - You can only have 5 missiles out at once. Missiles disappear if they fly offscreen or hit an enemy.
 - Beam charges have a much larger hitbox than missiles, move 25% more quickly, and pierce enemies, but are consumable. 
 - You have 3 lives, this is displayed by the current amount of ships on your HUD
-- Base score is 100 points per ship. This is increased to 150 if playing on Turbo Mode. 
-- Killing an enemy in close range has a 2x score multiplier. (200 pixels or less --> calculated using pythagorean theorem) 
-- Shooting an enemy in their back has a 2x score multiplier.
-- If both multipliers are active, you instead receive a larger score multiplier (5x instead of 4x)
-- If on normal speed, the game will speed up by 25% (base) every 90 seconds and increase score by 25 points.
-- If on turbo speed, the game will speed up by 50% (base, 33% turbo) every 90 seconds and increases by 50 points.
+- Base score is 50 points per trash ship, 100 per mine, and 250 per gunner. This is increased by 1.5x if playing on Turbo Mode. 
+- Killing an enemy in close range has a 4x score multiplier. (200 pixels or less --> calculated using pythagorean theorem) 
+- Shooting an enemy in their back has a 4x score multiplier.
+- If both multipliers are active, you instead receive a larger score multiplier (10x instead of 8x)
+- If on normal speed, the game will speed up by 25% (base) every 90 seconds and increase score by 15 points.
+- If on turbo speed, the game will speed up by 50% (base, 33% turbo) every 90 seconds and increases by 30 points.
 - Every 5000 points earns you a beam charge. If you're at capacity (3), then you instead earn 1000 bonus points.
-- Hitboxes are circular, not rectangular, so you have some room to dodge and flank enemies.
+- Hitboxes for mines and trash mobs are circular, not rectangular, so you have some room to dodge and flank enemies.
 - Movement is restricted in the top and bottom of the screen (60 pixels for each). Cinematic Bars will help cover this up.
+- Mines will always follow your current position and can overlap, kite them for an easy beam charge.
+- Mines will always spawn from the edge of a screen, so the middle will always be a safe spot.
+- Gunners will always spawn from the rightmost center of the screen before following your position.
+- Gunners fire every 1.5 seconds and will slowly move to your current y position, use this to your advantage.
+- There is enough room behind a gunner to perform a backstab
+
 
 
 ## <b>REQUIREMENTS:</b> 

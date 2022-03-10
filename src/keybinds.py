@@ -19,7 +19,7 @@ class Keybinds:
     def set_movement_scheme(self):
         """Sets the movment keys based on the current scheme"""
         if (self.current_scheme is self.ARROWS or self.current_scheme is self.ARROWS2 
-                or self.current_scheme is self.SPACE):
+                or self.current_scheme is self.SPACE or self.current_scheme is self.SPACE2):
             self.MOVEUP = pygame.K_UP
             self.MOVEDOWN = pygame.K_DOWN
             self.MOVELEFT = pygame.K_LEFT
