@@ -26,7 +26,8 @@ class GameStats:
         self.GAMEOVER = 4
         self.OPTIONSMENU = 5
         self.state = self.MAINMENU
-
+        self.pause_state = 0
+        self.music_state = {"GAMEPLAY": False, "MENU": False, "GAMEOVER": False, "PAUSE": False}
 
     def reset_stats(self):
         """Initialize stats that can change during the game."""

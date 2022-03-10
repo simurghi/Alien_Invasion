@@ -84,14 +84,16 @@ class Mine(Sprite):
             self.rect.centerx = self.screen_rect.centerx / 2
             self.rect.y = self.screen_rect.bottom
         elif self.random_pos == 7:
-            self.rect.bottomright = self.screen_rect.bottomright
+            self.rect.centerx = self.screen_rect.centerx * 3 / 4
+            self.rect.y = self.screen_rect.top
         elif self.random_pos == 8:
-            self.rect.topright = self.screen_rect.topright
+            self.rect.centerx = self.screen_rect.centerx * 3 / 4
+            self.rect.y = self.screen_rect.top
         elif self.random_pos == 9:
-            self.rect.centerx = self.screen_rect.centerx * 3 / 2
+            self.rect.centerx = self.screen_rect.centerx * 5 / 4
             self.rect.y = self.screen_rect.top
         elif self.random_pos == 10:
-            self.rect.centerx = self.screen_rect.centerx * 3 / 2
+            self.rect.centerx = self.screen_rect.centerx * 5 / 4
             self.rect.y = self.screen_rect.bottom
 
 

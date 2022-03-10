@@ -25,24 +25,25 @@ class AlienInvasion:
         pygame.joystick.init()
         pygame.display.set_caption("Alien Invasion")
         self._check_gamepad()
-        self.settings = Settings()
-        self.screen = pygame.display.set_mode(
-                (self.settings.screen_width, self.settings.screen_height), pygame.SCALED)
-        self.screen_rect = self.screen.get_rect()
+        self._make_game_objects()
+        self._load_images()
+        self._load_sfx()
+        self._set_volume()
+        self._create_sprite_groups()
+        self._create_fleet()
+
+    def _check_gamepad(self):
+        """Checks if a gamepad is connected and assigns it to the first one if it is."""
+        if pygame.joystick.get_count() > 0:
+            self.gamepad = pygame.joystick.Joystick(0)
+
+    def _load_images(self):
+        """Loads menu and game background images."""
         self.menu_image = pygame.image.load("assets/images/background.png").convert()
         self.background_image = pygame.image.load("assets/images/parallax_scrolling_background.png").convert()
-        self.background_x = 0
-        self.FPS = 60
-        self.pause_state = 0
-        self.time = time.time()
-        self.main_menu = MainMenu(self)
-        self.options_menu = OptionsMenu(self)
-        self.go_menu = GameOverMenu(self)
-        self.keybinds = Keybinds()
-        self.stats = GameStats(self)
-        self.options_menu.draw_buttons()
-        self.ship = Ship(self)
-        self.music_state = {"GAMEPLAY": False, "MENU": False, "GAMEOVER": False, "PAUSE": False}
+
+    def _load_sfx(self):
+        """Loads sound assets."""
         self.bullet_sfx = pygame.mixer.Sound("assets/audio/MissileFire.wav")
         self.beam_sfx = pygame.mixer.Sound("assets/audio/LaserShot.wav")
         self.explosion_sfx = pygame.mixer.Sound("assets/audio/DestroyMonster2.wav")
@@ -50,24 +51,6 @@ class AlienInvasion:
         self.flip_sfx = pygame.mixer.Sound("assets/audio/UnitFlip.wav")
         self.damage_sfx = pygame.mixer.Sound("assets/audio/MiniHitImpact.wav")
         self.beam_damage_sfx = pygame.mixer.Sound("assets/audio/HitOnEnergeticShield.wav")
-        self._set_volume()
-        self.bullets = pygame.sprite.Group()
-        self.beams = pygame.sprite.Group()
-        self.explosions = pygame.sprite.Group()
-        self.mines = pygame.sprite.Group()
-        self.aliens = pygame.sprite.Group()
-        self.gunners = pygame.sprite.GroupSingle()
-        self.difficulty_counter = 0
-        self._create_fleet()
-        self.top_bar = AspectRatio(self)
-        self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
-        self.scoreboard = Scoreboard(self)
-        self.adjust_beams = False
-
-    def _check_gamepad(self):
-        """Checks if a gamepad is connected and assigns it to the first one if it is."""
-        if pygame.joystick.get_count() > 0:
-            self.gamepad = pygame.joystick.Joystick(0)
 
     def _set_volume(self):
         """Sets the volumes for the game sounds."""
@@ -79,6 +62,35 @@ class AlienInvasion:
         self.damage_sfx.set_volume(0.45)
         self.beam_damage_sfx.set_volume(0.60)
 
+    def _make_game_objects(self):
+        """Creates all of the necessary game objects for the game to run."""
+        self.settings = Settings()
+        self._set_screen_attributes()
+        self.time = time.time()
+        self.main_menu = MainMenu(self)
+        self.options_menu = OptionsMenu(self)
+        self.go_menu = GameOverMenu(self)
+        self.keybinds = Keybinds()
+        self.stats = GameStats(self)
+        self.ship = Ship(self)
+        self.scoreboard = Scoreboard(self)
+        self.top_bar = AspectRatio(self)
+        self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
+
+    def _set_screen_attributes(self):
+        """Sets the screen's dimensions and creates its rect."""
+        self.screen = pygame.display.set_mode(
+                (self.settings.screen_width, self.settings.screen_height), pygame.SCALED)
+        self.screen_rect = self.screen.get_rect()
+
+    def _create_sprite_groups(self):
+        """Creates sprite group containers for objects."""
+        self.bullets = pygame.sprite.Group()
+        self.beams = pygame.sprite.Group()
+        self.explosions = pygame.sprite.Group()
+        self.mines = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+        self.gunners = pygame.sprite.GroupSingle()
 
     def run_game(self):
         """Start the main loop for the game."""
@@ -118,7 +130,6 @@ class AlienInvasion:
                 self.go_menu.check_game_over_buttons(mouse_pos)
                 self._check_mousedown_events()
 
-
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
         if self.stats.state is self.stats.GAMEPLAY:
@@ -148,7 +159,6 @@ class AlienInvasion:
             self.main_menu.draw_buttons()
         elif self.stats.state is self.stats.OPTIONSMENU:
             self.options_menu.draw_buttons()
-
         pygame.display.flip()
 
     def _adjust_fps_cap(self):
@@ -158,7 +168,7 @@ class AlienInvasion:
         #How long our frame took to process, substracting from the init 
         time_diff = current_time - self.time 
         # delay the game based on the target FPS if we finish early, otherwise don't delay
-        delay = max(1.0/self.FPS - time_diff, 0)
+        delay = max(1.0/self.settings.FPS - time_diff, 0)
         time.sleep(delay)
         self.time = current_time
 
@@ -177,7 +187,7 @@ class AlienInvasion:
         self.beams.empty()
         if self.gunners and self.gunners.sprite.gunner_bullets:
             self.gunners.sprite.gunner_bullets.empty()
-        self.difficulty_counter = 0
+        self.settings.difficulty_counter = 0
         self._create_fleet()
         self.ship.position_ship()
         self.ship.reset_ship_flip()
@@ -187,48 +197,43 @@ class AlienInvasion:
         self._toggle_mute()
         #Menu Music
         if (self.stats.state is self.stats.MAINMENU 
-                or self.stats.state is self.stats.OPTIONSMENU):
-            if not self.music_state["MENU"]:
+                or self.stats.state is self.stats.OPTIONSMENU) and not self.stats.music_state["MENU"]:
                 pygame.mixer.music.load("assets/audio/menu.wav")
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
-                self.music_state["MENU"] = True
+                self.stats.music_state["MENU"] = True
         #Combat Music
-        elif self.stats.state is self.stats.GAMEPLAY:
-            if not self.music_state["GAMEPLAY"]:
+        elif self.stats.state is self.stats.GAMEPLAY and not self.stats.music_state["GAMEPLAY"]:
                 pygame.mixer.music.load("assets/audio/battle.wav")
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
-                self.music_state["GAMEPLAY"] = True
+                self.stats.music_state["GAMEPLAY"] = True
         #Pause Music
-        elif self.stats.state is self.stats.PAUSE:
-            if not self.music_state["PAUSE"]:
+        elif self.stats.state is self.stats.PAUSE and not self.stats.music_state["PAUSE"]:
                 pygame.mixer.music.load("assets/audio/loading.wav")
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
-                self.music_state["PAUSE"] = True
+                self.stats.music_state["PAUSE"] = True
         #Game Over Music
-        elif self.stats.state is self.stats.GAMEOVER:
-            if not self.music_state["GAMEOVER"]:
+        elif self.stats.state is self.stats.GAMEOVER and not self.stats.music_state["GAMEOVER"]:
                 pygame.mixer.music.load("assets/audio/Disengage.wav")
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
-                self.music_state["GAMEOVER"] = True
-
+                self.stats.music_state["GAMEOVER"] = True
 
     def _toggle_mute(self):
         """Helper methods that sets volume of a track based on state and if option enabled."""
         if not self.settings.play_music:
             pygame.mixer.music.set_volume(0.0)
-        elif self.music_state["GAMEOVER"] and self.settings.play_music:
+        elif self.stats.music_state["GAMEOVER"] and self.settings.play_music:
             pygame.mixer.music.set_volume(0.5)
         elif self.settings.play_music:
             pygame.mixer.music.set_volume(1.0)
 
     def _clear_music_state(self):
         """Helper method that clears the music state dictionary to False values."""
-        for music in self.music_state:
-            self.music_state[music] = False
+        for music in self.stats.music_state:
+            self.stats.music_state[music] = False
 
     def _update_bullets(self):
         """Update position of the bullets and get rid of the old bullets."""
@@ -266,16 +271,12 @@ class AlienInvasion:
                 self._play_explosion(alien_index)
                 self.bullets.remove(bullet_indexes)
                 self._collision_cleanup_and_score(alien_index)
-        
         if collisions_beam:
             for alien_index, beam_indexes in collisions_beam.items():
                 self._calculate_score(alien_index, beam_indexes, 0.5)
                 self._play_explosion(alien_index)
                 self._collision_cleanup_and_score(alien_index)
-
         if not self.aliens: 
-            # Destroy existing bullets and make a new fleet. 
-            #self.bullets.empty()
             self._create_fleet()
     
     def _check_bullet_mine_collision(self):
@@ -291,16 +292,12 @@ class AlienInvasion:
                 self._play_explosion(mine_index)
                 self.bullets.remove(bullet_indexes)
                 self._collision_cleanup_and_score(mine_index)
-        
         if collisions_beam:
             for mine_index, beam_indexes in collisions_beam.items():
                 self._calculate_score(mine_index, beam_indexes, 1)
                 self._play_explosion(mine_index)
                 self._collision_cleanup_and_score(mine_index)
-
         if not self.aliens:
-            # Destroy existing bullets and make a new fleet. 
-            #self.bullets.empty()
             self._create_fleet()
 
     def _check_bullet_gunner_collision(self):
@@ -332,12 +329,7 @@ class AlienInvasion:
                     self._calculate_score(gun_index, beam_indexes, 2.5)
                     self._play_explosion(gun_index, is_gunner = True)
                     self._collision_cleanup_and_score_gunner(gun_index)
-
-
         if not self.aliens:
-            # Destroy existing bullets and make a new fleet. 
-            #self.bullets.empty()
-            #self.explosions.empty()
             self._create_fleet()
 
     def _collision_cleanup_and_score_gunner(self,alien_index):
@@ -372,17 +364,16 @@ class AlienInvasion:
     def _calculate_beam_addition(self):
         """Calculates if the player should received an additional beam charge or 1000 points
         If they hit the score threshold."""
-        if self.stats.hidden_score / 5000 >= 1 and not self.adjust_beams:
+        if self.stats.hidden_score / 5000 >= 1 and not self.settings.adjust_beams:
             if self.stats.charges_remaining < self.settings.beam_limit:
                 self.stats.charges_remaining += 1
                 self.scoreboard.prep_beams()
             elif self.stats.charges_remaining == self.settings.beam_limit:
                 self.stats.score += 500
             self.stats.hidden_score -= 5000
-            self.adjust_beams = True
+            self.settings.adjust_beams = True
         else:
-            self.adjust_beams = False
-
+            self.settings.adjust_beams = False
 
     def _play_explosion(self, alien_index, is_gunner = False):
         """Plays explosions and sounds if enabled."""
@@ -406,7 +397,6 @@ class AlienInvasion:
                 self.stats.state is self.stats.GAMEPLAY and beam_impact):
             self.beam_damage_sfx.play()
 
-
     def _check_cqc_distance(self, alien):
         """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
         formula = sqrt((self.ship.rect.centerx - alien.rect.centerx)**2 + 
@@ -425,7 +415,6 @@ class AlienInvasion:
             else:
                 multiplier += 1 if not multiplier else 0
         return multiplier
-        
 
     def _update_aliens(self):
         """Checks if the player ship collides with aliens, 
@@ -448,12 +437,12 @@ class AlienInvasion:
 
     def _scroll_background(self):
         """Smoothly scrolls the background image on the screen to give illusion of movement."""
-        self.rel_background_x = self.background_x % self.background_image.get_rect().width
+        self.rel_background_x = self.settings.background_x % self.background_image.get_rect().width
         self.screen.blit(self.background_image, (
             self.rel_background_x - self.background_image.get_rect().width, 0))
         if self.rel_background_x < self.settings.screen_width:
             self.screen.blit(self.background_image, (self.rel_background_x, 0))
-        self.background_x += self.settings.scroll_speed
+        self.settings.background_x += self.settings.scroll_speed
     
     def _check_keydown_events(self, event):
         """respond to keypresses.""" 
@@ -605,10 +594,10 @@ class AlienInvasion:
 
     def _check_pause(self):
         """Checks to see if hitting ESC should pause or unpause the game."""
-        self.pause_state +=1 
-        if self.pause_state % 2 == 0 and self.stats.state == self.stats.PAUSE:
+        self.stats.pause_state +=1 
+        if self.stats.pause_state % 2 == 0 and self.stats.state == self.stats.PAUSE:
             self.stats.state = self.stats.GAMEPLAY
-        elif self.pause_state % 2 and self.stats.state == self.stats.GAMEPLAY:
+        elif self.stats.pause_state % 2 and self.stats.state == self.stats.GAMEPLAY:
             self.stats.state = self.stats.PAUSE
 
     def _check_exit(self):
@@ -665,16 +654,13 @@ class AlienInvasion:
             self.settings.ship_speed *= 0.80
 
     def _create_fleet(self):
-        """Create the fleet of aliens."""
-        # Make an alien and find the number of aliens in a row.
-        # Spacing between each alien is equal to one alien height
+        """Create the fleet of aliens and find out 
+        how many can be populated in each fleet."""
         alien = Alien(self)
         wave_spawn = randint(1,8)
         alien_width, alien_height = alien.rect.size
         available_space_y = self.settings.screen_height - (1.50 * alien_height)
         number_aliens_y = int(available_space_y // (1.50 * alien_height)) 
-
-        # Determine the number of columns of aliens that fit on the screen.
         ship_width = self.ship.rect.width
         available_space_x = (self.settings.screen_height - 
                 (3 * alien_width) - ship_width)
@@ -689,14 +675,14 @@ class AlienInvasion:
             self._check_unique_spawn(mine, position_list)
             self.mines.add(mine)
 
-
     def _check_unique_spawn(self, mine, position_list):
+        """Shuffles the mines' starting positions randomly
+        to help prevent them from clumping up on spawn."""
         if not position_list:
             position_list.append(mine.random_pos)
         while mine.random_pos in position_list:
             mine.random_pos = randint(1,10)
             mine.set_random_position()
-
 
     def _select_spawn_pattern(self, wave_number, number_cols, number_aliens_y):
         """Selects a wave spawn pattern based on a random number."""
@@ -739,12 +725,8 @@ class AlienInvasion:
             self._create_trash_mobs(number_cols+3, number_aliens_y)
             self._create_mine(2)
 
-
-
-
     def _create_trash_mobs(self, number_cols, number_aliens_y):
         """Spawns waves of trash mobs based on wave pattern."""
-        # Create the first column of aliens.
         for col_number in range(number_cols):
             for alien_number in range(number_aliens_y):
                 self._create_alien(alien_number, col_number)
@@ -757,37 +739,28 @@ class AlienInvasion:
         alien.rect.x = (self.settings.screen_width ) + alien_width + int((2.25 * alien_width * col_number))
         alien.x = float(alien.rect.x) 
         alien.y = float(alien.rect.y)
-
         self.aliens.add(alien)
 
     def _ship_hit(self):
-        """Respond to the ship being hit by an alien."""
+        """Respond to the ship being hit by an alien. Delete any non-gunner aliens
+        and all bullets, play explosions at the player's location, create a new fleet,
+        reposition the player ship, and do a brief pause. End the game if no lives left"""
         # Decrement lives
         if self.stats.ships_remaining > 1:
             self.stats.ships_remaining -= 1
             self.scoreboard.prep_ships()
-
-            # Get rid of any remaining aliens and bullets
             self.aliens.empty()
             self.mines.empty()
             self.bullets.empty()
             if self.gunners and  self.gunners.sprite.gunner_bullets:
                     self.gunners.sprite.gunner_bullets.empty()
-
-            # Play an explosion at the ship's position
             explosion = Explosion(self.ship.rect.center)
             self.explosions.add(explosion)
             if self.settings.play_sfx and self.stats.state is self.stats.GAMEPLAY:
                 self.explosion_sfx.play()
-
-
-            # Create a new fleet and reposition the ship.
             self._create_fleet()
             self.ship.position_ship()
-
-            # Pause.
             time.sleep(0.10)
-
         else: 
             self.enter_game_over()
             self.scoreboard.prep_score_game_over()
@@ -795,8 +768,8 @@ class AlienInvasion:
 
     def _adjust_difficulty(self):
         """Gradually increases the game speed as time elapses."""
-        self.difficulty_counter+=1 
-        if self.difficulty_counter % (self.FPS * 90) == 0:
+        self.settings.difficulty_counter+=1 
+        if self.settings.difficulty_counter % (self.settings.FPS * 90) == 0:
             self.settings.increase_speed()
 
     def _make_game_cinematic(self):
@@ -813,7 +786,6 @@ class AlienInvasion:
             json.dump({"game_speed" : self.settings.turbo_speed, "control_scheme": 
                 self.keybinds.current_scheme, "play_music": self.settings.play_music,
                 "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars, "window_mode": self.settings.scaled_gfx}, f)
-
 
     def enter_game_over(self):
         """Game Over Screen that plays when the player dies."""

@@ -11,7 +11,7 @@ class Settings:
         self.cinematic_bars = True
         self.turbo_speed = False
         self.scaled_gfx = True 
-
+        self.FPS = 60
 
         #  Ship settings
         self.ship_limit = 3
@@ -42,8 +42,9 @@ class Settings:
         self.mine_speed = 1.50 * self.speed_mult
         self.gunner_speed = 1.25 * self.speed_mult
         self.scroll_speed = -1.0
-        # Scoring 
-
+        self.background_x = 0
+        self.difficulty_counter = 0
+        self.adjust_beams = False
 
     def increase_speed(self):
         """Increase speed settings."""
