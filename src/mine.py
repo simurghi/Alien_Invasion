@@ -56,13 +56,13 @@ class Mine(Sprite):
     def _move_mine(self):
         """Updates the position of the mines."""
         if self.x < self.ship.x:
-            self.x = self.x + self.settings.mine_speed
+            self.x += self.settings.mine_speed
         if self.x > self.ship.x:
-            self.x = self.x - self.settings.mine_speed
+            self.x -= self.settings.mine_speed
         if self.y < self.ship.y:
-            self.y = self.y + self.settings.mine_speed
+            self.y += self.settings.mine_speed
         if self.y > self.ship.y:
-            self.y = self.y - self.settings.mine_speed
+            self.y -= self.settings.mine_speed
 
         self.rect.y = self.y 
         self.rect.x = self.x 

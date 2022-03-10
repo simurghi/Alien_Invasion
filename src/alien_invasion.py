@@ -49,6 +49,7 @@ class AlienInvasion:
         self.menu_sfx = pygame.mixer.Sound("assets/audio/OptionSelect.wav")
         self.flip_sfx = pygame.mixer.Sound("assets/audio/UnitFlip.wav")
         self.damage_sfx = pygame.mixer.Sound("assets/audio/MiniHitImpact.wav")
+        self.beam_damage_sfx = pygame.mixer.Sound("assets/audio/HitOnEnergeticShield.wav")
         self._set_volume()
         self.bullets = pygame.sprite.Group()
         self.beams = pygame.sprite.Group()
@@ -75,7 +76,8 @@ class AlienInvasion:
         self.explosion_sfx.set_volume(0.40)
         self.menu_sfx.set_volume(0.40)
         self.flip_sfx.set_volume(0.40)
-        self.damage_sfx.set_volume(0.40)
+        self.damage_sfx.set_volume(0.45)
+        self.beam_damage_sfx.set_volume(0.60)
 
 
     def run_game(self):
@@ -127,10 +129,12 @@ class AlienInvasion:
             for beam in self.beams.sprites():
                 beam.draw_beam()
             self.aliens.draw(self.screen)
-            for gunner in self.gunners.sprites():
-                gunner.draw_gunner()
             for mine in self.mines.sprites():
                 mine.draw_mine()
+            for gunner in self.gunners.sprites():
+                gunner.draw_gunner()
+                for chonkymissile in gunner.gunner_bullets:
+                    chonkymissile.draw_bullet()
             self.explosions.draw(self.screen)
             self._make_game_cinematic()
             self.scoreboard.show_score()
@@ -171,6 +175,8 @@ class AlienInvasion:
         self.aliens.empty()
         self.bullets.empty()
         self.beams.empty()
+        if self.gunners:
+            self.gunners.sprite.gunner_bullets.empty()
         self.difficulty_counter = 0
         self._create_fleet()
         self.ship.position_ship()
@@ -256,21 +262,20 @@ class AlienInvasion:
                 self.beams, False, False)
         if collisions:
             for alien_index, bullet_indexes in collisions.items():
-                self._calculate_score(alien_index, bullet_indexes)
+                self._calculate_score(alien_index, bullet_indexes, 0.5)
                 self._play_explosion(alien_index)
                 self.bullets.remove(bullet_indexes)
                 self._collision_cleanup_and_score(alien_index)
         
         if collisions_beam:
             for alien_index, beam_indexes in collisions_beam.items():
-                self._calculate_score(alien_index, beam_indexes)
+                self._calculate_score(alien_index, beam_indexes, 0.5)
                 self._play_explosion(alien_index)
                 self._collision_cleanup_and_score(alien_index)
 
-        if not self.aliens or not self.gunners: 
+        if not self.aliens: 
             # Destroy existing bullets and make a new fleet. 
             #self.bullets.empty()
-            #self.explosions.empty()
             self._create_fleet()
     
     def _check_bullet_mine_collision(self):
@@ -282,21 +287,20 @@ class AlienInvasion:
                 self.beams, False, False)
         if collisions:
             for mine_index, bullet_indexes in collisions.items():
-                self._calculate_score(mine_index, bullet_indexes, 1.5)
+                self._calculate_score(mine_index, bullet_indexes, 1)
                 self._play_explosion(mine_index)
                 self.bullets.remove(bullet_indexes)
                 self._collision_cleanup_and_score(mine_index)
         
         if collisions_beam:
             for mine_index, beam_indexes in collisions_beam.items():
-                self._calculate_score(mine_index, beam_indexes, 1.5)
+                self._calculate_score(mine_index, beam_indexes, 1)
                 self._play_explosion(mine_index)
                 self._collision_cleanup_and_score(mine_index)
 
-        if not self.aliens or not self.gunners:
+        if not self.aliens:
             # Destroy existing bullets and make a new fleet. 
             #self.bullets.empty()
-            #self.explosions.empty()
             self._create_fleet()
 
     def _check_bullet_gunner_collision(self):
@@ -313,26 +317,36 @@ class AlienInvasion:
                     self._play_impact(gun_index)
                     self.bullets.remove(bullet_indexes)
                 else: 
-                    self._calculate_score(gun_index, bullet_indexes, 3.0)
+                    self._calculate_score(gun_index, bullet_indexes, 2.5)
                     self._play_explosion(gun_index, is_gunner = True)
-                    self._collision_cleanup_and_score(gun_index)
-        
+                    self._collision_cleanup_and_score_gunner(gun_index)
+       
         if collisions_beam:
             for gun_index, beam_indexes in collisions_beam.items():
                 if self.gunners.sprite.hitpoints > 0:
-                    self.gunners.sprite.hitpoints -= 1
-                    self._play_impact(gun_index)
-                    self.bullets.remove(beam_indexes)
+                    self.gunners.sprite.hitpoints -= 5
+                    self._play_impact(gun_index, beam_impact = True)
+                    if self.gunners.sprite.hitpoints > 0:
+                        self.beams.remove(beam_indexes)
                 else: 
-                    self._calculate_score(gun_index, beam_indexes, 3.0)
+                    self._calculate_score(gun_index, beam_indexes, 2.5)
                     self._play_explosion(gun_index, is_gunner = True)
-                    self._collision_cleanup_and_score(gun_index)
+                    self._collision_cleanup_and_score_gunner(gun_index)
 
-        if not self.aliens or not self.gunners:
+
+        if not self.aliens:
             # Destroy existing bullets and make a new fleet. 
             #self.bullets.empty()
             #self.explosions.empty()
             self._create_fleet()
+
+    def _collision_cleanup_and_score_gunner(self,alien_index):
+        """Removes collided gunners and bullets and adjusts score."""
+        if self.gunners.sprite.gunner_bullets:
+            self._explode_missiles()
+        alien_index.kill()
+        self.scoreboard.prep_score()
+        self.scoreboard.check_high_score()
 
     def _collision_cleanup_and_score(self,alien_index):
         """Removes collided aliens and adjusts score."""
@@ -340,6 +354,12 @@ class AlienInvasion:
         self.scoreboard.prep_score()
         self.scoreboard.check_high_score()
 
+    def _explode_missiles(self):
+        """Plays impact and sounds if enabled."""
+        for chonkymissile in self.gunners.sprite.gunner_bullets:
+            explosion = Explosion(chonkymissile.rect.center, 2)
+            self.explosions.add(explosion)
+        
     def _calculate_score(self, alien_index, projectile_index, enemy_mult = 1):
         """Calculates score multipliers for killed enemies."""
         cqc_mult = self._check_cqc_distance(alien_index)
@@ -375,20 +395,24 @@ class AlienInvasion:
                 self.stats.state is self.stats.GAMEPLAY):
             self.explosion_sfx.play()
 
-    def _play_impact(self, alien_index):
+    def _play_impact(self, alien_index, beam_impact= False):
         """Plays impact and sounds if enabled."""
         explosion = Explosion(alien_index.rect.center, 2)
         self.explosions.add(explosion)
         if (self.settings.play_sfx and 
-                self.stats.state is self.stats.GAMEPLAY):
+                self.stats.state is self.stats.GAMEPLAY and not beam_impact):
             self.damage_sfx.play()
+        elif (self.settings.play_sfx and 
+                self.stats.state is self.stats.GAMEPLAY and beam_impact):
+            self.beam_damage_sfx.play()
+
 
     def _check_cqc_distance(self, alien):
         """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
         formula = sqrt((self.ship.rect.centerx - alien.rect.centerx)**2 + 
                 (self.ship.rect.centerx - alien.rect.centerx)**2)
         if formula < 201:
-            return 2
+            return 4
         else:
             return 1
 
@@ -397,7 +421,7 @@ class AlienInvasion:
         multiplier = 0
         for bullet_index in bullet_indexes:
             if bullet_index.direction < 0: 
-                multiplier += 2
+                multiplier += 4
             else:
                 multiplier += 1 if not multiplier else 0
         return multiplier
@@ -415,10 +439,13 @@ class AlienInvasion:
             self._ship_hit()
         if pygame.sprite.spritecollide(self.ship, self.gunners, False, pygame.sprite.collide_circle):
             self._ship_hit()
+        if self.gunners:
+            if self.gunners.sprite.gunner_bullets:
+                if pygame.sprite.spritecollide(self.ship, self.gunners.sprite.gunner_bullets, False, pygame.sprite.collide_circle):
+                    self._ship_hit()
         for alien in self.aliens.copy():
             if alien.rect.left < -100: 
                 self.aliens.remove(alien)
-        
 
     def _scroll_background(self):
         """Smoothly scrolls the background image on the screen to give illusion of movement."""
@@ -643,7 +670,7 @@ class AlienInvasion:
         # Make an alien and find the number of aliens in a row.
         # Spacing between each alien is equal to one alien height
         alien = Alien(self)
-        wave_spawn = 8#randint(1,8)
+        wave_spawn = randint(1,8)
         alien_width, alien_height = alien.rect.size
         available_space_y = self.settings.screen_height - (1.50 * alien_height)
         number_aliens_y = int(available_space_y // (1.50 * alien_height)) 
@@ -686,12 +713,33 @@ class AlienInvasion:
         elif wave_number == 4:
             self._create_mine(9)
             self._create_trash_mobs(1,3)
-        else:
-            #self._create_mine(2)
-            gunner = Gunner(self)
+        elif wave_number == 5:
             if not self.gunners:
+                gunner = Gunner(self)
                 self.gunners.add(gunner)
-            #self._create_trash_mobs(number_cols+2, number_aliens_y)
+                self._create_mine(4)
+            else: 
+                self._create_mine(9)
+                self._create_trash_mobs(1,3)
+        elif wave_number == 6:
+            if not self.gunners:
+                self._create_mine(2)
+                self._create_trash_mobs(number_cols-1, number_aliens_y)
+                gunner = Gunner(self)
+                self.gunners.add(gunner)
+            else: 
+                self._create_mine(3)
+                self._create_trash_mobs(number_cols+1, number_aliens_y)
+        elif wave_number == 7:
+            if not self.gunners:
+                gunner = Gunner(self)
+                self.gunners.add(gunner)
+                self._create_mine(1)
+                self._create_trash_mobs(number_cols, number_aliens_y)
+        elif wave_number == 8:
+            self._create_trash_mobs(number_cols+2, number_aliens_y)
+            self._create_mine(1)
+
 
 
 
@@ -722,6 +770,9 @@ class AlienInvasion:
             self.aliens.empty()
             self.mines.empty()
             self.bullets.empty()
+            if self.gunners:
+                if self.gunners.sprite.gunner_bullets:
+                    self.gunners.sprite.gunner_bullets.empty()
 
             # Play an explosion at the ship's position
             explosion = Explosion(self.ship.rect.center)

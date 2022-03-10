@@ -38,6 +38,7 @@ class Settings:
         self.ship_speed = 3.50 * self.speed_mult
         self.alien_speed = 4.00 * self.speed_mult
         self.bullet_speed = 4.00 * self.speed_mult
+        self.gunner_bullet_speed = 2.00 * self.speed_mult
         self.mine_speed = 1.50 * self.speed_mult
         self.gunner_speed = 1.00 * self.speed_mult
         self.scroll_speed = -1.0
@@ -53,7 +54,8 @@ class Settings:
             self.speed_add = 1
             self.score_scale = 25
         self.ship_speed += self.speedup_scale * self.speed_add
-        self.bullet_speed += self.speedup_scale * self.speed_add
+        self.bullet_speed += (self.speedup_scale - 0.50) * self.speed_add
+        self.gunner_bullet_speed += self.speedup_scale * self.speed_add
         self.alien_speed += self.speedup_scale * self.speed_add
         self.mine_speed += (self.speedup_scale - 0.50) * self.speed_add
         self.alien_points += self.score_scale * self.speed_add
