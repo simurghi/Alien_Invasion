@@ -70,7 +70,3 @@ class Gunner(Sprite):
             self.y -= self.settings.gunner_speed
         self.rect.y = self.y 
         self.rect.x = self.x
-
-    def draw_gunner(self):
-        """Draw the mine at the current position."""
-        self.screen.blit(self.image, self.rect) 

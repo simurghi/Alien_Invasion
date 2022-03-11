@@ -43,7 +43,7 @@ class Settings:
         self.bullet_speed = 4.00 * self.speed_mult
         self.gunner_bullet_speed = 2.50 * self.speed_mult
         self.mine_speed = 1.50 * self.speed_mult
-        self.gunner_speed = 1.25 * self.speed_mult
+        self.gunner_speed = 1.20 * self.speed_mult
         self.scroll_speed = -1.0
         self.background_x = 0
         self.difficulty_counter = 0

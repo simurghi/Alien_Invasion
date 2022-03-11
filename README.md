@@ -133,6 +133,7 @@ https://user-images.githubusercontent.com/85529046/154772296-d154fe15-096b-4d85-
 - Mines will always spawn from the edge of a screen, so the middle will always be a safe spot.
 - Gunners will always spawn from the rightmost center of the screen before following your position.
 - Gunners fire every 1.5 seconds and will slowly move to your current y position, use this to your advantage.
+- There can only ever be one Gunner on the screen at once, if a gunner already exists when another one would spawn, a new enemy wave consisting of mines and trash mobs will be spawned instead.
 - There is enough room behind a gunner to perform a backstab
 
 

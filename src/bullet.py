@@ -10,9 +10,10 @@ class Bullet(Sprite):
         self.screen = ai_game.screen
         self.settings = ai_game.settings 
         self.direction = direction
+        self.ai_game = ai_game
         self.image = pygame.image.load('assets/images/missile.bmp')
         self.rect = self.image.get_rect()
-        self.rect.center = ai_game.ship.rect.center
+        self.rect.midright = ai_game.ship.rect.midright
         self.x = float(self.rect.x)
 
     def update(self):
@@ -24,9 +25,8 @@ class Bullet(Sprite):
         """Flips the bullet across the y-axis."""
         self.direction *= -1
         self.image = pygame.transform.flip(self.image, True, False)
-
-    def draw_bullet(self):
-        """Draw the bullet at the current position."""
-        self.screen.blit(self.image, self.rect) 
-
-
+        self.rect = self.image.get_rect()
+        if self.direction > 0:
+            self.rect.midright = self.ai_game.ship.rect.midright
+        else:
+            self.rect.midleft = self.ai_game.ship.rect.midleft

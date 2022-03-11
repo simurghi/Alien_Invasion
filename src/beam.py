@@ -34,10 +34,6 @@ class Beam(Sprite):
         self.direction *= -1
         self.image = pygame.transform.flip(self.image, True, False)
 
-    def draw_beam(self):
-        """Draw the beam at the current position."""
-        self.screen.blit(self.image, self.rect) 
-
     def update(self):
         """Update method for explosions"""
         self.x += self.settings.bullet_speed  * self.direction * 1.25

@@ -6,7 +6,7 @@ class Explosion(Sprite):
     def __init__(self, center, size=1):
         """Initialize explosion coordinates."""
         super().__init__()
-        self._load_assets()
+        self._load_assets(size)
         self.index = 0
         self.counter = 0
         self.image = self.explosion_images[self.index]

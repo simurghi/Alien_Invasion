@@ -1,0 +1,17 @@
+NEW FEATURES: 
+-- 2 New Enemy Types: Mines and Gunners!
+  -- Mines will spawn from the edge of the screen and chase after the player. 
+  -- Gunners spawn at the right center of the screen and shoot bullets at the player's current position. They have 10 HP. There can only ever be one gunner at a time.
+-- 4 New Control Presets: QWOP, SPACE-1, SPACE-2, ARROWS-2
+-- New Scaled GFX option added! 
+  -- Scales the game from the internal resolution of 960x640 to fit your monitor's current resolution.
+-- More unique wave patterns! Increased from 2 to 8
+
+BALANCE CHANGES: 
+-- Player and Trash mob speed slightly reduced (now both 3.5 instead of 3.75 and 4.0)
+-- Trash mob score reduced to 50 from 100
+-- Backstab and CQC multipliers improved to 4x each from 2x (stack to 10x total instead of 5x)
+BUG FIXES & IMPROVEMENTS:
+-- Load time optimized (now only reads the settings.json file once instead of multiple times.)
+-- Turbo Option now properly colored if enabled when the game launches. 
+-- Code Refactoring! Much cleaner and more consistent to read.

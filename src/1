@@ -133,14 +133,19 @@ class AlienInvasion:
         """Update images on the screen, and flip to the new screen."""
         if self.stats.state is self.stats.GAMEPLAY:
             self._scroll_background()
+            pygame.draw.circle(self.ship.image, (255,0,0), self.ship.rect.center, self.ship.radius)
             self.ship.blitme()
-            self.bullets.draw(self.screen)
-            self.beams.draw(self.screen)
+            for bullet in self.bullets.sprites():
+                bullet.draw_bullet()
+            for beam in self.beams.sprites():
+                beam.draw_beam()
             self.aliens.draw(self.screen)
-            self.mines.draw(self.screen)
-            self.gunners.draw(self.screen)
-            if self.gunners and self.gunners.sprite.gunner_bullets:
-                self.gunners.sprite.gunner_bullets.draw(self.screen)
+            for mine in self.mines.sprites():
+                mine.draw_mine()
+            for gunner in self.gunners.sprites():
+                gunner.draw_gunner()
+                for chonkymissile in gunner.gunner_bullets:
+                    chonkymissile.draw_bullet()
             self.explosions.draw(self.screen)
             self._make_game_cinematic()
             self.scoreboard.show_score()
@@ -419,11 +424,10 @@ class AlienInvasion:
             self._ship_hit()
         if pygame.sprite.spritecollide(self.ship, self.mines, False, pygame.sprite.collide_circle):
             self._ship_hit()
-        if pygame.sprite.spritecollide(self.ship, self.gunners, False, pygame.sprite.collide_mask):
+        if pygame.sprite.spritecollide(self.ship, self.gunners, False, pygame.sprite.collide_circle):
             self._ship_hit()
-        if (self.gunners and self.gunners.sprite.gunner_bullets and 
-                pygame.sprite.spritecollide(self.ship, self.gunners.sprite.gunner_bullets, 
-                    False, pygame.sprite.collide_mask)):
+        if self.gunners and  self.gunners.sprite.gunner_bullets:
+                if pygame.sprite.spritecollide(self.ship, self.gunners.sprite.gunner_bullets, False, pygame.sprite.collide_circle):
                     self._ship_hit()
         for alien in self.aliens.copy():
             if alien.rect.left < -100: 
@@ -651,7 +655,7 @@ class AlienInvasion:
         """Create the fleet of aliens and find out 
         how many can be populated in each fleet."""
         alien = Alien(self)
-        wave_spawn = randint(1,8)
+        wave_spawn = 9#randint(1,8)
         alien_width, alien_height = alien.rect.size
         available_space_y = self.settings.screen_height - (1.50 * alien_height)
         number_aliens_y = int(available_space_y // (1.50 * alien_height)) 
@@ -664,11 +668,10 @@ class AlienInvasion:
     def _create_mine(self, spawn_number = 1):
         """Create an alien and place it in a column."""
         position_list = []
-        if len(self.mines) < 20:
-            for j in range(0,spawn_number):
-                mine = Mine(self)
-                self._check_unique_spawn(mine, position_list)
-                self.mines.add(mine)
+        for j in range(0,spawn_number):
+            mine = Mine(self)
+            self._check_unique_spawn(mine, position_list)
+            self.mines.add(mine)
 
     def _check_unique_spawn(self, mine, position_list):
         """Shuffles the mines' starting positions randomly
@@ -719,6 +722,9 @@ class AlienInvasion:
         elif wave_number == 8:
             self._create_trash_mobs(number_cols+3, number_aliens_y)
             self._create_mine(2)
+        elif wave_number == 9:
+            self._create_trash_mobs(number_cols+4, number_aliens_y)
+
 
     def _create_trash_mobs(self, number_cols, number_aliens_y):
         """Spawns waves of trash mobs based on wave pattern."""
@@ -746,7 +752,7 @@ class AlienInvasion:
             self.aliens.empty()
             self.mines.empty()
             self.bullets.empty()
-            if self.gunners and self.gunners.sprite.gunner_bullets:
+            if self.gunners and  self.gunners.sprite.gunner_bullets:
                     self.gunners.sprite.gunner_bullets.empty()
             explosion = Explosion(self.ship.rect.center)
             self.explosions.add(explosion)

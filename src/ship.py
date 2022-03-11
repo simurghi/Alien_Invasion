@@ -13,6 +13,7 @@ class Ship(Sprite):
         self.image = pygame.image.load('assets/images/ship.bmp')
         self.rect = self.image.get_rect()
         self.rect.midleft = self.screen_rect.midleft
+        self.radius = 10
         self.is_flipped = False
         self.y = float(self.rect.y) 
         self.x = float(self.rect.x) 

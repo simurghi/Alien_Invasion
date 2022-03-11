@@ -19,6 +19,8 @@ class Mine(Sprite):
         self.set_random_position()
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
+        self.radius = int(self.rect.width / 2)
+        pygame.draw.circle(self.image, (255,0,0), self.rect.center, self.radius)
 
     def _load_assets(self):
         """Loads the images for the mines and stores them in a list. Also loads warning sound."""
@@ -96,10 +98,6 @@ class Mine(Sprite):
         elif self.random_pos == 10:
             self.rect.centerx = self.screen_rect.centerx * 5 / 4
             self.rect.y = self.screen_rect.bottom
-
-    def draw_mine(self):
-        """Draw the mine at the current position."""
-        self.screen.blit(self.image, self.rect) 
 
     def _cqc_warning(self):
         """If a mine is close to the player ship, they will receive a warning.
