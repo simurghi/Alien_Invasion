@@ -3,14 +3,13 @@ from pygame.sprite import Sprite
 from math import sqrt
 from random import randint
 
-
 class Mine(Sprite):
     """A class to represent an elite mine enemy."""
 
     def __init__(self, ai_game):
         """Initialize the mine and set its starting position."""
         super().__init__()
-        self._load_images_and_sound()
+        self._load_assets()
         self._create_objects(ai_game)
         self.screen = ai_game.screen
         self.screen_rect = ai_game.screen.get_rect()
@@ -21,7 +20,7 @@ class Mine(Sprite):
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
 
-    def _load_images_and_sound(self):
+    def _load_assets(self):
         """Loads the images for the mines and stores them in a list. Also loads warning sound."""
         self.mine_images = []
         for num in range(1, 5):
