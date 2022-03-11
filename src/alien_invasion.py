@@ -236,9 +236,7 @@ class AlienInvasion:
 
     def _update_bullets(self):
         """Update position of the bullets and get rid of the old bullets."""
-        # Update bullet positions
         self.bullets.update()
-        # Get rid of bullets that have disappeared.
         for bullet in self.bullets.copy():
             if bullet.rect.right > self.settings.screen_width or bullet.rect.right < 0: 
                 self.bullets.remove(bullet)
@@ -248,9 +246,7 @@ class AlienInvasion:
         
     def _update_beams(self):
         """Update position of the beams and get rid of the old beams."""
-        # Update bullet positions
         self.beams.update()
-        # Get rid of beams that have disappeared.
         for beam in self.beams.copy():
             if beam.rect.right > self.settings.screen_width or beam.rect.right < 0: 
                 self.beams.remove(beam)
@@ -746,7 +742,6 @@ class AlienInvasion:
         """Respond to the ship being hit by an alien. Delete any non-gunner aliens
         and all bullets, play explosions at the player's location, create a new fleet,
         reposition the player ship, and do a brief pause. End the game if no lives left"""
-        # Decrement lives
         if self.stats.ships_remaining > 1:
             self.stats.ships_remaining -= 1
             self.scoreboard.prep_ships()
@@ -798,7 +793,6 @@ class AlienInvasion:
         pause_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
         pause_image = pause_font.render("PAUSED", True,
                 (255,255,255))
-        # Display the message at the center of the screen.
         pause_rect = pause_image.get_rect()
         pause_rect.center = self.screen_rect.center
         self.screen.blit(pause_image, pause_rect)
@@ -811,6 +805,5 @@ class AlienInvasion:
             pygame.mouse.set_visible(True)
 
 if __name__ == '__main__':
-    # make a game instance and run the game. 
     ai = AlienInvasion()
     ai.run_game()
