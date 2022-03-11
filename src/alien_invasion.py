@@ -28,8 +28,6 @@ class AlienInvasion:
         self._check_gamepad()
         self._make_game_objects()
         self._load_images()
-        self._load_sfx()
-        self._set_volume()
         self._create_sprite_groups()
         self._create_fleet()
 
@@ -42,26 +40,6 @@ class AlienInvasion:
         """Loads menu and game background images."""
         self.menu_image = pygame.image.load("assets/images/background.png").convert()
         self.background_image = pygame.image.load("assets/images/parallax_scrolling_background.png").convert()
-
-    def _load_sfx(self):
-        """Loads sound assets."""
-        self.bullet_sfx = pygame.mixer.Sound("assets/audio/MissileFire.wav")
-        self.beam_sfx = pygame.mixer.Sound("assets/audio/LaserShot.wav")
-        self.explosion_sfx = pygame.mixer.Sound("assets/audio/DestroyMonster2.wav")
-        self.menu_sfx = pygame.mixer.Sound("assets/audio/OptionSelect.wav")
-        self.flip_sfx = pygame.mixer.Sound("assets/audio/UnitFlip.wav")
-        self.damage_sfx = pygame.mixer.Sound("assets/audio/MiniHitImpact.wav")
-        self.beam_damage_sfx = pygame.mixer.Sound("assets/audio/HitOnEnergeticShield.wav")
-
-    def _set_volume(self):
-        """Sets the volumes for the game sounds."""
-        self.bullet_sfx.set_volume(0.40)
-        self.beam_sfx.set_volume(0.80)
-        self.explosion_sfx.set_volume(0.40)
-        self.menu_sfx.set_volume(0.40)
-        self.flip_sfx.set_volume(0.40)
-        self.damage_sfx.set_volume(0.45)
-        self.beam_damage_sfx.set_volume(0.60)
 
     def _make_game_objects(self):
         """Creates all of the necessary game objects for the game to run."""
@@ -76,6 +54,7 @@ class AlienInvasion:
         self.ship = Ship(self)
         self.scoreboard = Scoreboard(self)
         self.music = Music(self)
+        self.sound = Sound(self)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
 
@@ -335,20 +314,13 @@ class AlienInvasion:
         else:
             explosion = Explosion(alien_index.rect.center, 3)
         self.explosions.add(explosion)
-        if (self.settings.play_sfx and 
-                self.stats.state is self.stats.GAMEPLAY):
-            self.explosion_sfx.play()
+        self.sound.play_sfx("explosion")
 
     def _play_impact(self, alien_index, beam_impact= False):
         """Plays impact and sounds if enabled."""
         explosion = Explosion(alien_index.rect.center, 2)
         self.explosions.add(explosion)
-        if (self.settings.play_sfx and 
-                self.stats.state is self.stats.GAMEPLAY and not beam_impact):
-            self.damage_sfx.play()
-        elif (self.settings.play_sfx and 
-                self.stats.state is self.stats.GAMEPLAY and beam_impact):
-            self.beam_damage_sfx.play()
+        self.sound.play_impact_sfx(beam_impact)
 
     def _check_cqc_distance(self, alien):
         """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
@@ -462,24 +434,24 @@ class AlienInvasion:
         # 7 Corresponds to the 'Start" Button on an Xbox Controller
         elif event.button == 7: 
             if self.settings.play_sfx and self.stats.state is self.stats.GAMEPLAY: 
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
             self._check_pause()
         # MENU CONTROLS: 
         # 0 Corresponds to the "A" Button on an Xbox Controller 
         elif event.button == 0 and self.stats.state is self.stats.MAINMENU: 
             self._clear_state()
             if self.settings.play_sfx:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
             self.stats.state = self.stats.GAMEPLAY
         # 1 Corresponds to the "B" Button on an Xbox Controller
         elif event.button == 1 and self.stats.state is self.stats.MAINMENU: 
             if self.settings.play_sfx:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
             self._check_exit()
         # 2 Corresponds to the "X" Button on an Xbox Controller
         elif event.button == 2 and self.stats.state is self.stats.MAINMENU: 
             if self.settings.play_sfx:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
             self.stats.state = self.stats.OPTIONSMENU
         # OPTIONSMENU CONTROLS:
         # 0 Corresponds to the "A" button on an Xbox controller
@@ -488,45 +460,45 @@ class AlienInvasion:
             self.options_menu._change_gfx_text()
             self.options_menu._change_window_size()
             if self.settings.play_sfx:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
             self._check_exit()
         # 1 Corresponds to the "B" Button on an Xbox controller
         elif event.button == 1 and self.stats.state is self.stats.OPTIONSMENU: 
             if self.settings.play_sfx:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
             self._check_exit()
         # 2 Corresponds to the "X" Button on an Xbox Controller
         elif event.button == 2 and self.stats.state is self.stats.OPTIONSMENU: 
             self.settings.turbo_speed = not self.settings.turbo_speed
             self.options_menu._change_turbo_text()
             if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
         # 3 Corresponds to the "Y" Button on an Xbox Controller
         elif event.button == 3 and self.stats.state is self.stats.OPTIONSMENU: 
             self.settings.cinematic_bars = not self.settings.cinematic_bars
             if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
         # 4 Corresponds to the "LB" (Left Bumper) on an Xbox Controller
         elif event.button == 4 and self.stats.state is self.stats.OPTIONSMENU: 
             self.settings.play_music = not self.settings.play_music 
             if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
         # 5 Corresponds to the "RB" (Right Bumper) on an Xbox Controller
         elif event.button == 5 and self.stats.state is self.stats.OPTIONSMENU: 
             self.settings.play_sfx = not self.settings.play_sfx
             if self.settings.play_sfx and self.stats.state is not self.stats.GAMEOVER:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
         # Special button press if in game over screen, goes to the menu
         elif (event.button == 1 and self.stats.state is self.stats.GAMEOVER): 
             self._clear_state()
             if self.settings.play_sfx:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
             self.stats.state = self.stats.MAINMENU
         # Special button press if in game over screen, restarts game
         elif (event.button == 0 and self.stats.state is self.stats.GAMEOVER): 
             self._clear_state()
             if self.settings.play_sfx:
-                self.menu_sfx.play()
+                self.sound.menu_sfx.play()
             self.stats.state = self.stats.GAMEPLAY
 
     def _check_joyhatmotion_events(self, event):
@@ -571,9 +543,7 @@ class AlienInvasion:
                 if self.ship.is_flipped:
                     new_bullet.rotate_bullet()
                 self.bullets.add(new_bullet)
-                if (self.settings.play_sfx and 
-                    self.stats.state is self.stats.GAMEPLAY):
-                    self.bullet_sfx.play()
+                self.sound.play_sfx("bullet")
 
     def _fire_beam(self):
         """Create a new beam and add it to the bullets group."""
@@ -585,18 +555,14 @@ class AlienInvasion:
                 self.beams.add(new_beam)
                 self.stats.charges_remaining -= 1
                 self.scoreboard.prep_beams()
-                if (self.settings.play_sfx and 
-                    self.stats.state is self.stats.GAMEPLAY):
-                    self.beam_sfx.play()
+                self.sound.play_sfx("beam")
 
     def _flip_ship(self):
         """Flips the ship and firing pattens of the bullet."""
         if self.stats.state == self.stats.GAMEPLAY:
             self.ship.rotate_ship()
             self._adjust_bullet_flipped()
-            if (self.settings.play_sfx and 
-                    self.stats.state is self.stats.GAMEPLAY):
-                self.flip_sfx.play()
+            self.sound.play_sfx("flip")
 
     def _adjust_bullet_flipped(self):
         """Adjusts the speed and direction of flipped bullets."""
@@ -710,8 +676,7 @@ class AlienInvasion:
                     self.gunners.sprite.gunner_bullets.empty()
             explosion = Explosion(self.ship.rect.center)
             self.explosions.add(explosion)
-            if self.settings.play_sfx and self.stats.state is self.stats.GAMEPLAY:
-                self.explosion_sfx.play()
+            self.sound.play_sfx("explosion")
             self._create_fleet()
             self.ship.position_ship()
             time.sleep(0.10)
