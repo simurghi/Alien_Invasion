@@ -1,7 +1,7 @@
 import json
 
 class GameStats:
-    """Track statistics for Alien Invasion."""
+    """Class to track statistics and state for Alien Invasion."""
 
     def __init__(self, ai_game):
         """Initialize stats."""

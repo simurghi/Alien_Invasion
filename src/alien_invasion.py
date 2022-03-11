@@ -10,10 +10,12 @@ from keybinds import Keybinds
 from math import sqrt
 from mine import Mine
 from menu import MainMenu, OptionsMenu, GameOverMenu
+from music import Music
 from random import randint
 from scoreboard import Scoreboard 
 from ship import Ship 
 from settings import Settings
+from sound import Sound
 
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
@@ -73,6 +75,7 @@ class AlienInvasion:
         self.stats = GameStats(self)
         self.ship = Ship(self)
         self.scoreboard = Scoreboard(self)
+        self.music = Music(self)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
 
@@ -96,7 +99,7 @@ class AlienInvasion:
         while True: 
             self._check_mouse_visible()
             self._check_events()
-            self._play_music()
+            self.music.play_music()
             if self.stats.state is self.stats.GAMEPLAY: 
                 self.ship.update()
                 self._update_bullets()
@@ -186,49 +189,6 @@ class AlienInvasion:
         self._create_fleet()
         self.ship.position_ship()
         self.ship.reset_ship_flip()
-
-    def _play_music(self):
-        """Selects which music to play based on the state of the game."""
-        self._toggle_mute()
-        #Menu Music
-        if (self.stats.state is self.stats.MAINMENU 
-                or self.stats.state is self.stats.OPTIONSMENU) and not self.stats.music_state["MENU"]:
-                pygame.mixer.music.load("assets/audio/menu.wav")
-                pygame.mixer.music.play(-1)
-                self._clear_music_state()
-                self.stats.music_state["MENU"] = True
-        #Combat Music
-        elif self.stats.state is self.stats.GAMEPLAY and not self.stats.music_state["GAMEPLAY"]:
-                pygame.mixer.music.load("assets/audio/battle.wav")
-                pygame.mixer.music.play(-1)
-                self._clear_music_state()
-                self.stats.music_state["GAMEPLAY"] = True
-        #Pause Music
-        elif self.stats.state is self.stats.PAUSE and not self.stats.music_state["PAUSE"]:
-                pygame.mixer.music.load("assets/audio/loading.wav")
-                pygame.mixer.music.play(-1)
-                self._clear_music_state()
-                self.stats.music_state["PAUSE"] = True
-        #Game Over Music
-        elif self.stats.state is self.stats.GAMEOVER and not self.stats.music_state["GAMEOVER"]:
-                pygame.mixer.music.load("assets/audio/Disengage.wav")
-                pygame.mixer.music.play(-1)
-                self._clear_music_state()
-                self.stats.music_state["GAMEOVER"] = True
-
-    def _toggle_mute(self):
-        """Helper methods that sets volume of a track based on state and if option enabled."""
-        if not self.settings.play_music:
-            pygame.mixer.music.set_volume(0.0)
-        elif self.stats.music_state["GAMEOVER"] and self.settings.play_music:
-            pygame.mixer.music.set_volume(0.5)
-        elif self.settings.play_music:
-            pygame.mixer.music.set_volume(1.0)
-
-    def _clear_music_state(self):
-        """Helper method that clears the music state dictionary to False values."""
-        for music in self.stats.music_state:
-            self.stats.music_state[music] = False
 
     def _update_bullets(self):
         """Update position of the bullets and get rid of the old bullets."""
