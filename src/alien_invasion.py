@@ -1,5 +1,4 @@
 import sys, pygame, time, json
-
 from random import randint
 from math import sqrt
 from settings import Settings
@@ -174,7 +173,7 @@ class AlienInvasion:
 
     def _clear_state(self):
         """ Resets the stats for the game on play/restart."""
-        self.settings.initialize_dynamic_settings()
+        self.settings._initialize_dynamic_settings()
         self.stats.reset_stats()
         self.scoreboard.prep_score()
         self.scoreboard.prep_ships()
@@ -309,7 +308,7 @@ class AlienInvasion:
                 self.beams, False, False)
         if collisions:
             for gun_index, bullet_indexes in collisions.items():
-                if self.gunners.sprite.hitpoints > 0:
+                if self.gunners and self.gunners.sprite.hitpoints > 0:
                     self.gunners.sprite.hitpoints -= 1
                     self._play_impact(gun_index)
                     self.bullets.remove(bullet_indexes)
@@ -320,7 +319,7 @@ class AlienInvasion:
        
         if collisions_beam:
             for gun_index, beam_indexes in collisions_beam.items():
-                if self.gunners.sprite.hitpoints > 0:
+                if self.gunners and self.gunners.sprite.hitpoints > 0:
                     self.gunners.sprite.hitpoints -= 5
                     self._play_impact(gun_index, beam_impact = True)
                     if self.gunners.sprite.hitpoints > 0:
@@ -357,8 +356,10 @@ class AlienInvasion:
         cqc_mult = self._check_cqc_distance(alien_index)
         backstab_mult = self._check_backstab(projectile_index)
         bonus_mult = 1.25 if (cqc_mult > 1 and backstab_mult > 1) else 1
-        self.stats.score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult * enemy_mult)
-        self.stats.hidden_score += round(self.settings.alien_points * cqc_mult * backstab_mult * bonus_mult * enemy_mult)
+        self.stats.score += round(self.settings.alien_points * 
+                (cqc_mult + backstab_mult) * bonus_mult * enemy_mult)
+        self.stats.hidden_score += round(self.settings.alien_points * 
+                (cqc_mult + backstab_mult) * bonus_mult * enemy_mult)
         self._calculate_beam_addition()
 
     def _calculate_beam_addition(self):

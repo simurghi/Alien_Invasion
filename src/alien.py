@@ -11,22 +11,12 @@ class Alien(Sprite):
         self.random_y = random.randint(-5, 5)*5
         self.settings = ai_game.settings
         self.screen_rect = ai_game.screen.get_rect()
-        self.radius = 20
-
-        # Load the alien image and set its rect attribute.
         self.image = pygame.image.load('assets/images/alien_med.bmp')
         self.rect = self.image.get_rect()
-
-        # Start each new alien alined to the right of the screen at a random height
         self.x = float(self.rect.x) 
         self.y = float(self.rect.y)
-
 
     def update(self):
         """Move the alien to the left."""
         self.x -= (self.settings.alien_speed)
         self.rect.x = self.x
-
-
-    def draw_hitbox(self):
-        pygame.draw.circle(self.image, (0, 255, 0), self.rect.center, self.radius)

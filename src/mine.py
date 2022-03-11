@@ -10,46 +10,49 @@ class Mine(Sprite):
     def __init__(self, ai_game):
         """Initialize the mine and set its starting position."""
         super().__init__()
-        # Load the mine images 
+        self._load_images_and_sound()
+        self._create_objects(ai_game)
+        self.screen = ai_game.screen
+        self.screen_rect = ai_game.screen.get_rect()
+        self._initialize_dynamic_settings()
+        self.image = self.mine_images[self.index]
+        self.rect = self.image.get_rect()
+        self.set_random_position()
+        self.y = float(self.rect.y)
+        self.x = float(self.rect.x)
+
+    def _load_images_and_sound(self):
+        """Loads the images for the mines and stores them in a list. Also loads warning sound."""
         self.mine_images = []
         for num in range(1, 5):
             drone = pygame.image.load(f"assets/images/mine{num}.png").convert_alpha()
             self.mine_images.append(drone)
         self.detect_sound = pygame.mixer.Sound('assets/audio/MineDetected.wav')
 
-        self.screen = ai_game.screen
-        self.ship = ai_game.ship
+    def _initialize_dynamic_settings(self):
+        """Initializes dynamic settings for the mine like its animations and warning sounds."""
         self.random_pos = randint(1, 10)
-        self.screen_rect = ai_game.screen.get_rect()
-        self.settings = ai_game.settings
-        self.stats = ai_game.stats
         self.play_warning = False
-        self.radius = 20
         self.audio_delay = 0
-
         self.index = 0
         self.counter = 0
-        self.image = self.mine_images[self.index]
-        self.rect = self.image.get_rect()
-        self.set_random_position()
 
-        # Store the mine's exact position as a float
-        self.y = float(self.rect.y)
-        self.x = float(self.rect.x)
+    def _create_objects(self, ai_game):
+        """Creates objects of other classes necessary for the mine to function."""
+        self.ship = ai_game.ship
+        self.settings = ai_game.settings
+        self.stats = ai_game.stats
 
     def update(self):
         """Update method for mines"""
         self._move_mine()
-        # Playback speed at which our mines cycle through, lower is faster
-        animation_speed = self.cqc_warning()
+        animation_speed = self._cqc_warning()
         self.counter += 1
-
         if self.counter >= animation_speed and self.index < len(self.mine_images) - 1:
             self.counter = 0
             self.index+= 1
             self.image = self.mine_images[self.index]
-
-        # Reset animation index if it completes
+        # Reset animation index if it completes to repeat animation
         if self.index >= len(self.mine_images) - 1 and self.counter >= animation_speed:
             self.index = 0
 
@@ -63,7 +66,6 @@ class Mine(Sprite):
             self.y += self.settings.mine_speed
         if self.y > self.ship.y:
             self.y -= self.settings.mine_speed
-
         self.rect.y = self.y 
         self.rect.x = self.x 
 
@@ -96,15 +98,13 @@ class Mine(Sprite):
             self.rect.centerx = self.screen_rect.centerx * 5 / 4
             self.rect.y = self.screen_rect.bottom
 
-
-
-
     def draw_mine(self):
         """Draw the mine at the current position."""
         self.screen.blit(self.image, self.rect) 
 
-    def cqc_warning(self):
-        """If a mine is close to the player ship, they will receive a warning."""
+    def _cqc_warning(self):
+        """If a mine is close to the player ship, they will receive a warning.
+        Additionally, the mine's blinking animation will be faster"""
         formula_x = sqrt((self.ship.rect.centerx - self.rect.centerx)**2 + 
                 (self.ship.rect.centerx - self.rect.centerx)**2)
         formula_y = sqrt((self.ship.rect.centery - self.rect.centery)**2 + 
@@ -119,6 +119,3 @@ class Mine(Sprite):
         else: 
             self.play_warning = False
             return 16
-
-
-

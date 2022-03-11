@@ -6,20 +6,18 @@ class Button:
         """Initialize button attributes."""
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
+        self._set_button_properties()
+        self.msg = msg
+        self.rect = pygame.Rect(0,0, self.width, self.height)
+        self.rect.center = self.screen_rect.centerx - x_offset, self.screen_rect.centery - y_offset
+        self._prep_msg(msg)
 
-        # Set the dimensions and properties of the button.
+    def _set_button_properties(self):
+        """Sets the size, color, and font of the button."""
         self.width, self.height = 200, 50
         self.button_color = (34, 139, 34)
         self.text_color = (255, 255, 255)
         self.font = pygame.font.Font('assets/fonts/m5x7.ttf', 48)
-        self.msg = msg
-
-
-        # Build the button's rect object and center it.
-        self.rect = pygame.Rect(0,0, self.width, self.height)
-        self.rect.center = self.screen_rect.centerx - x_offset, self.screen_rect.centery - y_offset
-
-        self._prep_msg(msg)
 
     def _prep_msg(self, msg):
         """Turn msg into a rendered image and center text on the button."""

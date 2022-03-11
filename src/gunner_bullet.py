@@ -12,16 +12,11 @@ class GunnerBullet(Sprite):
         self.image = pygame.image.load('assets/images/thiccmissile.png').convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.center = gunner.rect.center
-        
-        # Store the bullet's position as a decimal vlaue. 
         self.x = float(self.rect.x)
 
-
     def update(self):
-        """Move the bullet to the right of the screen."""
-        # Update the decimal position of the bullet. 
+        """Move the bullet to the right of the screen and delete it if it goes offscreen."""
         self.x -=  self.settings.gunner_bullet_speed
-        # Update the rect position. 
         self.rect.x = self.x
         if self.x < -100:
             self.kill()
@@ -29,5 +24,3 @@ class GunnerBullet(Sprite):
     def draw_bullet(self):
         """Draw the bullet at the current position."""
         self.screen.blit(self.image, self.rect) 
-
-

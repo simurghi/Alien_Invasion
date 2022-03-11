@@ -1,9 +1,15 @@
 import pygame
 
-
 class Keybinds:
     """A class to manage keybindings"""
     def __init__(self):
+        self._initialize_control_schemes()
+        self.current_scheme = 1
+        self.set_movement_scheme()
+        self.set_combat_scheme()
+
+    def _initialize_control_schemes(self):
+        """Sets the possible control schemes for the game."""
         self.ARROWS = 1
         self.ARROWS2 = 2
         self.VIM = 3
@@ -12,9 +18,6 @@ class Keybinds:
         self.QWOP = 6
         self.WASD = 7
         self.ESDF = 8 
-        self.current_scheme = 1
-        self.set_movement_scheme()
-        self.set_combat_scheme()
 
     def set_movement_scheme(self):
         """Sets the movment keys based on the current scheme"""
@@ -44,7 +47,6 @@ class Keybinds:
             self.MOVEDOWN = pygame.K_p
             self.MOVELEFT = pygame.K_q
             self.MOVERIGHT = pygame.K_w
-
 
     def set_combat_scheme(self):
         if self.current_scheme is self.ARROWS:

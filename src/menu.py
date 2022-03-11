@@ -1,5 +1,4 @@
 import pygame.font, sys, pygame
-
 from button import Button
 
 class MainMenu:
@@ -9,17 +8,19 @@ class MainMenu:
         """Initialize button attributes."""
         self.game = ai_game
         self.screen = ai_game.screen
+        self._create_main_buttons(ai_game)
+
+    def _create_main_buttons(self, ai_game):
+        """Creates the buttons for the main menu."""
         self.play_button = Button(ai_game, "Start", 100, 150)
         self.options_button = Button(ai_game, "Options", 100, 75)
         self.exit_button = Button(ai_game, "Quit", 100, 0)
-
 
     def check_main_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         self._check_play_button(mouse_pos)
         self._check_options_button(mouse_pos)
         self._check_exit_button(mouse_pos)
-
 
     def _check_play_button(self, mouse_pos):
         """ Start a new game when the player clicks Play"""
@@ -37,7 +38,6 @@ class MainMenu:
             self.game.stats.state = self.game.stats.OPTIONSMENU
             if self.game.settings.play_sfx: 
                 self.game.menu_sfx.play()
-           
 
     def _check_exit_button(self, mouse_pos):
         """ Exits the game from the main menu once clicked."""
@@ -48,7 +48,6 @@ class MainMenu:
             self.game.dump_stats_json()
             pygame.quit()
             sys.exit()
-
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""
@@ -63,9 +62,17 @@ class OptionsMenu:
         """Initialize button attributes."""
         self.game = ai_game
         self.screen = ai_game.screen
+        self._set_initial_text()
+        self._create_options_buttons()
+
+    def _set_initial_text(self):
         self.speed_state = "Normal"
         self.control_state =  "ARROWS" 
         self.gfx_state = "Scaled"
+
+
+    def _create_options_buttons(self):
+        """Creates buttons for the options menu."""
         self.turbo_button = Button(self, self.speed_state, 100, 250)
         self.controls_button = Button(self, self.control_state, 100, 175)
         self.mute_button = Button(self, "Music", 100, 100)
@@ -111,7 +118,6 @@ class OptionsMenu:
         elif self.game.keybinds.current_scheme is self.game.keybinds.QWOP:
             self.control_state = "QWOP"
 
-
     def _change_gfx_text(self):
         """Helper method that changes what text is displayed on the resolution button"""
         if not self.game.settings.scaled_gfx:
@@ -122,12 +128,9 @@ class OptionsMenu:
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
-        self.mute_button.toggle_color(self.game.settings.play_music)
-        self.sfx_button.toggle_color(self.game.settings.play_sfx)
-        self.cinematic_button.toggle_color(self.game.settings.cinematic_bars)
-        self.turbo_button.toggle_color(not self.game.settings.turbo_speed, self.speed_state)
         self.controls_button._prep_msg(self.control_state)
         self.gfx_button._prep_msg(self.gfx_state)
+        self._toggle_colors()
         self.mute_button.draw_button()
         self.sfx_button.draw_button()
         self.cinematic_button.draw_button()
@@ -135,6 +138,13 @@ class OptionsMenu:
         self.turbo_button.draw_button()
         self.gfx_button.draw_button()
         self.back_button.draw_button()
+
+    def _toggle_colors(self):
+        """ Toggles colors for buttons that have on/off states."""
+        self.mute_button.toggle_color(self.game.settings.play_music)
+        self.sfx_button.toggle_color(self.game.settings.play_sfx)
+        self.cinematic_button.toggle_color(self.game.settings.cinematic_bars)
+        self.turbo_button.toggle_color(not self.game.settings.turbo_speed, self.speed_state)
 
     def _check_mute_button(self, mouse_pos):
         """ Toggles music when the player clicks 'Music'"""
@@ -262,15 +272,11 @@ class GameOverMenu:
         game_over_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
         game_over_image = game_over_font.render("GAME OVER", True,
                 (255,255,255))
-        # Display the message at the center of the screen.
         game_over_rect = game_over_image.get_rect()
         game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
         self.screen.blit(game_over_image, game_over_rect)
-
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.menu_button.draw_button()
         self.restart_button.draw_button()
-
-
