@@ -81,22 +81,22 @@ class Mine(Sprite):
         elif self.random_pos == 4:
             self.rect.midbottom = self.screen_rect.midtop
         elif self.random_pos == 5:
-            self.rect.centerx = self.screen_rect.centerx / 2
+            self.rect.centerx = self.screen_rect.centerx / 3
             self.rect.y = self.screen_rect.top
         elif self.random_pos == 6:
-            self.rect.centerx = self.screen_rect.centerx / 2
+            self.rect.centerx = self.screen_rect.centerx / 3
             self.rect.y = self.screen_rect.bottom
         elif self.random_pos == 7:
-            self.rect.centerx = self.screen_rect.centerx * 3 / 4
+            self.rect.centerx = self.screen_rect.centerx * 2 / 3
             self.rect.y = self.screen_rect.top
         elif self.random_pos == 8:
-            self.rect.centerx = self.screen_rect.centerx * 3 / 4
+            self.rect.centerx = self.screen_rect.centerx * 2 / 3
             self.rect.y = self.screen_rect.top
         elif self.random_pos == 9:
-            self.rect.centerx = self.screen_rect.centerx * 5 / 4
+            self.rect.centerx = self.screen_rect.centerx 
             self.rect.y = self.screen_rect.top
         elif self.random_pos == 10:
-            self.rect.centerx = self.screen_rect.centerx * 5 / 4
+            self.rect.centerx = self.screen_rect.centerx 
             self.rect.y = self.screen_rect.bottom
 
     def _cqc_warning(self):
