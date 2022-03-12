@@ -29,6 +29,7 @@ class Mine(Sprite):
             drone = pygame.image.load(f"assets/images/mine{num}.png").convert_alpha()
             self.mine_images.append(drone)
         self.detect_sound = pygame.mixer.Sound('assets/audio/MineDetected.wav')
+        self.detect_sound.set_volume(0.70)
 
     def _initialize_dynamic_settings(self):
         """Initializes dynamic settings for the mine like its animations and warning sounds."""

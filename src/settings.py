@@ -52,15 +52,15 @@ class Settings:
     def increase_speed(self):
         """Increase speed and bonus point settings."""
         if self.turbo_speed:
-            self.speed_add = 2
-            self.score_scale = 30
-        else:
             self.speed_add = 1
-            self.score_scale = 15
+            self.score_scale = 50
+        else:
+            self.speed_add = 0.5
+            self.score_scale = 25
         self.ship_speed += self.speedup_scale * self.speed_add
-        self.bullet_speed += (self.speedup_scale - 0.50) * self.speed_add
-        self.gunner_bullet_speed += self.speedup_scale * self.speed_add
+        self.bullet_speed += self.speedup_scale * self.speed_add
+        self.gunner_bullet_speed += self.speedup_scale * self.speed_add / 2
         self.alien_speed += self.speedup_scale * self.speed_add
-        self.mine_speed += (self.speedup_scale - 0.50) * self.speed_add
+        self.mine_speed += self.speedup_scale * self.speed_add / 2
         self.alien_points += self.score_scale * self.speed_add
         self.scroll_speed += -1.0

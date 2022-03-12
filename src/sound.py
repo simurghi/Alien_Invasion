@@ -25,7 +25,7 @@ class Sound:
         self.explosion_sfx.set_volume(0.40)
         self.menu_sfx.set_volume(0.40)
         self.flip_sfx.set_volume(0.40)
-        self.damage_sfx.set_volume(0.45)
+        self.damage_sfx.set_volume(0.55)
         self.beam_damage_sfx.set_volume(0.60)
 
     def play_sfx(self, sound_event):
