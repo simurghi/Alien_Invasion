@@ -624,6 +624,7 @@ class AlienInvasion:
                 gunner = Gunner(self)
                 self.gunners.add(gunner)
                 self._create_mine(4)
+                self._create_trash_mobs(1,3)
             else: 
                 self._create_mine(9)
                 self._create_trash_mobs(1,4)

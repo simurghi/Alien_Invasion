@@ -1,2 +1,3 @@
 make controller class to handle buttons and map ints to button names
-make music class to handle game music
+make windows binary
+refactor collision code in main class.
