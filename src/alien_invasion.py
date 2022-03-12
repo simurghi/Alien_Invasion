@@ -570,14 +570,8 @@ class AlienInvasion:
         if self.stats.ships_remaining > 1:
             self.stats.ships_remaining -= 1
             self.scoreboard.prep_ships()
-            self.aliens.empty()
-            self.mines.empty()
-            self.bullets.empty()
-            if self.gunners and self.gunners.sprite.gunner_bullets:
-                    self.gunners.sprite.gunner_bullets.empty()
-            explosion = Explosion(self.ship.rect.center)
-            self.explosions.add(explosion)
-            self.sound.play_sfx("explosion")
+            self._empty_enemies_on_death()
+            self._play_explosion_on_death()
             self._create_fleet()
             self.ship.position_ship()
             time.sleep(0.10)
@@ -585,6 +579,21 @@ class AlienInvasion:
             self.enter_game_over()
             self.scoreboard.prep_score_game_over()
             self.scoreboard.prep_high_score_game_over()
+
+    def _empty_enemies_on_death(self):
+        """If the player dies, clear all enemies and projectiles
+        on the screen except for the gunner."""
+        self.aliens.empty()
+        self.mines.empty()
+        self.bullets.empty()
+        if self.gunners and self.gunners.sprite.gunner_bullets:
+                self.gunners.sprite.gunner_bullets.empty()
+
+    def _play_explosion_on_death(self):
+        """Plays an explosion at the position where the player died."""
+        explosion = Explosion(self.ship.rect.center)
+        self.explosions.add(explosion)
+        self.sound.play_sfx("explosion")
 
     def _adjust_difficulty(self):
         """Gradually increases the game speed as time elapses."""
@@ -598,12 +607,10 @@ class AlienInvasion:
             self.top_bar.draw_bar()
             self.bot_bar.draw_bar()
 
-
     def enter_game_over(self):
         """Game Over Screen that plays when the player dies."""
         self.state.state = self.state.GAMEOVER
         pygame.mixer.music.fadeout(500)
-
 
     def _check_mouse_visible(self):
         """Checks if the game is in a state where the mouse is visible."""

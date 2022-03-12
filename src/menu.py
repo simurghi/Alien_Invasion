@@ -43,7 +43,7 @@ class MainMenu:
         button_clicked = self.exit_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
             self.sound.play_sfx("options_menu")
-            self.game.dump_stats_json()
+            self.game.stats.dump_stats_json()
             pygame.quit()
             sys.exit()
 
@@ -104,10 +104,14 @@ class OptionsMenu:
             self.control_state = "ARROWS" 
         elif self.game.keybinds.current_scheme is self.game.keybinds.ARROWS2:
             self.control_state = "ARROWS-2" 
+        if self.game.keybinds.current_scheme is self.game.keybinds.ARROWS3:
+            self.control_state = "ARROWS-3" 
+        elif self.game.keybinds.current_scheme is self.game.keybinds.ARROWS4:
+            self.control_state = "ARROWS-4" 
         elif self.game.keybinds.current_scheme is self.game.keybinds.WASD:
-            self.control_state = "WASD"
+            self.control_state = "WASD+MOUSE"
         elif self.game.keybinds.current_scheme is self.game.keybinds.ESDF:
-            self.control_state = "ESDF"
+            self.control_state = "ESDF+MOUSE"
         elif self.game.keybinds.current_scheme is self.game.keybinds.VIM:
             self.control_state = "VIMLIKE"
         elif self.game.keybinds.current_scheme is self.game.keybinds.SPACE:
@@ -116,6 +120,10 @@ class OptionsMenu:
             self.control_state = "SPACE-2"
         elif self.game.keybinds.current_scheme is self.game.keybinds.QWOP:
             self.control_state = "QWOP"
+        elif self.game.keybinds.current_scheme is self.game.keybinds.WOLF:
+            self.control_state = "WOLF"
+        elif self.game.keybinds.current_scheme is self.game.keybinds.LEFTY:
+            self.control_state = "LEFTY"
 
     def _change_gfx_text(self):
         """Helper method that changes what text is displayed on the resolution button"""
@@ -181,6 +189,10 @@ class OptionsMenu:
             if self.game.keybinds.current_scheme is self.game.keybinds.ARROWS:
                 self.game.keybinds.current_scheme = self.game.keybinds.ARROWS2
             elif self.game.keybinds.current_scheme is self.game.keybinds.ARROWS2:
+                self.game.keybinds.current_scheme = self.game.keybinds.ARROWS3
+            elif self.game.keybinds.current_scheme is self.game.keybinds.ARROWS3:
+                self.game.keybinds.current_scheme = self.game.keybinds.ARROWS4
+            elif self.game.keybinds.current_scheme is self.game.keybinds.ARROWS4:
                 self.game.keybinds.current_scheme = self.game.keybinds.SPACE
             elif self.game.keybinds.current_scheme is self.game.keybinds.SPACE:
                 self.game.keybinds.current_scheme = self.game.keybinds.SPACE2
@@ -189,11 +201,16 @@ class OptionsMenu:
             elif self.game.keybinds.current_scheme is self.game.keybinds.QWOP:
                 self.game.keybinds.current_scheme = self.game.keybinds.VIM
             elif self.game.keybinds.current_scheme is self.game.keybinds.VIM:
+                self.game.keybinds.current_scheme = self.game.keybinds.WOLF
+            elif self.game.keybinds.current_scheme is self.game.keybinds.WOLF:
                 self.game.keybinds.current_scheme = self.game.keybinds.WASD
             elif self.game.keybinds.current_scheme is self.game.keybinds.WASD:
                 self.game.keybinds.current_scheme = self.game.keybinds.ESDF
             elif self.game.keybinds.current_scheme is self.game.keybinds.ESDF:
+                self.game.keybinds.current_scheme = self.game.keybinds.LEFTY
+            elif self.game.keybinds.current_scheme is self.game.keybinds.LEFTY:
                 self.game.keybinds.current_scheme = self.game.keybinds.ARROWS
+
             self._change_controls_text()
             self.game.keybinds.set_movement_scheme()
             self.game.keybinds.set_combat_scheme()
@@ -240,7 +257,6 @@ class GameOverMenu:
                 (255,255,255))
         self.game_over_rect = self.game_over_image.get_rect()
         self.game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
-
 
     def check_game_over_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""

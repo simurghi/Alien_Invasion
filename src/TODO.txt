@@ -1,3 +1,3 @@
-make controller class to handle buttons and map ints to button names
-make windows binary
+make windows binary for release
+fix mouse cursor appearing while in game bug.
 refactor collision code in main class.
