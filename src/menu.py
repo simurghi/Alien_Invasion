@@ -235,6 +235,12 @@ class GameOverMenu:
         self.sound = ai_game.sound
         self.menu_button = Button(self, "Menu", 150, -50)
         self.restart_button = Button(self, "Restart", -150,-50)
+        self.game_over_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
+        self.game_over_image = self.game_over_font.render("GAME OVER", True,
+                (255,255,255))
+        self.game_over_rect = self.game_over_image.get_rect()
+        self.game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
+
 
     def check_game_over_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
@@ -260,14 +266,27 @@ class GameOverMenu:
     def render_game_over(self):
         """Renders and displays the game over message."""
         self.screen.fill(self.game.settings.bg_color)
-        game_over_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
-        game_over_image = game_over_font.render("GAME OVER", True,
-                (255,255,255))
-        game_over_rect = game_over_image.get_rect()
-        game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
-        self.screen.blit(game_over_image, game_over_rect)
+        self.screen.blit(self.game_over_image, self.game_over_rect)
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.menu_button.draw_button()
         self.restart_button.draw_button()
+
+class PauseMenu:
+
+    def __init__(self, ai_game):
+        """Initialize Pause Menu attributes."""
+        self.screen = ai_game.screen
+        self.screen_rect = self.screen.get_rect()
+        self.pause_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
+        self.pause_image = self.pause_font.render("PAUSED", True,
+                (255,255,255))
+        self.pause_rect = self.pause_image.get_rect()
+        self.pause_rect.center = self.screen_rect.center
+
+    def render_pause(self):
+        """Renders and displays the pause message."""
+        self.screen.blit(self.pause_image, self.pause_rect)
+
+

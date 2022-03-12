@@ -11,7 +11,7 @@ from gunner import Gunner
 from keybinds import Keybinds
 from math import sqrt
 from mine import Mine
-from menu import MainMenu, OptionsMenu, GameOverMenu
+from menu import MainMenu, OptionsMenu, GameOverMenu, PauseMenu
 from music import Music
 from random import randint
 from scoreboard import Scoreboard 
@@ -50,6 +50,7 @@ class AlienInvasion:
         self.main_menu = MainMenu(self)
         self.options_menu = OptionsMenu(self)
         self.go_menu = GameOverMenu(self)
+        self.pause = PauseMenu(self)
         self.controller = Controller(self)
         self.stats = GameStats(self)
         self.scoreboard = Scoreboard(self)
@@ -74,8 +75,8 @@ class AlienInvasion:
     def run_game(self):
         """Start the main loop for the game."""
         while True: 
-            self._check_mouse_visible()
             self._check_events()
+            self._check_mouse_visible()
             self.music.play_music()
             if self.state.state is self.state.GAMEPLAY: 
                 self.ship.update()
@@ -125,7 +126,7 @@ class AlienInvasion:
             self._make_game_cinematic()
             self.scoreboard.show_score()
         elif self.state.state is self.state.PAUSE:
-            self._render_pause()
+            self.pause.render_pause()
         elif self.state.state is self.state.GAMEOVER:
             self.go_menu.render_game_over()
             self.go_menu.draw_buttons()
@@ -603,14 +604,6 @@ class AlienInvasion:
         self.state.state = self.state.GAMEOVER
         pygame.mixer.music.fadeout(500)
 
-    def _render_pause(self):
-        """Renders and displays the pause message."""
-        pause_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
-        pause_image = pause_font.render("PAUSED", True,
-                (255,255,255))
-        pause_rect = pause_image.get_rect()
-        pause_rect.center = self.screen_rect.center
-        self.screen.blit(pause_image, pause_rect)
 
     def _check_mouse_visible(self):
         """Checks if the game is in a state where the mouse is visible."""
