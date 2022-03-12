@@ -10,22 +10,21 @@ class Gunner(Sprite):
     def __init__(self, ai_game):
         """Initialize the gunner and set its starting position."""
         super().__init__()
-        self._set_assets()
+        self._set_assets(ai_game)
         self.rect = self.image.get_rect()
         self.screen_rect = ai_game.screen.get_rect()
         self._make_game_objects(ai_game)
         self._set_gunner_stats()
         self._set_initial_coordinates()
 
-    def _set_assets(self):
+    def _set_assets(self, ai_game):
         """Loads the audio and images for the gunner and sets their properties."""
         self.image = pygame.image.load('assets/images/alien.bmp')
-        self.fire_sfx = pygame.mixer.Sound('assets/audio/SingleShot2.wav')
-        self.fire_sfx.set_volume(0.40)
+        self.fire_sfx = ai_game.sound.gunner_sfx
 
     def _make_game_objects(self, ai_game):
         """Makes the objects necessary for the gunner to function."""
-        self.ai_game = ai_game
+        self.game = ai_game
         self.screen = ai_game.screen
         self.ship = ai_game.ship
         self.settings = ai_game.settings
@@ -54,11 +53,9 @@ class Gunner(Sprite):
     def _fire_bullets(self):
         """Creates new bullets based on a cooldown"""
         if self.fire_rate % 120 == 0:
-            new_gbullet = GunnerBullet(self.ai_game, self)
+            new_gbullet = GunnerBullet(self.game, self)
             self.gunner_bullets.add(new_gbullet)
-            if (self.settings.play_sfx and 
-                self.ai_game.stats.state is self.ai_game.stats.GAMEPLAY):
-                    self.fire_sfx.play()
+            self.game.sound.play_sfx("gunner")
 
     def _move_gunner(self):
         """Updates the position of the mines."""

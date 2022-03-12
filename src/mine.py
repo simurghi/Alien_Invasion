@@ -28,8 +28,6 @@ class Mine(Sprite):
         for num in range(1, 5):
             drone = pygame.image.load(f"assets/images/mine{num}.png").convert_alpha()
             self.mine_images.append(drone)
-        self.detect_sound = pygame.mixer.Sound('assets/audio/MineDetected.wav')
-        self.detect_sound.set_volume(0.70)
 
     def _initialize_dynamic_settings(self):
         """Initializes dynamic settings for the mine like its animations and warning sounds."""
@@ -43,7 +41,7 @@ class Mine(Sprite):
         """Creates objects of other classes necessary for the mine to function."""
         self.ship = ai_game.ship
         self.settings = ai_game.settings
-        self.stats = ai_game.stats
+        self.sound = ai_game.sound
 
     def update(self):
         """Update method for mines"""
@@ -108,9 +106,8 @@ class Mine(Sprite):
         formula_y = sqrt((self.ship.rect.centery - self.rect.centery)**2 + 
                 (self.ship.rect.centery - self.rect.centery)**2)
         if formula_x < 151 and formula_y < 151:
-            if (self.settings.play_sfx and self.stats.state is self.stats.GAMEPLAY
-                    and not self.play_warning and self.audio_delay % 120 == 0):
-                self.detect_sound.play()
+            if self.audio_delay % 120 == 0:
+                self.sound.play_sfx("mine")
                 self.audio_delay += 1
                 self.play_warning = True
             return 8

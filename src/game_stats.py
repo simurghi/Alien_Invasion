@@ -1,7 +1,7 @@
 import json
 
 class GameStats:
-    """Class to track statistics and state for Alien Invasion."""
+    """Class to track statistics for Alien Invasion."""
 
     def __init__(self, ai_game):
         """Initialize stats."""
@@ -13,7 +13,13 @@ class GameStats:
         self._set_json_options_settings()
         self._set_json_keybinds()
         self._update_menu_text_json()
-        self._create_game_states()
+
+    def reset_stats(self):
+        """Initialize stats that can change during the game."""
+        self.ships_remaining = self.settings.ship_limit
+        self.charges_remaining = self.settings.beam_limit
+        self.score = 0
+        self.hidden_score = 0
 
     def _set_json_options_settings(self):
         """Sets current options preferences based on JSON file."""
@@ -35,24 +41,6 @@ class GameStats:
         self.game.options_menu._change_turbo_text()
         self.game.options_menu._change_gfx_text()
         self.game.options_menu._change_window_size()
-
-    def _create_game_states(self):
-        """Creates instance variables necessary for the game states to function."""
-        self.MAINMENU = 1
-        self.GAMEPLAY = 2
-        self.PAUSE = 3
-        self.GAMEOVER = 4
-        self.OPTIONSMENU = 5
-        self.state = self.MAINMENU
-        self.pause_state = 0
-        self.music_state = {"GAMEPLAY": False, "MENU": False, "GAMEOVER": False, "PAUSE": False}
-
-    def reset_stats(self):
-        """Initialize stats that can change during the game."""
-        self.ships_remaining = self.settings.ship_limit
-        self.charges_remaining = self.settings.beam_limit
-        self.score = 0
-        self.hidden_score = 0
 
     def _read_stats_json(self):
         """Reads the score.json file and sees if we already have a high score."""
@@ -140,3 +128,13 @@ class GameStats:
                 return gfx_option
             else:
                 return False
+
+    def dump_stats_json(self):
+        """Dumps score and key game settings to a JSON file."""
+        with open("stats/score.json", 'w') as f:
+            json.dump({"high_score" : self.game.stats.high_score}, f)
+        with open("stats/settings.json", 'w') as f:
+            json.dump({"game_speed" : self.settings.turbo_speed, "control_scheme": 
+                self.game.keybinds.current_scheme, "play_music": self.settings.play_music,
+                "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars, "window_mode": self.settings.scaled_gfx}, f)
+
