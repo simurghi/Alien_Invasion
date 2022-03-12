@@ -35,8 +35,7 @@ class Controller:
     def check_joybuttondown_events(self, event):
         """respond to gamepad face button presses.""" 
         self._check_combat_controls(event)
-        self._check_main_menu_controls(event)
-        self._check_options_menu_controls(event)
+        self._check_menu_controls(event)
         self._check_game_over_controls(event)
         
     def _check_combat_controls(self, event):
@@ -53,7 +52,7 @@ class Controller:
             self.sound.play_sfx("options_menu")
             self.game._check_pause()
 
-    def _check_main_menu_controls(self, event):
+    def _check_menu_controls(self, event):
         """Handles input while in the main menu."""
         if self.state.state is self.state.MAINMENU:
             if event.button == self.BTN_A:
@@ -66,10 +65,7 @@ class Controller:
             elif event.button == self.BTN_X:
                 self.sound.play_sfx("options_menu")
                 self.state.state = self.state.OPTIONSMENU
-
-    def _check_options_menu_controls(self, event):
-        """Handles input while in the options menu."""
-        if self.state.state is self.state.OPTIONSMENU:
+        elif self.state.state is self.state.OPTIONSMENU:
             if event.button == self.BTN_A: 
                 self.settings.scaled_gfx = not self.settings.scaled_gfx
                 self.options_menu._change_gfx_text()
@@ -92,7 +88,7 @@ class Controller:
             elif event.button == self.BTN_RB:
                 self.settings.play_sfx = not self.settings.play_sfx
                 self.sound.play_sfx("options_menu")
-    
+
     def _check_game_over_controls(self, event):
         """Handles input while in the game over screen."""
         if self.state.state is self.state.GAMEOVER:
