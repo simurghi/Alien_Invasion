@@ -76,7 +76,6 @@ class AlienInvasion:
         """Start the main loop for the game."""
         while True: 
             self._check_events()
-            self._check_mouse_visible()
             self.music.play_music()
             if self.state.state is self.state.GAMEPLAY: 
                 self.ship.update()
@@ -85,6 +84,7 @@ class AlienInvasion:
                 self._update_aliens()
                 self.explosions.update()
                 self._adjust_difficulty()
+            self._check_mouse_visible()
             self._update_screen()
             self._adjust_fps_cap()
 
@@ -99,16 +99,16 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event) 
-            elif event.type == pygame.JOYBUTTONDOWN:
-                self.controller.check_joybuttondown_events(event)
-            elif event.type == pygame.JOYHATMOTION:
-                self.controller.check_joyhatmotion_events(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 self.options_menu.check_options_menu_buttons(mouse_pos)
                 self.main_menu.check_main_menu_buttons(mouse_pos)
                 self.go_menu.check_game_over_buttons(mouse_pos)
                 self._check_mousedown_events()
+            elif event.type == pygame.JOYBUTTONDOWN:
+                self.controller.check_joybuttondown_events(event)
+            elif event.type == pygame.JOYHATMOTION:
+                self.controller.check_joyhatmotion_events(event)
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
@@ -174,9 +174,9 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.right > self.settings.screen_width or bullet.rect.right < 0: 
                 self.bullets.remove(bullet)
-        self._check_bullet_alien_collision()
-        self._check_bullet_mine_collision()
-        self._check_bullet_gunner_collision()
+        self._check_bullet_alien_collision(self.aliens, 0.5)
+        self._check_bullet_alien_collision(self.mines, 1)
+        self._check_bullet_alien_collision(self.gunners, 3.0)
         
     def _update_beams(self):
         """Update position of the beams and get rid of the old beams."""
@@ -184,79 +184,59 @@ class AlienInvasion:
         for beam in self.beams.copy():
             if beam.rect.right > self.settings.screen_width or beam.rect.right < 0: 
                 self.beams.remove(beam)
-        self._check_bullet_alien_collision()
-        self._check_bullet_mine_collision()
+        self._check_bullet_alien_collision(self.aliens, 0.5)
+        self._check_bullet_alien_collision(self.mines, 1)
+        self._check_bullet_alien_collision(self.gunners, 3.0)
 
-    def _check_bullet_alien_collision(self):
+    def _check_bullet_alien_collision(self, enemy_list, score_multiplier):
         """Respond to bullet-alien collisions."""
-        collisions = pygame.sprite.groupcollide(self.aliens,
+        collisions = pygame.sprite.groupcollide(enemy_list,
                 self.bullets, False, False)
-        collisions_beam = pygame.sprite.groupcollide(self.aliens,
+        collisions_beam = pygame.sprite.groupcollide(enemy_list,
                 self.beams, False, False)
-        if collisions:
-            for alien_index, bullet_indexes in collisions.items():
-                self._calculate_score(alien_index, bullet_indexes, 0.5)
-                self._play_explosion(alien_index)
-                self.bullets.remove(bullet_indexes)
-                self._collision_cleanup_and_score(alien_index)
-        if collisions_beam:
-            for alien_index, beam_indexes in collisions_beam.items():
-                self._calculate_score(alien_index, beam_indexes, 0.5)
-                self._play_explosion(alien_index)
-                self._collision_cleanup_and_score(alien_index)
+        self._process_collision(collisions, enemy_list, score_multiplier, False)
+        self._process_collision(collisions_beam, enemy_list, score_multiplier, True)
         if not self.aliens: 
             self._create_fleet()
     
-    def _check_bullet_mine_collision(self):
-        """Respond to bullet-mines collisions."""
-        collisions = pygame.sprite.groupcollide(self.mines,
-                self.bullets, False, False)
-        collisions_beam = pygame.sprite.groupcollide(self.mines,
-                self.beams, False, False)
+    def _process_collision(self, collisions, enemy_list, score_multiplier, is_beam):
+        """Processes the game logic based on the type of collision"""
         if collisions:
-            for mine_index, bullet_indexes in collisions.items():
-                self._calculate_score(mine_index, bullet_indexes, 1)
-                self._play_explosion(mine_index)
-                self.bullets.remove(bullet_indexes)
-                self._collision_cleanup_and_score(mine_index)
-        if collisions_beam:
-            for mine_index, beam_indexes in collisions_beam.items():
-                self._calculate_score(mine_index, beam_indexes, 1)
-                self._play_explosion(mine_index)
-                self._collision_cleanup_and_score(mine_index)
-        if not self.aliens:
-            self._create_fleet()
+            for alien_index, bullet_indexes in collisions.items():
+                if enemy_list is self.aliens or enemy_list is self.mines:
+                    self._process_trash_and_mines(alien_index, bullet_indexes, score_multiplier, is_beam)
+                elif enemy_list is self.gunners:
+                    if self.gunners and self.gunners.sprite.hitpoints > 0:
+                        self._damage_gunner(alien_index, bullet_indexes, is_beam)
+                    else: 
+                        self._kill_gunner(alien_index, bullet_indexes, score_multiplier)
 
-    def _check_bullet_gunner_collision(self):
-        """Respond to bullet-mines collisions."""
-        collisions = pygame.sprite.groupcollide(self.gunners,
-                self.bullets, False, False)
-        collisions_beam = pygame.sprite.groupcollide(self.gunners,
-                self.beams, False, False)
-        if collisions:
-            for gun_index, bullet_indexes in collisions.items():
-                if self.gunners and self.gunners.sprite.hitpoints > 0:
-                    self.gunners.sprite.hitpoints -= 1
-                    self._play_impact(gun_index)
-                    self.bullets.remove(bullet_indexes)
-                else: 
-                    self._calculate_score(gun_index, bullet_indexes, 2.5)
-                    self._play_explosion(gun_index, is_gunner = True)
-                    self._collision_cleanup_and_score_gunner(gun_index)
-       
-        if collisions_beam:
-            for gun_index, beam_indexes in collisions_beam.items():
-                if self.gunners and self.gunners.sprite.hitpoints > 0:
-                    self.gunners.sprite.hitpoints -= 5
-                    self._play_impact(gun_index, beam_impact = True)
-                    if self.gunners.sprite.hitpoints > 0:
-                        self.beams.remove(beam_indexes)
-                else: 
-                    self._calculate_score(gun_index, beam_indexes, 2.5)
-                    self._play_explosion(gun_index, is_gunner = True)
-                    self._collision_cleanup_and_score_gunner(gun_index)
-        if not self.aliens:
-            self._create_fleet()
+    def _process_trash_and_mines(self, alien_index, bullet_indexes, score_multiplier, is_beam):
+        """If the enemy is a trash mob or a mine, calculate score, effects, and cleanup"""
+        self._calculate_score(alien_index, bullet_indexes, score_multiplier)
+        self._play_explosion(alien_index)
+        if not is_beam:
+            self.bullets.remove(bullet_indexes)
+        self._collision_cleanup_and_score(alien_index)
+
+    def _damage_gunner(self, alien_index, bullet_indexes, is_beam):
+        """If the enemy is a gunner and isn't killed by an impact, 
+        calculate damage dealt and effects."""
+        if is_beam:
+            self.gunners.sprite.hitpoints -= 5
+            self._play_impact(alien_index, beam_impact = True)
+            if self.gunners.sprite.hitpoints > 0:
+                self.beams.remove(bullet_indexes)
+        elif not is_beam:
+            self.gunners.sprite.hitpoints -= 1
+            self._play_impact(alien_index)
+            self.bullets.remove(bullet_indexes)
+
+    def _kill_gunner(self, alien_index, bullet_indexes, score_multiplier):
+        """If the enemy is a gunner and we kill it, calculate score, effects, and cleanup."""
+        self._calculate_score(alien_index, bullet_indexes, score_multiplier)
+        self._play_explosion(alien_index, is_gunner = True)
+        self._collision_cleanup_and_score_gunner(alien_index)
 
     def _collision_cleanup_and_score_gunner(self,alien_index):
         """Removes collided gunners and bullets and adjusts score."""
@@ -540,6 +520,9 @@ class AlienInvasion:
                 self.gunners.add(gunner)
                 self._create_mine(2)
                 self._create_trash_mobs(number_cols+1, number_aliens_y)
+            else:
+                self._create_mine(1)
+                self._create_trash_mobs(number_cols+3, number_aliens_y)
         elif wave_number == 8:
             self._create_trash_mobs(number_cols+3, number_aliens_y)
             self._create_mine(2)
