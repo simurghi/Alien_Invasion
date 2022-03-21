@@ -127,11 +127,11 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 ![menu](https://user-images.githubusercontent.com/85529046/159285444-7f883428-0aa9-4e2e-bb21-46dc4c9c01d5.png)
 
 
-- **Game Speed**: Normal is the default game speed. Turbo plays at 1.5x the speed of normal.
-- **Control Scheme**: Defaults to "ARROWS". See controls section for exact bindings. Controller not affected.
+- **Game Speed**: Normal is the default game speed. Turbo plays at 1.5x the speed of normal and scales 2x as fast, but has a 1.5x score multiplier.
+- **Control Scheme**: Selects a control preset. Defaults to "ARROWS". See controls section for exact bindings. Controller not affected.
 - **Music**: Toggles in-game and menu music. Disabled when the button is red, enabled when the button is green.
 - **Sound**: Toggles in-game sound. Disabled when the button is red, enabled when the button is green.
-- **Movie VFX**: Toggles cinematic black bars on the top and bottom of the screen, forcing a 16:9 aspect ratio instead of 3:2 (when red).
+- **Movie VFX**: Toggles cinematic black bars on the top and bottom of the screen, When enabled, forces a 16:9 aspect ratio, otherwise 3:2 when off.
 - **Scaling**: Toggles between "Native" resolution (960x640) and "Scaled" (upscales base resolution to fit display).
 - **Back**: Returns to the main menu
 
@@ -143,15 +143,17 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 - You have 3 lives, this is displayed by the current amount of ships on your HUD
 - Base score is 50 points per trash ship, 100 per mine, and 250 per gunner. This is increased by 1.5x if playing on Turbo Mode. 
 - Killing an enemy in close range has a 4x score multiplier. (200 pixels or less --> calculated using pythagorean theorem) 
-- Shooting an enemy in their back has a 4x score multiplier.
+- Shooting an enemy in their back has a 4x score multiplier (i.e. if your bullet is travelling to the left).
 - If both multipliers are active, you instead receive a larger score multiplier (10x instead of 8x)
-- If on normal speed, the game will speed up by 25% (base) every 90 seconds and increase score by 15 points.
-- If on turbo speed, the game will speed up by 50% (base, 33% turbo) every 90 seconds and increases by 30 points.
+- If on normal speed, the game will speed up by +50% (base) every 90 seconds and increase score by 25 points.
+- If on turbo speed, the game will speed up by +100% (base) every 90 seconds and increases by 50 points.
 - Every 5000 points earns you a beam charge. If you're at capacity (3), then you instead earn 1000 bonus points.
 - Hitboxes for mines and trash mobs are circular, not rectangular, so you have some room to dodge and flank enemies.
+- Hitboxes for Gunners and their bullets are pixel accurate, so you can die if you clip into their wings. 
 - Movement is restricted in the top and bottom of the screen (60 pixels for each). Cinematic Bars will help cover this up.
 - Mines will always follow your current position and can overlap, kite them for an easy beam charge.
-- Mines will always spawn from the edge of a screen, so the middle will always be a safe spot.
+- Mines will always spawn from the a left or center edge of the screen, so the middle or right will always be a safe spot.
+- Mines will play a sound and blink faster if near a player (150 pixels distance) 
 - Gunners will always spawn from the rightmost center of the screen before following your position.
 - Gunners fire every 1.5 seconds and will slowly move to your current y position, use this to your advantage.
 - There can only ever be one Gunner on the screen at once, if a gunner already exists when another one would spawn, a new enemy wave consisting of mines and trash mobs will be spawned instead.
