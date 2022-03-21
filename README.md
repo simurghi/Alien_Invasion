@@ -18,6 +18,35 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 
 
 
+## <b>REQUIREMENTS:</b> 
+
+- Python 3.10 +
+- Pygame 2.1 + 
+
+NOTE: I have only tested with these versions installed. You can use older versions, but they might not be compatible! 
+
+## <b>INSTALLATION:</b>
+
+### Releases:
+
+Download the latest release, extract the zip, and run the alien invasion launch script (Linux). There is also an experimental Windows exe built with wine available. 
+
+### Cloning:
+
+clone this repository using git in your terminal:
+
+```
+$ git clone https://github.com/kck130030/alien_invasion.git
+
+$ cd alien_invasion
+
+$ python alien_invasion.py
+
+```
+NOTE: Some systems need to run python 3 using "python3" instead of "python"
+
+
+
 
 
 ## <b>Controls:</b>
@@ -30,7 +59,7 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 
 #### Game
 - ESC: Toggle Pause 
-- The Game Has 4 Different Keyboard + Mouse control schemes for combat + movement:
+- The Game Has 12 Different Keyboard + Mouse control schemes for combat + movement:
 ##### ARROWS:
 - Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
 - X: Fire a missile
@@ -109,7 +138,7 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 - Y: Toggle Cinematic VFX
 - A: Toggle Graphics Scaling
 - Left Bumper (LB): Toggle Music
-- Right Bumper (RG): Toggle Sound
+- Right Bumper (RB): Toggle Sound
 
 #### Game
 - D-pad: Move ship
@@ -125,7 +154,6 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 
 ### <b>Menu Options:</b>
 ![menu](https://user-images.githubusercontent.com/85529046/159285444-7f883428-0aa9-4e2e-bb21-46dc4c9c01d5.png)
-
 
 - **Game Speed**: Normal is the default game speed. Turbo plays at 1.5x the speed of normal and scales 2x as fast, but has a 1.5x score multiplier.
 - **Control Scheme**: Selects a control preset. Defaults to "ARROWS". See controls section for exact bindings. Controller not affected.
@@ -160,32 +188,5 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 - There is enough room behind a gunner to perform a backstab
 
 
-
-## <b>REQUIREMENTS:</b> 
-
-- Python 3.10 +
-- Pygame 2.1 + 
-
-NOTE: I have only tested with these versions installed. You can use older versions, but they might not be compatible! 
-
-## <b>INSTALLATION:</b>
-
-### Releases:
-
-Download the latest release, extract the zip, and run the alien invasion launch script (Linux). There is also an experimental Windows exe built with wine available. 
-
-### Cloning:
-
-clone this repository using git in your terminal:
-
-```
-$ git clone https://github.com/kck130030/alien_invasion.git
-
-$ cd alien_invasion
-
-$ python alien_invasion.py
-
-```
-NOTE: Some systems need to run python 3 using "python3" instead of "python"
 
 
