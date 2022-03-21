@@ -124,18 +124,16 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 
 
 ### <b>Menu Options:</b>
-(![menu](https://user-images.githubusercontent.com/85529046/152646746-f338293e-800c-4258-9b09-8d802ab49a4b.png)
+![menu](https://user-images.githubusercontent.com/85529046/159285444-7f883428-0aa9-4e2e-bb21-46dc4c9c01d5.png)
 
 
-
-- **Start**: Enters the game 
 - **Game Speed**: Normal is the default game speed. Turbo plays at 1.5x the speed of normal.
 - **Control Scheme**: Defaults to "ARROWS". See controls section for exact bindings. Controller not affected.
 - **Music**: Toggles in-game and menu music. Disabled when the button is red, enabled when the button is green.
 - **Sound**: Toggles in-game sound. Disabled when the button is red, enabled when the button is green.
 - **Movie VFX**: Toggles cinematic black bars on the top and bottom of the screen, forcing a 16:9 aspect ratio instead of 3:2 (when red).
 - **Scaling**: Toggles between "Native" resolution (960x640) and "Scaled" (upscales base resolution to fit display).
-- **Quit**: Exits the game
+- **Back**: Returns to the main menu
 
 ### <b>Tips:</b>
 
