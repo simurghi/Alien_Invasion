@@ -1,6 +1,6 @@
 # Alien Invasion
 
-Alien Invasion is a challenging sicescrolling Shoot Em' Up inspired by arcade games.The longer you survive, the faster the game becomes, but the greater your score multiplier rises. Programmed in Python using PyGame and built using PyInstaller. Heavily inspired by Eric Matthes' Alien Invasion.
+Alien Invasion is a challenging sidescrolling Shoot Em' Up inspired by classic arcade games.The longer you survive, the faster the game becomes, but the greater your score multiplier rises. Being aggressive will further increase your score Programmed in Python using PyGame and built using PyInstaller. Heavily inspired by Eric Matthes' Alien Invasion.
 
 
 
@@ -37,8 +37,18 @@ https://user-images.githubusercontent.com/85529046/154772296-d154fe15-096b-4d85-
 ##### ARROWS-2:
 - Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
 - S: Fire a missile
-- D: Flip Ship across the y-axis
-- A: Fire a beam charge
+- A: Flip Ship across the y-axis
+- D: Fire a beam charge
+##### ARROWS-3:
+- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
+- Z: Fire a missile
+- X: Flip Ship across the y-axis
+- C: Fire a beam charge
+##### ARROWS-4:
+- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
+- A: Fire a missile
+- S: Flip Ship across the y-axis
+- D: Fire a beam charge
 ##### VIMLIKE:
 - JKL; (offset to the right of traditional VIM): Move the ship left, down, up, and right, respectively.
 - D: Fire a missile
@@ -69,6 +79,16 @@ https://user-images.githubusercontent.com/85529046/154772296-d154fe15-096b-4d85-
 - Spacebar: Fire a missile
 - X: Flip Ship across the y-axis
 - Left Shift: Fire a beam charge
+##### LEFTY:
+- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
+- LMB: Fire a missile
+- RMB: Flip Ship across the y-axis
+- MMB: Fire a beam charge
+##### WOLF:
+- WASD: Move the ship up, left, down, and right, respectively
+- H: Fire a missile
+- K: Flip Ship across the y-axis
+- J: Fire a beam charge
 
 
 #### Game Over
@@ -85,6 +105,7 @@ https://user-images.githubusercontent.com/85529046/154772296-d154fe15-096b-4d85-
 - B: Return to Main Menu 
 - X: Toggle Game Speed
 - Y: Toggle Cinematic VFX
+- A: Toggle Graphics Scaling
 - Left Bumper (LB): Toggle Music
 - Right Bumper (RG): Toggle Sound
 
@@ -111,7 +132,7 @@ https://user-images.githubusercontent.com/85529046/154772296-d154fe15-096b-4d85-
 - **Music**: Toggles in-game and menu music. Disabled when the button is red, enabled when the button is green.
 - **Sound**: Toggles in-game sound. Disabled when the button is red, enabled when the button is green.
 - **Movie VFX**: Toggles cinematic black bars on the top and bottom of the screen, forcing a 16:9 aspect ratio instead of 3:2 (when red).
-- **Resolution**: Toggles between "Native" resolution (960x640) and "Scaled" (upscales base resolution to fit display).
+- **Scaling**: Toggles between "Native" resolution (960x640) and "Scaled" (upscales base resolution to fit display).
 - **Quit**: Exits the game
 
 ### <b>Tips:</b>
@@ -149,7 +170,7 @@ NOTE: I have only tested with these versions installed. You can use older versio
 
 ### Releases:
 
-Download the latest release, extract the zip, and run the alien invasion launch script (Linux). 
+Download the latest release, extract the zip, and run the alien invasion launch script (Linux). There is also an experimental Windows exe built with wine available. 
 
 ### Cloning:
 
