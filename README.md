@@ -184,6 +184,7 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 - Mines will play a sound and blink faster if near a player (150 pixels distance) 
 - Gunners will always spawn from the rightmost center of the screen before following your position.
 - Gunners fire every 1.5 seconds and will slowly move to your current y position, use this to your advantage.
+- Gunners have 10 HP and take 1 damage from every missile shot, and 5 from every beam shot. 
 - There can only ever be one Gunner on the screen at once, if a gunner already exists when another one would spawn, a new enemy wave consisting of mines and trash mobs will be spawned instead.
 - There is enough room behind a gunner to perform a backstab
 
