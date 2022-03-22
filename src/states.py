@@ -14,6 +14,7 @@ class GameState:
         self.PAUSE = 3
         self.GAMEOVER = 4
         self.OPTIONSMENU = 5
+        self.CONTROLSMENU = 6
 
     def _set_dynamic_states(self):
         """Creates the game states that game be changed throughout the game."""

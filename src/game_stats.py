@@ -27,17 +27,16 @@ class GameStats:
         self.game.settings.play_sfx = self._read_sfx_json()
         self.game.settings.turbo_speed = self._read_turbo_json()
         self.game.settings.cinematic_bars = self._read_vfx_json()
+        self.game.keybinds.controls = self._read_keybinds_json()
+        self.game.keybinds.use_mouse - self._read_mouse_json()
         self.game.settings.scaled_gfx = self._read_gfx_json()
 
     def _set_json_keybinds(self):
         """Sets key preset preference based on JSON file."""
-        self.game.keybinds.current_scheme = self._read_controls_json()
-        self.game.keybinds.set_movement_scheme()
-        self.game.keybinds.set_combat_scheme()
+        pass
 
     def _update_menu_text_json(self):
         """Updates menu text based on JSON file preferences."""
-        self.game.options_menu._change_controls_text()
         self.game.options_menu._change_turbo_text()
         self.game.options_menu._change_gfx_text()
         self.game.options_menu._change_window_size()
@@ -78,6 +77,27 @@ class GameStats:
             else:
                 return True
 
+    def _read_keybinds_json(self):
+        """Searches the dictionary creates from the settings.json file 
+        and sees if we already have a control mapping enabled."""
+        if self.options_data:
+            controls_option = self.options_data.get("controls")
+            if controls_option is not None: 
+                return controls_option
+            else:
+                return {"MOVELEFT": pygame.K_LEFT, "MOVERIGHT": pygame.K_RIGHT,
+                "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
+                "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
+
+    def _read_mouse_json(self):
+        """Searches the dictionary created from the settings.json file 
+        and sees if we already have an option for enabling mouse control ingame."""
+        if self.options_data:
+            mouse_option = self.options_data.get("mouse_enabled")
+            if mouse_option is not None: 
+                return mouse_option
+            else:
+                return False
 
     def _read_sfx_json(self):
         """Searches the dictionary created from the settings.json file
@@ -109,16 +129,6 @@ class GameStats:
             else:
                 return False
 
-    def _read_controls_json(self):
-        """Searches the dictionary created from the settings.json file
-        and sees if we already have an option for controls."""
-        if self.options_data:
-            control_option = self.options_data.get("control_scheme")
-            if control_option is not None:
-                return control_option
-            else:
-                return 1
-
     def _read_gfx_json(self):
         """Searches the dictionary created from the settings.json file 
         and sees if we already have an option for window size."""
@@ -134,7 +144,8 @@ class GameStats:
         with open("stats/score.json", 'w') as f:
             json.dump({"high_score" : self.game.stats.high_score}, f)
         with open("stats/settings.json", 'w') as f:
-            json.dump({"game_speed" : self.settings.turbo_speed, "control_scheme": 
-                self.game.keybinds.current_scheme, "play_music": self.settings.play_music,
-                "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars, "window_mode": self.settings.scaled_gfx}, f)
+            json.dump({"game_speed" : self.settings.turbo_speed,"play_music": self.settings.play_music,
+                "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars, "window_mode":
+                self.settings.scaled_gfx, "controls": self.game.keybinds.controls, 
+                "mouse_enabled": self.game.keybinds.use_mouse}, f)
 

@@ -11,7 +11,7 @@ from gunner import Gunner
 from keybinds import Keybinds
 from math import sqrt
 from mine import Mine
-from menu import MainMenu, OptionsMenu, GameOverMenu, PauseMenu
+from menu import MainMenu, OptionsMenu, GameOverMenu, PauseMenu, ControlsMenu
 from music import Music
 from random import randint
 from scoreboard import Scoreboard 
@@ -49,6 +49,7 @@ class AlienInvasion:
         self.sound = Sound(self)
         self.main_menu = MainMenu(self)
         self.options_menu = OptionsMenu(self)
+        self.controls_menu = ControlsMenu(self)
         self.go_menu = GameOverMenu(self)
         self.pause = PauseMenu(self)
         self.controller = Controller(self)
@@ -104,6 +105,7 @@ class AlienInvasion:
                 self.options_menu.check_options_menu_buttons(mouse_pos)
                 self.main_menu.check_main_menu_buttons(mouse_pos)
                 self.go_menu.check_game_over_buttons(mouse_pos)
+                self.controls_menu.check_controls_menu_buttons(mouse_pos)
                 self._check_mousedown_events()
             elif event.type == pygame.JOYBUTTONDOWN:
                 self.controller.check_joybuttondown_events(event)
@@ -135,6 +137,8 @@ class AlienInvasion:
             self.main_menu.draw_buttons()
         elif self.state.state is self.state.OPTIONSMENU:
             self.options_menu.draw_buttons()
+        elif self.state.state is self.state.CONTROLSMENU:
+            self.controls_menu.draw_buttons()
         pygame.display.flip()
 
     def _adjust_fps_cap(self):
@@ -359,23 +363,16 @@ class AlienInvasion:
         if event.key == pygame.K_ESCAPE:
             self._check_pause()
             self._check_exit()
-        if (self.keybinds.current_scheme is self.keybinds.ARROWS 
-                or self.keybinds.current_scheme is self.keybinds.ARROWS2 
-                or self.keybinds.current_scheme is self.keybinds.VIM
-                or self.keybinds.current_scheme is self.keybinds.SPACE
-                or self.keybinds.current_scheme is self.keybinds.SPACE2
-                or self.keybinds.current_scheme is self.keybinds.QWOP):
-            if event.key == self.keybinds.MISSILEATTACK and not self.keybinds.use_mouse:
-                self._fire_bullet()
-            if event.key == self.keybinds.BEAMATTACK and not self.keybinds.use_mouse:
-                self._fire_beam()
-            if event.key == self.keybinds.FLIPSHIP and not self.keybinds.use_mouse:
-                self._flip_ship()
+        if event.key == self.keybinds.MISSILEATTACK and not self.keybinds.use_mouse:
+            self._fire_bullet()
+        if event.key == self.keybinds.BEAMATTACK and not self.keybinds.use_mouse:
+            self._fire_beam()
+        if event.key == self.keybinds.FLIPSHIP and not self.keybinds.use_mouse:
+            self._flip_ship()
 
     def _check_mousedown_events(self):
         """respond to keypresses.""" 
-        if (self.keybinds.current_scheme is self.keybinds.WASD 
-                or self.keybinds.current_scheme is self.keybinds.ESDF):
+        if self.keybinds.use_mouse:
             mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
             if mouse_buttons[0]:
                 self._fire_bullet()
@@ -407,6 +404,8 @@ class AlienInvasion:
         """Checks to see if hitting ESC should exit the game."""
         if self.state.state == self.state.OPTIONSMENU:
             self.state.state = self.state.MAINMENU
+        elif self.state.state == self.state.CONTROLSMENU:
+            self.state.state = self.state.OPTIONSMENU
         elif self.state.state == self.state.MAINMENU or self.state.state == self.state.GAMEOVER:
             self.stats.dump_stats_json()
             pygame.quit()
