@@ -44,7 +44,6 @@ class AlienInvasion:
         self.time_game = time.time()
         self.keybinds = Keybinds()
         self.state = GameState()
-        self.ship = Ship(self)
         self.music = Music(self)
         self.sound = Sound(self)
         self.main_menu = MainMenu(self)
@@ -52,8 +51,9 @@ class AlienInvasion:
         self.controls_menu = ControlsMenu(self)
         self.go_menu = GameOverMenu(self)
         self.pause = PauseMenu(self)
-        self.controller = Controller(self)
         self.stats = GameStats(self)
+        self.ship = Ship(self)
+        self.controller = Controller(self)
         self.scoreboard = Scoreboard(self)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
@@ -364,22 +364,22 @@ class AlienInvasion:
             self._check_pause()
             self._check_exit()
         if event.key == self.keybinds.MISSILEATTACK and not self.keybinds.use_mouse:
-            self._fire_bullet()
+            self.ship.fire_bullet()
         if event.key == self.keybinds.BEAMATTACK and not self.keybinds.use_mouse:
-            self._fire_beam()
+            self.ship.fire_beam()
         if event.key == self.keybinds.FLIPSHIP and not self.keybinds.use_mouse:
-            self._flip_ship()
+            self.ship.flip_ship()
 
     def _check_mousedown_events(self):
         """respond to keypresses.""" 
         if self.keybinds.use_mouse:
             mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
             if mouse_buttons[0]:
-                self._fire_bullet()
+                self.ship.fire_bullet()
             if mouse_buttons[1]:
-                self._fire_beam()
+                self.ship.fire_beam()
             if mouse_buttons[2]:
-                self._flip_ship()
+                self.ship.flip_ship()
 
     def _check_keyup_events(self, event):
         """respond to key releases."""
@@ -410,44 +410,6 @@ class AlienInvasion:
             self.stats.dump_stats_json()
             pygame.quit()
             sys.exit()
-
-    def _fire_bullet(self):
-        """Create a new bullet and add it to the bullets group."""
-        if self.state.state == self.state.GAMEPLAY:
-            if len(self.bullets) < self.settings.bullets_allowed: 
-                new_bullet = Bullet(self)
-                if self.ship.is_flipped:
-                    new_bullet.rotate_bullet()
-                self.bullets.add(new_bullet)
-                self.sound.play_sfx("bullet")
-
-    def _fire_beam(self):
-        """Create a new beam and add it to the bullets group."""
-        if self.state.state == self.state.GAMEPLAY:
-            if len(self.beams) < self.stats.charges_remaining: 
-                new_beam = Beam(self)
-                if self.ship.is_flipped:
-                    new_beam.rotate_beam()
-                self.beams.add(new_beam)
-                self.stats.charges_remaining -= 1
-                self.scoreboard.prep_beams()
-                self.sound.play_sfx("beam")
-
-    def _flip_ship(self):
-        """Flips the ship and firing pattens of the bullet."""
-        if self.state.state == self.state.GAMEPLAY:
-            self.ship.rotate_ship()
-            self._adjust_bullet_flipped()
-            self.sound.play_sfx("flip")
-
-    def _adjust_bullet_flipped(self):
-        """Adjusts the speed and direction of flipped bullets."""
-        if self.ship.is_flipped:
-            self.settings.bullet_speed *= 2.50
-            self.settings.ship_speed *= 1.25
-        else: 
-            self.settings.bullet_speed *= 0.4
-            self.settings.ship_speed *= 0.80
 
     def _create_fleet(self):
         """Create the fleet of aliens and find out 
@@ -577,7 +539,7 @@ class AlienInvasion:
     def _adjust_difficulty(self):
         """Gradually increases the game speed as time elapses."""
         self.settings.difficulty_counter+=1 
-        if self.settings.difficulty_counter % (self.settings.FPS * 90) == 0:
+        if self.settings.difficulty_counter % (self.settings.FPS * 20) == 0:
             self.settings.increase_speed()
 
     def _make_game_cinematic(self):

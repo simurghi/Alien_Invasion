@@ -4,7 +4,7 @@ from pygame.sprite import Sprite
 class Beam(Sprite):
     """A class to manage bullets fired from the ship."""
 
-    def __init__(self, ai_game):
+    def __init__(self, ai_game, ship):
         """Create a beam object at the ship's current position."""
         super().__init__()
         self._load_assets()
@@ -13,7 +13,7 @@ class Beam(Sprite):
         self._initialize_dynamic_settings()
         self.image = self.beam_images[self.index]
         self.rect = self.image.get_rect()
-        self.rect.center = ai_game.ship.rect.center
+        self.rect.center = ship.rect.center
         self.x = float(self.rect.x)
 
     def _load_assets(self):

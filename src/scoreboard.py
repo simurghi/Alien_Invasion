@@ -66,7 +66,7 @@ class Scoreboard:
         """Show how many beams the player has left."""
         self.beams = Group()
         for charge in range (self.stats.charges_remaining):
-            beam = Beam(self.ai_game)
+            beam = Beam(self.ai_game, self.ai_game.ship)
             beam.rect.x = 10 + charge * beam.rect.width
             beam.rect.y = self.screen_rect.bottom - 40
             self.beams.add(beam)

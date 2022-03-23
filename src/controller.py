@@ -28,9 +28,9 @@ class Controller:
         self.state = ai_game.state
         self.sound = ai_game.sound
         self.game = ai_game
-        self.ship = ai_game.ship
         self.settings = ai_game.settings
         self.options_menu = ai_game.options_menu
+        self.ship = ai_game.ship
 
     def check_joybuttondown_events(self, event):
         """respond to gamepad face button presses.""" 
@@ -41,14 +41,14 @@ class Controller:
     def _check_combat_controls(self, event):
         """Handles input while in combat."""
         if self.state.state is self.state.GAMEPLAY:
-            if event.button == self.BTN_A: 
-                self.game._fire_bullet()
+            if event.button == self.BTN_A:
+                self.ship.fire_bullet()
             if event.button == self.BTN_B:
-                self.game._flip_ship()
-            if event.button == self.BTN_X:
-                self.game._fire_beam()
-        if (event.button == self.BTN_START and 
-                self.state.state is self.state.GAMEPLAY or self.state.state is self.state.PAUSE): 
+                self.ship.flip_ship()
+            if event.button == self.BTN_X: 
+                self.ship.fire_beam()
+        if (event.button == self.BTN_START and self.state.state 
+                is self.state.GAMEPLAY or self.state.state is self.state.PAUSE): 
             self.sound.play_sfx("options_menu")
             self.game._check_pause()
 

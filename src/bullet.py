@@ -4,7 +4,7 @@ from pygame.sprite import Sprite
 class Bullet(Sprite):
     """A class to manage bullets fired from the ship."""
 
-    def __init__(self, ai_game, direction=1):
+    def __init__(self, ai_game, ship, direction=1):
         """Create a bullet object a the ship's current position."""
         super().__init__()
         self.screen = ai_game.screen
@@ -13,7 +13,7 @@ class Bullet(Sprite):
         self.ai_game = ai_game
         self.image = pygame.image.load('assets/images/missile.bmp')
         self.rect = self.image.get_rect()
-        self.rect.midright = ai_game.ship.rect.midright
+        self.rect.midright = ship.rect.midright
         self.x = float(self.rect.x)
 
     def update(self):
