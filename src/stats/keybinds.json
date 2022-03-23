@@ -1,1 +1,0 @@
-{"MOVEUP": pygame.K_UP, "MOVELEFT": pygame.K_LEFT, "MOVEDOWN": pygame.K_DOWN, "MOVERIGHT": pygame.K_RIGHT, "MISSILEATTACK": pygame.K_x, "FLIPSHIP": pygame.K_z, "BEAMATTACK": pygame.K_c, "use_mouse": false}

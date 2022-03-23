@@ -13,9 +13,9 @@ class MainMenu:
 
     def _create_main_buttons(self, ai_game):
         """Creates the buttons for the main menu."""
-        self.play_button = Button(ai_game, "Start", 100, 150)
-        self.options_button = Button(ai_game, "Options", 100, 75)
-        self.exit_button = Button(ai_game, "Quit", 100, 0)
+        self.play_button = Button(ai_game, "Start", 250, 150)
+        self.options_button = Button(ai_game, "Options", 250, 75)
+        self.exit_button = Button(ai_game, "Quit", 250, 0)
         self.buttons = [self.play_button,
                 self.options_button, self.exit_button]
 
@@ -72,17 +72,16 @@ class OptionsMenu:
 
     def _create_options_buttons(self):
         """Creates buttons for the options menu."""
-        self.turbo_button = Button(self, self.speed_state, 100, 250)
-        self.controls_button = Button(self, "Keybindings", 100, 175)
-        self.mute_button = Button(self, "Music", 100, 100)
-        self.sfx_button = Button(self, "Sound", 100, 25)
-        self.cinematic_button = Button(self, "Movie VFX", 100, -50)
-        self.gfx_button = Button(self, self.gfx_state, 100, -125)
-        self.back_button = Button(self, "Back", 100, -275)
+        self.turbo_button = Button(self, self.speed_state, 0, 250)
+        self.controls_button = Button(self, "Keybindings", 0, 175)
+        self.mute_button = Button(self, "Music", 0, 100)
+        self.sfx_button = Button(self, "Sound", 0, 25)
+        self.cinematic_button = Button(self, "Movie VFX", 0, -50)
+        self.gfx_button = Button(self, self.gfx_state, 0, -125)
+        self.back_button = Button(self, "Back", 0, -275)
         self.buttons = [self.turbo_button, self.controls_button,
                 self.mute_button, self.sfx_button, self.cinematic_button,
                 self.gfx_button, self.back_button]
-
 
     def check_options_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
@@ -196,36 +195,58 @@ class ControlsMenu:
 
     def _create_controls_buttons(self):
         """Creates buttons for the options menu."""
-        self.left_button = Button(self, 
-                f"LEFT - {pygame.key.name(self.keybinds.controls.get('MOVELEFT'))}", 100, 280)
-        self.right_button = Button(self,
-                f"RIGHT - {pygame.key.name(self.keybinds.controls.get('MOVERIGHT'))}", 100, 210)
-        self.up_button = Button(self,
-                f"UP - {pygame.key.name(self.keybinds.controls.get('MOVEUP'))}", 100, 140)
-        self.down_button = Button(self,
-                f"DOWN - {pygame.key.name(self.keybinds.controls.get('MOVEDOWN'))}", 100, 70)
-        self.beam_button = Button(self,
-                f"BEAM - {pygame.key.name(self.keybinds.controls.get('BEAMATTACK'))}", 100, 00)
-        self.flip_button = Button(self,
-                f"FLIP - {pygame.key.name(self.keybinds.controls.get('FLIPSHIP'))}", 100, -70)
-        self.missile_button = Button(self,
-                f"SHOOT - {pygame.key.name(self.keybinds.controls.get('MISSILEATTACK'))}", 100, -140) 
-        self.mouse_button = Button(self, "USE MOUSE", 100, -210)
-        self.back_button = Button(self, "Back", 100, -280)
-        self.buttons = [self.left_button, self.right_button, self.up_button, self.down_button,
-                self.beam_button, self.flip_button, self.missile_button, self.mouse_button,
-                self.back_button]
+        self.left_button = Button(self, self.keybinds.move_left_text, -250, 280)
+        self.right_button = Button(self, self.keybinds.move_right_text, -250, 210)
+        self.up_button = Button(self, self.keybinds.move_up_text, -250, 140)
+        self.down_button = Button(self, self.keybinds.move_down_text, -250, 70)
+        self.beam_button = Button(self, self.keybinds.beam_text, -250, 00)
+        self.flip_button = Button(self, self.keybinds.flip_text, -250, -70)
+        self.missile_button = Button(self, self.keybinds.shoot_text, -250, -140) 
+        self.mouse_button = Button(self, "USE MOUSE", -250, -210)
+        self.back_button = Button(self, "Back", -250, -280)
+        self.buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
+                self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
+                self.flip_button: "FLIPSHIP", self.missile_button: "MISSILEATTACK"}
 
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
+        for button, mapping in self.buttons.items():
+            self._check_keybind_button(mouse_pos, button, mapping) 
         self._check_back_button(mouse_pos)
+        self._check_mouse_button(mouse_pos)
+
+    def _check_keybind_button(self, mouse_pos, button, mapping):
+        button_clicked = button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
+            done = False
+            self.sound.play_sfx("options_menu")
+            while not done:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        done = True
+                        pygame.quit()
+                        sys.exit()
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            done = True
+                        elif event.key not in self.keybinds.controls.values():
+                            self.keybinds.controls[mapping] = event.key
+                            done = True
+
+    def _update_button_text(self):
+        self.keybinds.init_menu_text()
+        for i in enumerate(self.buttons):
+            i[1]._prep_msg(self.keybinds.menu_text[i[0]])
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
+        self._update_button_text()
         self._toggle_colors()
         for button in self.buttons:
-           button.draw_button()
+            button.draw_button()
+        self.mouse_button.draw_button()
+        self.back_button.draw_button()
 
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""
@@ -236,6 +257,13 @@ class ControlsMenu:
         button_clicked = self.back_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.game.state.state = self.game.state.OPTIONSMENU
+            self.sound.play_sfx("options_menu")
+
+    def _check_mouse_button(self, mouse_pos):
+        """Enters the main menu from the options menu screen once clicked."""
+        button_clicked = self.mouse_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
+            self.keybinds.use_mouse = not self.keybinds.use_mouse
             self.sound.play_sfx("options_menu")
 
 class GameOverMenu:

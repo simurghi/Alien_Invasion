@@ -1,4 +1,4 @@
-import json
+import json, pygame
 
 class GameStats:
     """Class to track statistics for Alien Invasion."""
@@ -28,7 +28,7 @@ class GameStats:
         self.game.settings.turbo_speed = self._read_turbo_json()
         self.game.settings.cinematic_bars = self._read_vfx_json()
         self.game.keybinds.controls = self._read_keybinds_json()
-        self.game.keybinds.use_mouse - self._read_mouse_json()
+        self.game.keybinds.use_mouse = self._read_mouse_json()
         self.game.settings.scaled_gfx = self._read_gfx_json()
 
     def _set_json_keybinds(self):

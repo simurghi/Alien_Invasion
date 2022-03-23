@@ -104,8 +104,8 @@ class AlienInvasion:
                 mouse_pos = pygame.mouse.get_pos()
                 self.options_menu.check_options_menu_buttons(mouse_pos)
                 self.main_menu.check_main_menu_buttons(mouse_pos)
-                self.go_menu.check_game_over_buttons(mouse_pos)
                 self.controls_menu.check_controls_menu_buttons(mouse_pos)
+                self.go_menu.check_game_over_buttons(mouse_pos)
                 self._check_mousedown_events()
             elif event.type == pygame.JOYBUTTONDOWN:
                 self.controller.check_joybuttondown_events(event)
@@ -352,22 +352,22 @@ class AlienInvasion:
     
     def _check_keydown_events(self, event):
         """respond to keypresses.""" 
-        if event.key == self.keybinds.MOVEUP:
+        if event.key == self.keybinds.controls.get("MOVEUP"):
             self.ship.moving_up = True 
-        elif event.key == self.keybinds.MOVEDOWN:
+        elif event.key == self.keybinds.controls.get("MOVEDOWN"):
             self.ship.moving_down = True
-        if event.key == self.keybinds.MOVELEFT:
+        if event.key == self.keybinds.controls.get("MOVELEFT"):
             self.ship.moving_left = True 
-        elif event.key == self.keybinds.MOVERIGHT:
+        elif event.key == self.keybinds.controls.get("MOVERIGHT"):
             self.ship.moving_right = True
         if event.key == pygame.K_ESCAPE:
             self._check_pause()
             self._check_exit()
-        if event.key == self.keybinds.MISSILEATTACK and not self.keybinds.use_mouse:
+        if event.key == self.keybinds.controls.get("MISSILEATTACK") and not self.keybinds.use_mouse:
             self.ship.fire_bullet()
-        if event.key == self.keybinds.BEAMATTACK and not self.keybinds.use_mouse:
+        if event.key == self.keybinds.controls.get("BEAMATTACK") and not self.keybinds.use_mouse:
             self.ship.fire_beam()
-        if event.key == self.keybinds.FLIPSHIP and not self.keybinds.use_mouse:
+        if event.key == self.keybinds.controls.get("FLIPSHIP") and not self.keybinds.use_mouse:
             self.ship.flip_ship()
 
     def _check_mousedown_events(self):
@@ -383,13 +383,13 @@ class AlienInvasion:
 
     def _check_keyup_events(self, event):
         """respond to key releases."""
-        if event.key == self.keybinds.MOVEUP:
+        if event.key == self.keybinds.controls.get("MOVEUP"):
             self.ship.moving_up = False
-        elif event.key == self.keybinds.MOVEDOWN:
+        elif event.key == self.keybinds.controls.get("MOVEDOWN"):
             self.ship.moving_down = False
-        if event.key == self.keybinds.MOVELEFT:
+        if event.key == self.keybinds.controls.get("MOVELEFT"):
             self.ship.moving_left = False
-        elif event.key == self.keybinds.MOVERIGHT:
+        elif event.key == self.keybinds.controls.get("MOVERIGHT"):
             self.ship.moving_right = False
 
     def _check_pause(self):
