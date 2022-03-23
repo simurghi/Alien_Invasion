@@ -229,6 +229,10 @@ class ControlsMenu:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             done = True
+                        elif event.key == pygame.K_BACKSPACE:
+                            done = True
+                            pygame.quit()
+                            sys.exit()
                         elif event.key not in self.keybinds.controls.values():
                             self.keybinds.controls[mapping] = event.key
                             done = True

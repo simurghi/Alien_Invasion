@@ -363,6 +363,10 @@ class AlienInvasion:
         if event.key == pygame.K_ESCAPE:
             self._check_pause()
             self._check_exit()
+        if event.key == pygame.K_BACKSPACE:
+            self.stats.dump_stats_json()
+            pygame.quit()
+            sys.exit()
         if event.key == self.keybinds.controls.get("MISSILEATTACK") and not self.keybinds.use_mouse:
             self.ship.fire_bullet()
         if event.key == self.keybinds.controls.get("BEAMATTACK") and not self.keybinds.use_mouse:
