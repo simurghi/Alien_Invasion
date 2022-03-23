@@ -372,12 +372,15 @@ class AlienInvasion:
     def _check_mousedown_events(self):
         """respond to mouse clicks.""" 
         mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
+        mouse_pos = pygame.mouse.get_pos()
         if mouse_buttons[0]:
-            mouse_pos = pygame.mouse.get_pos()
             self.options_menu.check_options_menu_buttons(mouse_pos)
             self.main_menu.check_main_menu_buttons(mouse_pos)
             self.controls_menu.check_controls_menu_buttons(mouse_pos)
             self.go_menu.check_game_over_buttons(mouse_pos)
+        elif mouse_buttons[2]:
+            self.controls_menu._clear_keybind_button(mouse_pos)
+
         if self.keybinds.use_mouse:
             if mouse_buttons[0]:
                 self.ship.fire_bullet()
@@ -409,7 +412,8 @@ class AlienInvasion:
         """Checks to see if hitting ESC should exit the game."""
         if self.state.state == self.state.OPTIONSMENU:
             self.state.state = self.state.MAINMENU
-        elif self.state.state == self.state.CONTROLSMENU:
+        elif (self.state.state == self.state.CONTROLSMENU and 
+                pygame.K_UNDERSCORE not in self.keybinds.controls.values()):
             self.state.state = self.state.OPTIONSMENU
         elif self.state.state == self.state.MAINMENU or self.state.state == self.state.GAMEOVER:
             self.stats.dump_stats_json()

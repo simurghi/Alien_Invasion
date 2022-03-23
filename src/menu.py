@@ -217,8 +217,8 @@ class ControlsMenu:
 
     def _check_keybind_button(self, mouse_pos, button, mapping):
         button_clicked = button.rect.collidepoint(mouse_pos)
+        done = False
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
-            done = False
             self.sound.play_sfx("options_menu")
             while not done:
                 for event in pygame.event.get():
@@ -237,16 +237,27 @@ class ControlsMenu:
                             self.keybinds.controls[mapping] = event.key
                             done = True
 
+    def _clear_keybind_button(self, mouse_pos):
+        for button, mapping in self.buttons.items():
+            if button.rect.collidepoint(mouse_pos):
+                button_clicked = button.rect.collidepoint(mouse_pos)
+                key_val = mapping
+                break
+        button_clicked = button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
+            self.sound.play_sfx("options_menu")
+            self.keybinds.controls[key_val] = pygame.K_UNDERSCORE
+
     def _update_button_text(self):
         self.keybinds.init_menu_text()
-        for i in enumerate(self.buttons):
-            i[1]._prep_msg(self.keybinds.menu_text[i[0]])
+        for button in enumerate(self.buttons):
+            button[1]._prep_msg(self.keybinds.menu_text[button[0]])
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
-        self._update_button_text()
         self._toggle_colors()
+        self._update_button_text()
         for button in self.buttons:
             button.draw_button()
         self.mouse_button.draw_button()
@@ -254,12 +265,22 @@ class ControlsMenu:
 
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""
+        for button, mapping in self.buttons.items():
+            button.toggle_color(self._check_empty_key(mapping))
         self.mouse_button.toggle_color(self.game.keybinds.use_mouse)
+
+    def _check_empty_key(self, mapping):
+        """ Checks if a key is empty or not."""
+        if self.keybinds.controls.get(mapping) == pygame.K_UNDERSCORE:
+            return False
+        else: 
+            return True
 
     def _check_back_button(self, mouse_pos):
         """Enters the main menu from the options menu screen once clicked."""
         button_clicked = self.back_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
+        if (button_clicked and pygame.K_UNDERSCORE not in self.keybinds.controls.values() and
+                self.game.state.state is self.game.state.CONTROLSMENU):
             self.game.state.state = self.game.state.OPTIONSMENU
             self.sound.play_sfx("options_menu")
 
