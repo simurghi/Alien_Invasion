@@ -59,68 +59,30 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 
 #### Game
 - ESC: Toggle Pause 
-- The Game Has 12 Different Keyboard + Mouse control schemes for combat + movement:
-##### ARROWS:
+
+##### ARROWS (DEFAULT):
 - Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
 - X: Fire a missile
 - Z: Flip Ship across the y-axis
 - C: Fire a beam charge
-##### ARROWS-2:
-- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
-- S: Fire a missile
-- A: Flip Ship across the y-axis
-- D: Fire a beam charge
-##### ARROWS-3:
-- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
-- Z: Fire a missile
-- X: Flip Ship across the y-axis
-- C: Fire a beam charge
-##### ARROWS-4:
-- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
-- A: Fire a missile
-- S: Flip Ship across the y-axis
-- D: Fire a beam charge
-##### VIMLIKE:
-- JKL; (offset to the right of traditional VIM): Move the ship left, down, up, and right, respectively.
-- D: Fire a missile
-- S: Flip Ship across the y-axis
-- F: Fire a beam charge
-##### WASD:
-- WASD: Move the ship up, left, down, and right, respectively
-- Left Mouse (LMB): Fire a missile
-- Right Mouse (RMB): Flip Ship across the y-axis
-- Middle Mouse (MMB): Fire a beam charge
-##### QWOP:
-- QWOP: Move the ship left, right, up, and down, respectively
-- Spacebar: Fire a missile
-- F: Flip ship across the y-axis
-- K: Fire a beam charge
-##### ESDF:
-- ESDF: Move the ship up, left, down, and right, respectively
-- LMB: Fire a missile
-- RMB: Flip Ship across the y-axis
-- MMB: Fire a beam charge
-##### SPACE:
-- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
-- Spacebar: Fire a missile
-- Left Shift: Flip ship across the y-axis
-- Left Control: Fire a beam charge
-##### SPACE-2:
-- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
-- Spacebar: Fire a missile
-- X: Flip Ship across the y-axis
-- Left Shift: Fire a beam charge
-##### LEFTY:
-- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
-- LMB: Fire a missile
-- RMB: Flip Ship across the y-axis
-- MMB: Fire a beam charge
-##### WOLF:
-- WASD: Move the ship up, left, down, and right, respectively
-- H: Fire a missile
-- K: Flip Ship across the y-axis
-- J: Fire a beam charge
+- Mouse Controls: Disabled
 
+##### CUSTOM:
+- The user can define their own preferred keyboard and mouse control scheme by assigning button presses as follows:
+- Keys cannot overlap and the user will need to use an alternative key. 
+
+- MOVELEFT: (Defaults to Left Arrow)
+- MOVERIGHT: (Defaults to Right Arrow)
+- MOVEUP: (Defaults to Up Arrow)
+- MOVEDOWN: (Defaults to Down Arrow)
+- BEAMATTACK: (Defaults to the "C" Key)
+- FLIPSHIP: (Defaults to the "Z" Key)
+- MISSILEATTACK: (Defaults to the "X" Key)
+
+- Use Mouse: Toggles if combat actions (Flip, Missile, and Beam) should be controlled by the mouse instead of keyboard (not remappable):
+- LMB: Fire a missile
+- RMB: Flip Ship across the y-axis
+- MMB: Fire a beam charge
 
 #### Game Over
 - Left Click: Activate menu option
@@ -156,7 +118,7 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 ![menu](https://user-images.githubusercontent.com/85529046/159285444-7f883428-0aa9-4e2e-bb21-46dc4c9c01d5.png)
 
 - **Game Speed**: Normal is the default game speed. Turbo plays at 1.5x the speed of normal and scales 2x as fast, but has a 1.5x score multiplier.
-- **Control Scheme**: Selects a control preset. Defaults to "ARROWS". See controls section for exact bindings. Controller not affected.
+- **Keybindings**: Allows you to set custom key presets. Defaults to "ARROWS". See controls section for exact bindings. Controller not affected.
 - **Music**: Toggles in-game and menu music. Disabled when the button is red, enabled when the button is green.
 - **Sound**: Toggles in-game sound. Disabled when the button is red, enabled when the button is green.
 - **Movie VFX**: Toggles cinematic black bars on the top and bottom of the screen, When enabled, forces a 16:9 aspect ratio, otherwise 3:2 when off.
@@ -173,8 +135,8 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 - Killing an enemy in close range has a 4x score multiplier. (200 pixels or less --> calculated using pythagorean theorem) 
 - Shooting an enemy in their back has a 4x score multiplier (i.e. if your bullet is travelling to the left).
 - If both multipliers are active, you instead receive a larger score multiplier (10x instead of 8x)
-- If on normal speed, the game will speed up by +50% (base) every 90 seconds and increase score by 25 points.
-- If on turbo speed, the game will speed up by +100% (base) every 90 seconds and increases by 50 points.
+- If on normal speed, the game will speed up by +10% (base) every 20 seconds and increase score by 5 points.
+- If on turbo speed, the game will speed up by +20% (base) every 20 seconds and increases by 10 points.
 - Every 5000 points earns you a beam charge. If you're at capacity (3), then you instead earn 1000 bonus points.
 - Hitboxes for mines and trash mobs are circular, not rectangular, so you have some room to dodge and flank enemies.
 - Hitboxes for Gunners and their bullets are pixel accurate, so you can die if you clip into their wings. 
