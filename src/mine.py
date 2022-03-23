@@ -105,7 +105,7 @@ class Mine(Sprite):
                 (self.ship.rect.centerx - self.rect.centerx)**2)
         formula_y = sqrt((self.ship.rect.centery - self.rect.centery)**2 + 
                 (self.ship.rect.centery - self.rect.centery)**2)
-        if formula_x < 151 and formula_y < 151:
+        if formula_x < 176 and formula_y < 176:
             if self.audio_delay % 120 == 0:
                 self.sound.play_sfx("mine")
                 self.audio_delay += 1
