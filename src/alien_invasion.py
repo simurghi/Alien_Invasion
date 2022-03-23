@@ -101,11 +101,6 @@ class AlienInvasion:
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event) 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                self.options_menu.check_options_menu_buttons(mouse_pos)
-                self.main_menu.check_main_menu_buttons(mouse_pos)
-                self.controls_menu.check_controls_menu_buttons(mouse_pos)
-                self.go_menu.check_game_over_buttons(mouse_pos)
                 self._check_mousedown_events()
             elif event.type == pygame.JOYBUTTONDOWN:
                 self.controller.check_joybuttondown_events(event)
@@ -375,9 +370,15 @@ class AlienInvasion:
             self.ship.flip_ship()
 
     def _check_mousedown_events(self):
-        """respond to keypresses.""" 
+        """respond to mouse clicks.""" 
+        mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
+        if mouse_buttons[0]:
+            mouse_pos = pygame.mouse.get_pos()
+            self.options_menu.check_options_menu_buttons(mouse_pos)
+            self.main_menu.check_main_menu_buttons(mouse_pos)
+            self.controls_menu.check_controls_menu_buttons(mouse_pos)
+            self.go_menu.check_game_over_buttons(mouse_pos)
         if self.keybinds.use_mouse:
-            mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
             if mouse_buttons[0]:
                 self.ship.fire_bullet()
             if mouse_buttons[1]:
