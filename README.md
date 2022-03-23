@@ -55,6 +55,7 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 
 #### Menus 
 - Left Mouse: Activate menu option 
+- Right Mouse: Clear Keybind (Controls Menu only)
 - ESC: Exit game
 
 #### Game
@@ -70,6 +71,7 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 ##### CUSTOM:
 - The user can define their own preferred keyboard and mouse control scheme by assigning button presses as follows:
 - Keys cannot overlap and the user will need to use an alternative key. 
+- If a Key is unbound, it must be mapped to leave the control screen (the application can still be exited normally.)
 
 - MOVELEFT: (Defaults to Left Arrow)
 - MOVERIGHT: (Defaults to Right Arrow)
@@ -123,6 +125,7 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 - **Sound**: Toggles in-game sound. Disabled when the button is red, enabled when the button is green.
 - **Movie VFX**: Toggles cinematic black bars on the top and bottom of the screen, When enabled, forces a 16:9 aspect ratio, otherwise 3:2 when off.
 - **Scaling**: Toggles between "Native" resolution (960x640) and "Scaled" (upscales base resolution to fit display).
+- **Fire Mode**: Toggles between "Autofire" and "Singleshot" presets. This will determine if your ship can hold down the fire button or not (both modes have stats differences between them.)
 - **Back**: Returns to the main menu
 
 ### <b>Tips:</b>
