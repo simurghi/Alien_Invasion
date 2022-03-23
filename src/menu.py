@@ -208,6 +208,16 @@ class ControlsMenu:
                 self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
                 self.flip_button: "FLIPSHIP", self.missile_button: "MISSILEATTACK"}
 
+    def draw_buttons(self):
+        """ Draws buttons to the screen."""
+        self.screen.blit(self.game.menu_image, (0, 0)) 
+        self._toggle_colors()
+        self._update_button_text()
+        for button in self.buttons:
+            button.draw_button()
+        self.mouse_button.draw_button()
+        self.back_button.draw_button()
+
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         for button, mapping in self.buttons.items():
@@ -237,7 +247,7 @@ class ControlsMenu:
                             self.keybinds.controls[mapping] = event.key
                             done = True
 
-    def _clear_keybind_button(self, mouse_pos):
+    def clear_keybind_button(self, mouse_pos):
         for button, mapping in self.buttons.items():
             if button.rect.collidepoint(mouse_pos):
                 button_clicked = button.rect.collidepoint(mouse_pos)
@@ -245,7 +255,7 @@ class ControlsMenu:
                 break
         button_clicked = button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
-            self.sound.play_sfx("options_menu")
+            self.sound.play_sfx("options_menu_unselect")
             self.keybinds.controls[key_val] = pygame.K_UNDERSCORE
 
     def _update_button_text(self):
@@ -253,15 +263,6 @@ class ControlsMenu:
         for button in enumerate(self.buttons):
             button[1]._prep_msg(self.keybinds.menu_text[button[0]])
 
-    def draw_buttons(self):
-        """ Draws buttons to the screen."""
-        self.screen.blit(self.game.menu_image, (0, 0)) 
-        self._toggle_colors()
-        self._update_button_text()
-        for button in self.buttons:
-            button.draw_button()
-        self.mouse_button.draw_button()
-        self.back_button.draw_button()
 
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""

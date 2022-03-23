@@ -379,7 +379,7 @@ class AlienInvasion:
             self.controls_menu.check_controls_menu_buttons(mouse_pos)
             self.go_menu.check_game_over_buttons(mouse_pos)
         elif mouse_buttons[2]:
-            self.controls_menu._clear_keybind_button(mouse_pos)
+            self.controls_menu.clear_keybind_button(mouse_pos)
 
         if self.keybinds.use_mouse:
             if mouse_buttons[0]:
