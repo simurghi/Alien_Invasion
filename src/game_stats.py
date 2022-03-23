@@ -11,7 +11,6 @@ class GameStats:
         self.options_data = self._read_options_json()
         self.high_score = self._read_stats_json()
         self._set_json_options_settings()
-        self._set_json_keybinds()
         self._update_menu_text_json()
 
     def reset_stats(self):
@@ -30,10 +29,6 @@ class GameStats:
         self.game.keybinds.controls = self._read_keybinds_json()
         self.game.keybinds.use_mouse = self._read_mouse_json()
         self.game.settings.scaled_gfx = self._read_gfx_json()
-
-    def _set_json_keybinds(self):
-        """Sets key preset preference based on JSON file."""
-        pass
 
     def _update_menu_text_json(self):
         """Updates menu text based on JSON file preferences."""
@@ -61,11 +56,11 @@ class GameStats:
                 data = json.load(f)
                 return data
         except FileNotFoundError:
-            return 0
+            return None
         except json.decoder.JSONDecodeError:
-            return 0
+            return None
         except KeyError: 
-            return 0
+            return None
 
     def _read_music_json(self):
         """Searches the dictionary created from the settings.json file
@@ -76,6 +71,8 @@ class GameStats:
                 return music_option
             else:
                 return True
+        else:
+            return True
 
     def _read_keybinds_json(self):
         """Searches the dictionary creates from the settings.json file 
@@ -88,6 +85,11 @@ class GameStats:
                 return {"MOVELEFT": pygame.K_LEFT, "MOVERIGHT": pygame.K_RIGHT,
                 "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
                 "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
+        else:
+            return {"MOVELEFT": pygame.K_LEFT, "MOVERIGHT": pygame.K_RIGHT,
+            "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
+            "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
+
 
     def _read_mouse_json(self):
         """Searches the dictionary created from the settings.json file 
@@ -98,6 +100,8 @@ class GameStats:
                 return mouse_option
             else:
                 return False
+        else:
+            return False
 
     def _read_sfx_json(self):
         """Searches the dictionary created from the settings.json file
@@ -108,6 +112,8 @@ class GameStats:
                 return sfx_option
             else:
                 return True
+        else:
+            return True
 
     def _read_vfx_json(self):
         """Searches the dictionary created from the settings.json file
@@ -118,6 +124,8 @@ class GameStats:
                 return vfx_option
             else:
                 return True
+        else:
+            return True
 
     def _read_turbo_json(self):
         """Searches the dictionary created from the settings.json file
@@ -128,6 +136,9 @@ class GameStats:
                 return turbo_option
             else:
                 return False
+        else:
+            return False
+
 
     def _read_gfx_json(self):
         """Searches the dictionary created from the settings.json file 
@@ -138,6 +149,8 @@ class GameStats:
                 return gfx_option
             else:
                 return False
+        else:
+            return False
 
     def dump_stats_json(self):
         """Dumps score and key game settings to a JSON file."""
