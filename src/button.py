@@ -8,6 +8,8 @@ class Button:
         self.screen_rect = self.screen.get_rect()
         self._set_button_properties()
         self.msg = msg
+        self.x_offset = x_offset
+        self.y_offset = y_offset
         self.rect = pygame.Rect(0,0, self.width, self.height)
         self.rect.center = self.screen_rect.centerx - x_offset, self.screen_rect.centery - y_offset
         self._prep_msg(msg)

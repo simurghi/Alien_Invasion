@@ -189,8 +189,10 @@ class ControlsMenu:
         """Initialize button attributes."""
         self.game = ai_game
         self.screen = ai_game.screen
+        self.screen_rect = self.screen.get_rect()
         self.keybinds = ai_game.keybinds
         self.sound = ai_game.sound
+        self.selected = False
         self._create_controls_buttons()
 
     def _create_controls_buttons(self):
@@ -230,24 +232,30 @@ class ControlsMenu:
         done = False
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.sound.play_sfx("options_menu")
+            self.selected = True
             while not done:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         done = True
+                        self.selected = False
                         pygame.quit()
                         sys.exit()
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             done = True
+                            self.selected = False
                         elif event.key == pygame.K_BACKSPACE:
                             done = True
+                            self.selected = False
                             pygame.quit()
                             sys.exit()
                         elif event.key not in self.keybinds.controls.values():
                             self.keybinds.controls[mapping] = event.key
                             done = True
+                            self.selected = False
 
     def clear_keybind_button(self, mouse_pos):
+        """If right clicking a button, clear the input to free it for reassignment."""
         for button, mapping in self.buttons.items():
             if button.rect.collidepoint(mouse_pos):
                 button_clicked = button.rect.collidepoint(mouse_pos)
@@ -259,10 +267,10 @@ class ControlsMenu:
             self.keybinds.controls[key_val] = pygame.K_UNDERSCORE
 
     def _update_button_text(self):
+        """Updates the keybinding based on the current value."""
         self.keybinds.init_menu_text()
         for button in enumerate(self.buttons):
             button[1]._prep_msg(self.keybinds.menu_text[button[0]])
-
 
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""
