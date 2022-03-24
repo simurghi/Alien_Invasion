@@ -13,6 +13,9 @@ class Ship(Sprite):
         self.rect = self.image.get_rect()
         self.rect.midleft = self.screen_rect.midleft
         self.radius = 10
+        self.fire_delay = 150
+        self.last_shot = pygame.time.get_ticks()
+        self.is_firing = False
         self.is_flipped = False
         self.y = float(self.rect.y) 
         self.x = float(self.rect.x) 
@@ -51,6 +54,8 @@ class Ship(Sprite):
             self.x -= self.settings.ship_speed 
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.x += self.settings.ship_speed
+        if self.is_firing:
+            self._fire_bullet()
         self.rect.y = self.y 
         self.rect.x = self.x 
 
@@ -75,10 +80,10 @@ class Ship(Sprite):
     def _adjust_bullet_flipped(self):
         """Adjusts the speed and direction of flipped bullets."""
         if self.is_flipped:
-            self.settings.bullet_speed *= 2.50
+            self.settings.bullet_speed *= 2.00
             self.settings.ship_speed *= 1.25
         else: 
-            self.settings.bullet_speed *= 0.40
+            self.settings.bullet_speed *= 0.50
             self.settings.ship_speed *= 0.80
 
     def reset_ship_flip(self):
@@ -86,10 +91,13 @@ class Ship(Sprite):
         self.image = pygame.image.load('assets/images/ship.bmp')
         self.is_flipped = False
 
-    def fire_bullet(self):
+    def _fire_bullet(self):
         """Create a new bullet and add it to the bullets group."""
         if self.state.state == self.state.GAMEPLAY:
-            if len(self.game.bullets) < self.settings.bullets_allowed: 
+            now = pygame.time.get_ticks()
+            if (len(self.game.bullets) < self.settings.bullets_allowed and
+                    now - self.last_shot > self.fire_delay): 
+                self.last_shot = now
                 new_bullet = Bullet(self.game, self)
                 if self.is_flipped:
                     new_bullet.rotate_bullet()

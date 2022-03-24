@@ -37,18 +37,25 @@ class Controller:
         self._check_combat_controls(event)
         self._check_menu_controls(event)
         self._check_game_over_controls(event)
+
+    def check_joybuttonup_events(self, event):
+        """respond to gamepad face button releases.""" 
+        self._check_combat_controls(event)
         
     def _check_combat_controls(self, event):
         """Handles input while in combat."""
         if self.state.state is self.state.GAMEPLAY:
-            if event.button == self.BTN_A:
-                self.ship.fire_bullet()
-            if event.button == self.BTN_B:
+            if event.button == self.BTN_A and event.type == pygame.JOYBUTTONDOWN:
+                self.ship.is_firing = True
+            if event.button == self.BTN_A and event.type == pygame.JOYBUTTONUP:
+                self.ship.is_firing = False
+            if event.button == self.BTN_B and event.type == pygame.JOYBUTTONDOWN:
                 self.ship.flip_ship()
-            if event.button == self.BTN_X: 
+            if event.button == self.BTN_X and event.type == pygame.JOYBUTTONDOWN:
                 self.ship.fire_beam()
-        if (event.button == self.BTN_START and self.state.state 
-                is self.state.GAMEPLAY or self.state.state is self.state.PAUSE): 
+        if (event.button == self.BTN_START and event.type == pygame.JOYBUTTONDOWN and 
+                (self.state.state is self.state.GAMEPLAY 
+                    or self.state.state is self.state.PAUSE)): 
             self.sound.play_sfx("options_menu")
             self.game._check_pause()
 
