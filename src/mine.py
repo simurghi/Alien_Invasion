@@ -19,7 +19,7 @@ class Mine(Sprite):
         self.set_random_position()
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
-        self.radius = int(self.rect.width / 2)
+        self.radius = int(self.rect.width / 2) - 2
         pygame.draw.circle(self.image, (255,0,0), self.rect.center, self.radius)
 
     def _load_assets(self):
