@@ -103,6 +103,7 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 - A: Toggle Graphics Scaling
 - Left Bumper (LB): Toggle Music
 - Right Bumper (RB): Toggle Sound
+- Select (Back): Toggle FPS mode
 
 #### Game
 - D-pad: Move ship
@@ -125,7 +126,7 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 - **Sound**: Toggles in-game sound. Disabled when the button is red, enabled when the button is green.
 - **Movie VFX**: Toggles cinematic black bars on the top and bottom of the screen, When enabled, forces a 16:9 aspect ratio, otherwise 3:2 when off.
 - **Scaling**: Toggles between "Native" resolution (960x640) and "Scaled" (upscales base resolution to fit display).
-- **Fire Mode**: Toggles between "Autofire" and "Singleshot" presets. This will determine if your ship can hold down the fire button or not (both modes have stats differences between them.)
+- **Framerate**: Toggles between a 60 and 120 FPS cap. 
 - **Back**: Returns to the main menu
 
 ### <b>Tips:</b>
