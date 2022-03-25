@@ -49,9 +49,9 @@ Download the latest release, extract the zip, and run the alien invasion launch 
 To create your own release, once you've cloned the repository, use :
 
 ```
-cd alien_invasion/src
+$ cd alien_invasion/src
 
-pyinstaller -F -w src/alien_invasion.py
+$ pyinstaller -F -w src/alien_invasion.py
 
 ```
 NOTE: The finished binary _must_ be able to find the stats and assets folders or else it won't work. You can move them into the same directory or use symlinks. 
