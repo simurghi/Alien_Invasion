@@ -40,7 +40,7 @@ class AlienInvasion:
     def _make_game_objects(self):
         """Creates all of the necessary game objects for the game to run."""
         self.previous_time = time.time()
-        self.clock = pygame.time.Clock()
+        self.time_game = time.time()
         self.settings = Settings()
         self.screen = pygame.display.set_mode(
                 (self.settings.screen_width, self.settings.screen_height), pygame.SCALED)
@@ -85,13 +85,24 @@ class AlienInvasion:
                 self._adjust_difficulty(dt)
             self._check_mouse_visible()
             self._update_screen()
-            self.clock.tick(self.settings.FPS)
+            self.set_fps_cap()
 
     def calculate_delta_time(self):
         """Calculates delta time to ensure framerate independence"""
         dt = time.time() - self.previous_time
         self.previous_time = time.time()
         return dt
+
+    def set_fps_cap(self):
+         """Sets the internal FPS cap for the game.
+         Current time is calculated after all other events in the game loop have elapsed
+         The time different is how long our frame took to process
+         The game will be delayed based on the game's FPS if we finish the loop early"""
+         current_time = time.time()
+         time_diff = current_time - self.time_game
+         delay = max(1.0/self.settings.FPS - time_diff, 0)
+         time.sleep(delay)
+         self.time_game = current_time
 
     def _check_events(self):
         """Respond to keypresses, gamepad actions, and mouse events."""
