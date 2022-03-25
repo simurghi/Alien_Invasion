@@ -52,8 +52,6 @@ class Settings:
         self.background_x = 0
         self.difficulty_counter = 0
         self.adjust_beams = False
-        self.last_death_time = 0
-        self.last_death_difference = 0
 
     def increase_speed(self):
         """Increase speed and bonus point settings."""
