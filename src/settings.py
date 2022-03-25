@@ -1,3 +1,5 @@
+import pygame
+
 class Settings:
     """A class to store all settings for Alien Invasion."""
 
@@ -22,7 +24,7 @@ class Settings:
         self.turbo_speed = False
         self.scaled_gfx = True 
         self.fire_mode = False
-        self.FPS = 60.0
+        self.FPS = 120.0
 
     def _initialize_static_settings(self):
         """Initialize settings that do not change throughout the game."""
@@ -33,22 +35,25 @@ class Settings:
 
     def _initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
+        self.bandaid = 2
         if self.turbo_speed:
             self.speed_mult = 1.5
             self.alien_points = 150
         else: 
             self.speed_mult = 1
             self.alien_points = 100
-        self.ship_speed = 7.00 * self.speed_mult
-        self.alien_speed = 6.00 * self.speed_mult
-        self.bullet_speed = 8.00 * self.speed_mult
-        self.gunner_bullet_speed = 5.00 * self.speed_mult
-        self.mine_speed = 3.00 * self.speed_mult
-        self.gunner_speed = 2.00 * self.speed_mult
+        self.ship_speed = 210 * self.speed_mult * self.bandaid
+        self.alien_speed = 180.00 * self.speed_mult * self.bandaid
+        self.bullet_speed = 240.00 * self.speed_mult * self.bandaid
+        self.gunner_bullet_speed = 150 * self.speed_mult * self.bandaid
+        self.mine_speed = 90 * self.speed_mult * self.bandaid
+        self.gunner_speed = 60 * self.speed_mult * self.bandaid
         self.scroll_speed = -1.0
         self.background_x = 0
         self.difficulty_counter = 0
         self.adjust_beams = False
+        self.last_death_time = 0
+        self.last_death_difference = 0
 
     def increase_speed(self):
         """Increase speed and bonus point settings."""
