@@ -17,7 +17,7 @@ class Alien(Sprite):
         self.y = float(self.rect.y)
         self.radius = 23
 
-    def update(self):
+    def update(self, dt):
         """Move the alien to the left."""
-        self.x -= (self.settings.alien_speed)
+        self.x -= self.settings.alien_speed * dt
         self.rect.x = self.x

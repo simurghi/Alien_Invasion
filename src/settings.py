@@ -22,7 +22,7 @@ class Settings:
         self.turbo_speed = False
         self.scaled_gfx = True 
         self.fire_mode = False
-        self.FPS = 60
+        self.FPS = 60.0
 
     def _initialize_static_settings(self):
         """Initialize settings that do not change throughout the game."""
@@ -39,12 +39,12 @@ class Settings:
         else: 
             self.speed_mult = 1
             self.alien_points = 100
-        self.ship_speed = 3.50 * self.speed_mult
-        self.alien_speed = 3.00 * self.speed_mult
-        self.bullet_speed = 4.00 * self.speed_mult
+        self.ship_speed = 7.00 * self.speed_mult
+        self.alien_speed = 6.00 * self.speed_mult
+        self.bullet_speed = 8.00 * self.speed_mult
         self.gunner_bullet_speed = 2.50 * self.speed_mult
-        self.mine_speed = 1.50 * self.speed_mult
-        self.gunner_speed = 1.00 * self.speed_mult
+        self.mine_speed = 3.00 * self.speed_mult
+        self.gunner_speed = 2.00 * self.speed_mult
         self.scroll_speed = -1.0
         self.background_x = 0
         self.difficulty_counter = 0

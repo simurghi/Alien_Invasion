@@ -39,9 +39,12 @@ class AlienInvasion:
 
     def _make_game_objects(self):
         """Creates all of the necessary game objects for the game to run."""
-        self.settings = Settings()
-        self._set_screen_attributes()
+        self.previous_time = time.time()
         self.time_game = time.time()
+        self.settings = Settings()
+        self.screen = pygame.display.set_mode(
+                (self.settings.screen_width, self.settings.screen_height), pygame.SCALED)
+        self.screen_rect = self.screen.get_rect()
         self.keybinds = Keybinds()
         self.state = GameState()
         self.music = Music(self)
@@ -58,12 +61,6 @@ class AlienInvasion:
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
 
-    def _set_screen_attributes(self):
-        """Sets the screen's dimensions and creates its rect."""
-        self.screen = pygame.display.set_mode(
-                (self.settings.screen_width, self.settings.screen_height), pygame.SCALED)
-        self.screen_rect = self.screen.get_rect()
-
     def _create_sprite_groups(self):
         """Creates sprite group containers for objects."""
         self.bullets = pygame.sprite.Group()
@@ -76,18 +73,26 @@ class AlienInvasion:
     def run_game(self):
         """Start the main loop for the game."""
         while True: 
+            dt = self.calculate_delta_time()
             self._check_events()
             self.music.play_music()
             if self.state.state is self.state.GAMEPLAY: 
-                self.ship.update()
-                self._update_bullets()
-                self._update_beams()
-                self._update_aliens()
+                self.ship.update(dt)
+                self._update_bullets(dt)
+                self._update_beams(dt)
+                self._update_aliens(dt)
                 self.explosions.update()
                 self._adjust_difficulty()
             self._check_mouse_visible()
             self._update_screen()
             self._adjust_fps_cap()
+
+    def calculate_delta_time(self):
+        """Calculates delta time to ensure framerate independence"""
+        dt = time.time() - self.previous_time
+        dt *= self.settings.FPS
+        self.previous_time = time.time()
+        return dt
 
     def _check_events(self):
         """Respond to keypresses, gamepad actions, and mouse events."""
@@ -171,9 +176,9 @@ class AlienInvasion:
         self.ship.position_ship()
         self.ship.reset_ship_flip()
 
-    def _update_bullets(self):
+    def _update_bullets(self, dt):
         """Update position of the bullets and get rid of the old bullets."""
-        self.bullets.update()
+        self.bullets.update(dt)
         for bullet in self.bullets.copy():
             if bullet.rect.right > self.settings.screen_width or bullet.rect.right < 0: 
                 self.bullets.remove(bullet)
@@ -181,9 +186,9 @@ class AlienInvasion:
         self._check_bullet_alien_collision(self.mines, 1)
         self._check_bullet_alien_collision(self.gunners, 3.0)
         
-    def _update_beams(self):
+    def _update_beams(self, dt):
         """Update position of the beams and get rid of the old beams."""
-        self.beams.update()
+        self.beams.update(dt)
         for beam in self.beams.copy():
             if beam.rect.right > self.settings.screen_width or beam.rect.right < 0: 
                 self.beams.remove(beam)
@@ -320,12 +325,12 @@ class AlienInvasion:
                 multiplier += 1 if not multiplier else 0
         return multiplier
 
-    def _update_aliens(self):
+    def _update_aliens(self, dt):
         """Checks if the player ship collides with aliens, 
         then deletes chaff aliens if they go offscreen.""" 
-        self.aliens.update()
-        self.mines.update()
-        self.gunners.update()
+        self.aliens.update(dt)
+        self.mines.update(dt)
+        self.gunners.update(dt)
         if pygame.sprite.spritecollide(self.ship, self.aliens, False, pygame.sprite.collide_circle):
             self._ship_hit()
         if pygame.sprite.spritecollide(self.ship, self.mines, False, pygame.sprite.collide_circle):

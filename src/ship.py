@@ -44,16 +44,16 @@ class Ship(Sprite):
         """Draw the ship at its current location."""
         self.screen.blit(self.image, self.rect) 
 
-    def update(self):
+    def update(self, dt):
         """Update the ship's position based on the movement flag."""
         if self.moving_up and self.rect.top > 60: 
-            self.y -= self.settings.ship_speed
+            self.y -= self.settings.ship_speed * dt
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom - 60:
-            self.y += self.settings.ship_speed
+            self.y += self.settings.ship_speed * dt
         if self.moving_left and self.rect.left > 0:
-            self.x -= self.settings.ship_speed 
+            self.x -= self.settings.ship_speed * dt
         if self.moving_right and self.rect.right < self.screen_rect.right:
-            self.x += self.settings.ship_speed
+            self.x += self.settings.ship_speed * dt
         if self.is_firing:
             self._fire_bullet()
         self.rect.y = self.y 

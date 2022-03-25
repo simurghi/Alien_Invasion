@@ -34,9 +34,9 @@ class Beam(Sprite):
         self.direction *= -1
         self.image = pygame.transform.flip(self.image, True, False)
 
-    def update(self):
+    def update(self, dt):
         """Update method for explosions"""
-        self.x += self.settings.bullet_speed  * self.direction * 1.25
+        self.x += self.settings.bullet_speed  * self.direction * 1.25 * dt
         self.rect.x = self.x
         # Playback speed at which our explosions cycle through, lower is faster
         animation_speed = 4

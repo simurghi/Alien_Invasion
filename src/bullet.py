@@ -16,9 +16,9 @@ class Bullet(Sprite):
         self.rect.midright = ship.rect.midright
         self.x = float(self.rect.x)
 
-    def update(self):
+    def update(self, dt):
         """Move the bullet to the right of the screen."""
-        self.x += self.settings.bullet_speed  * self.direction
+        self.x += self.settings.bullet_speed  * self.direction * dt
         self.rect.x = self.x
 
     def rotate_bullet(self):

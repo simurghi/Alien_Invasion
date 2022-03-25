@@ -43,9 +43,9 @@ class Gunner(Sprite):
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
 
-    def update(self):
+    def update(self, dt):
         """Update method for mines"""
-        self._move_gunner()
+        self._move_gunner(dt)
         self._fire_bullets()
         if self.gunner_bullets:
             self.gunner_bullets.update()
@@ -59,13 +59,13 @@ class Gunner(Sprite):
             self.gunner_bullets.add(new_gbullet)
             self.game.sound.play_sfx("gunner")
 
-    def _move_gunner(self):
+    def _move_gunner(self, dt):
         """Updates the position of the mines."""
         if self.x > self.screen_rect.right - 175:
-            self.x -= 2 * self.settings.gunner_speed
+            self.x -= 2 * self.settings.gunner_speed * dt
         if self.rect.centery < self.ship.rect.centery:
-            self.y += self.settings.gunner_speed
+            self.y += self.settings.gunner_speed * dt
         if self.rect.centery > self.ship.rect.centery:
-            self.y -= self.settings.gunner_speed
+            self.y -= self.settings.gunner_speed * dt
         self.rect.y = self.y 
         self.rect.x = self.x

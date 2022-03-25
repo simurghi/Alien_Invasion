@@ -43,9 +43,9 @@ class Mine(Sprite):
         self.settings = ai_game.settings
         self.sound = ai_game.sound
 
-    def update(self):
+    def update(self, dt):
         """Update method for mines"""
-        self._move_mine()
+        self._move_mine(dt)
         animation_speed = self._cqc_warning()
         self.counter += 1
         if self.counter >= animation_speed and self.index < len(self.mine_images) - 1:
@@ -56,16 +56,16 @@ class Mine(Sprite):
         if self.index >= len(self.mine_images) - 1 and self.counter >= animation_speed:
             self.index = 0
 
-    def _move_mine(self):
+    def _move_mine(self, dt):
         """Updates the position of the mines."""
         if self.x < self.ship.x:
-            self.x += self.settings.mine_speed
+            self.x += self.settings.mine_speed * dt
         if self.x > self.ship.x:
-            self.x -= self.settings.mine_speed
+            self.x -= self.settings.mine_speed * dt
         if self.y < self.ship.y:
-            self.y += self.settings.mine_speed
+            self.y += self.settings.mine_speed * dt
         if self.y > self.ship.y:
-            self.y -= self.settings.mine_speed
+            self.y -= self.settings.mine_speed * dt
         self.rect.y = self.y 
         self.rect.x = self.x 
 
