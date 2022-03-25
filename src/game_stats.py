@@ -29,11 +29,13 @@ class GameStats:
         self.game.keybinds.controls = self._read_keybinds_json()
         self.game.keybinds.use_mouse = self._read_mouse_json()
         self.game.settings.scaled_gfx = self._read_gfx_json()
+        self.game.settings.high_FPS = self._read_fps_json()
 
     def _update_menu_text_json(self):
         """Updates menu text based on JSON file preferences."""
         self.game.options_menu._change_turbo_text()
         self.game.options_menu._change_gfx_text()
+        self.game.options_menu._change_fps()
         self.game.options_menu._change_window_size()
 
     def _read_stats_json(self):
@@ -152,6 +154,18 @@ class GameStats:
         else:
             return False
 
+    def _read_fps_json(self):
+        """Searches the dictionary created from the settings.json file 
+        and sees if we already have an option for high FPS."""
+        if self.options_data:
+            fps_option = self.options_data.get("high_FPS")
+            if fps_option is not None:
+                return fps_option
+            else:
+                return False
+        else:
+            return False
+
     def dump_stats_json(self):
         """Dumps score and key game settings to a JSON file."""
         with open("stats/score.json", 'w') as f:
@@ -160,5 +174,5 @@ class GameStats:
             json.dump({"game_speed" : self.settings.turbo_speed,"play_music": self.settings.play_music,
                 "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars, "window_mode":
                 self.settings.scaled_gfx, "controls": self.game.keybinds.controls, 
-                "mouse_enabled": self.game.keybinds.use_mouse}, f)
+                "mouse_enabled": self.game.keybinds.use_mouse, "high_FPS": self.settings.high_FPS}, f)
 

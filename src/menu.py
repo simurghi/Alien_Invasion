@@ -68,7 +68,7 @@ class OptionsMenu:
     def _set_initial_text(self):
         self.speed_state = "Normal"
         self.gfx_state = "Scaled"
-
+        self.FPS_state = "60 FPS"
 
     def _create_options_buttons(self):
         """Creates buttons for the options menu."""
@@ -78,10 +78,11 @@ class OptionsMenu:
         self.sfx_button = Button(self, "Sound", 0, 25)
         self.cinematic_button = Button(self, "Movie VFX", 0, -50)
         self.gfx_button = Button(self, self.gfx_state, 0, -125)
+        self.fps_button = Button(self, self.FPS_state, 0, -200)
         self.back_button = Button(self, "Back", 0, -275)
         self.buttons = [self.turbo_button, self.controls_button,
                 self.mute_button, self.sfx_button, self.cinematic_button,
-                self.gfx_button, self.back_button]
+                self.gfx_button, self.fps_button, self.back_button]
 
     def check_options_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
@@ -91,6 +92,7 @@ class OptionsMenu:
         self._check_sfx_button(mouse_pos)
         self._check_cinematic_button(mouse_pos)
         self._check_gfx_button(mouse_pos)
+        self._check_fps_button(mouse_pos)
         self._check_back_button(mouse_pos)
 
     def _change_turbo_text(self):
@@ -107,10 +109,20 @@ class OptionsMenu:
         else:
             self.gfx_state = "Scaled"
 
+    def _change_fps(self):
+        """Helper method that changes what the game's FPS is"""
+        if not self.game.settings.high_FPS:
+            self.game.settings.FPS = 60.0
+            self.FPS_state = "60 FPS"
+        else:
+            self.game.settings.FPS = 120.0
+            self.FPS_state = "120 FPS"
+
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
         self.gfx_button._prep_msg(self.gfx_state)
+        self.fps_button._prep_msg(self.FPS_state)
         self._toggle_colors()
         for button in self.buttons:
             button.draw_button()
@@ -165,6 +177,14 @@ class OptionsMenu:
             self.game.settings.scaled_gfx = not self.game.settings.scaled_gfx
             self._change_gfx_text()
             self._change_window_size()
+            self.sound.play_sfx("options_menu")
+
+    def _check_fps_button(self, mouse_pos):
+        """Changes the game's framerate based on the current option."""
+        button_clicked = self.fps_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
+            self.game.settings.high_FPS = not self.game.settings.high_FPS
+            self._change_fps()
             self.sound.play_sfx("options_menu")
 
     def _check_back_button(self, mouse_pos):

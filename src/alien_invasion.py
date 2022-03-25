@@ -159,7 +159,6 @@ class AlienInvasion:
         self.beams.empty()
         if self.gunners and self.gunners.sprite.gunner_bullets:
             self.gunners.sprite.gunner_bullets.empty()
-        self._calculate_death_time()
         self._create_fleet()
         self.ship.position_ship()
         self.ship.reset_ship_flip()
@@ -556,15 +555,9 @@ class AlienInvasion:
     def _adjust_difficulty(self, dt):
         """Gradually increases the game speed as time elapses."""
         self.settings.difficulty_counter += 1 * dt
-        '''now = pygame.time.get_ticks()
-        print(f"TIME NOW: {now}")
-        print(f"LAST DEATH TIME: {self.settings.last_death_time}")
-        print(f"DIFFICULTY TIMER: {self.settings.difficulty_counter}")
-        if now - self.settings.difficulty_counter - self.settings.last_death_time > 20000: 
-            self.settings.difficulty_counter = now
-            print("DIFFICULTY UP!")
+        if self.settings.difficulty_counter - 20 > 0: 
+            self.settings.difficulty_counter -= 20
             self.settings.increase_speed()
-            print(f"SHIP SPEED: {self.settings.ship_speed}")'''
 
     def _make_game_cinematic(self):
         """Draws cinematic black bars around the top and bottom of the screen, forcing a 16:9 aspect ratio."""
@@ -583,13 +576,6 @@ class AlienInvasion:
             pygame.mouse.set_visible(False)
         else:
             pygame.mouse.set_visible(True)
-
-    def _calculate_death_time(self):
-        """Calculates the time of death of the player to properly update pygame's clock."""
-        pass
-        '''now = pygame.time.get_ticks()
-        self.settings.last_death_difference = now - self.settings.last_death_time
-        self.settings.last_death_time = now'''
 
 if __name__ == '__main__':
     ai = AlienInvasion()
