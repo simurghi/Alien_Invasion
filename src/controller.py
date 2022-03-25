@@ -21,6 +21,7 @@ class Controller:
         self.BTN_Y = 3
         self.BTN_LB = 4
         self.BTN_RB = 5
+        self.BTN_SELECT = 6
         self.BTN_START = 7
 
     def _create_objects(self, ai_game):
@@ -95,6 +96,12 @@ class Controller:
             elif event.button == self.BTN_RB:
                 self.settings.play_sfx = not self.settings.play_sfx
                 self.sound.play_sfx("options_menu")
+            elif event.button == self.BTN_SELECT:
+                self.settings.high_FPS = not self.settings.high_FPS
+                self.settings.toggle_fps()
+                self.options_menu._change_fps()
+                self.sound.play_sfx("options_menu")
+
 
     def _check_game_over_controls(self, event):
         """Handles input while in the game over screen."""

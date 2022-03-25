@@ -70,3 +70,11 @@ class Settings:
         self.mine_speed += self.speedup_scale * self.speed_add / 3
         self.alien_points += self.score_scale * self.speed_add
         self.scroll_speed += -0.2
+
+    def toggle_fps(self):
+        """Toggles between high and low FPS based on settings."""
+        if self.high_FPS:
+            self.FPS = 120.0
+        else:
+            self.FPS = 60.0
+

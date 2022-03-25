@@ -112,10 +112,8 @@ class OptionsMenu:
     def _change_fps(self):
         """Helper method that changes what the game's FPS is"""
         if not self.game.settings.high_FPS:
-            self.game.settings.FPS = 60.0
             self.FPS_state = "60 FPS"
         else:
-            self.game.settings.FPS = 120.0
             self.FPS_state = "120 FPS"
 
     def draw_buttons(self):
@@ -184,6 +182,7 @@ class OptionsMenu:
         button_clicked = self.fps_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.game.settings.high_FPS = not self.game.settings.high_FPS
+            self.game.settings.toggle_fps()
             self._change_fps()
             self.sound.play_sfx("options_menu")
 
