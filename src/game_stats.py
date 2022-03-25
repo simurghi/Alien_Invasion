@@ -34,7 +34,10 @@ class GameStats:
     def _update_menu_text_json(self):
         """Updates menu text based on JSON file preferences."""
         self.game.options_menu._change_turbo_text()
+        self.game.options_menu._change_music_text()
+        self.game.options_menu._change_sound_text()
         self.game.options_menu._change_gfx_text()
+        self.game.options_menu._change_movie_text()
         self.game.options_menu._change_fps()
         self.game.options_menu._change_window_size()
 

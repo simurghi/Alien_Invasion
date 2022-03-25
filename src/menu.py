@@ -67,16 +67,19 @@ class OptionsMenu:
 
     def _set_initial_text(self):
         self.speed_state = "Normal"
-        self.gfx_state = "Scaled"
+        self.gfx_state = "Scaled REZ"
         self.FPS_state = "60 FPS"
+        self.sfx_state = "Sound ON"
+        self.music_state = "Music ON"
+        self.vfx_state = "Movie VFX ON"
 
     def _create_options_buttons(self):
         """Creates buttons for the options menu."""
         self.turbo_button = Button(self, self.speed_state, 0, 250)
         self.controls_button = Button(self, "Keybindings", 0, 175)
-        self.mute_button = Button(self, "Music", 0, 100)
-        self.sfx_button = Button(self, "Sound", 0, 25)
-        self.cinematic_button = Button(self, "Movie VFX", 0, -50)
+        self.mute_button = Button(self, self.music_state, 0, 100)
+        self.sfx_button = Button(self, self.sfx_state, 0, 25)
+        self.cinematic_button = Button(self, self.vfx_state, 0, -50)
         self.gfx_button = Button(self, self.gfx_state, 0, -125)
         self.fps_button = Button(self, self.FPS_state, 0, -200)
         self.back_button = Button(self, "Back", 0, -275)
@@ -105,9 +108,30 @@ class OptionsMenu:
     def _change_gfx_text(self):
         """Helper method that changes what text is displayed on the resolution button"""
         if not self.game.settings.scaled_gfx:
-            self.gfx_state = "Native"
+            self.gfx_state = "Native REZ"
         else:
-            self.gfx_state = "Scaled"
+            self.gfx_state = "Scaled REZ"
+
+    def _change_music_text(self):
+        """Helper method that changes what text is displayed on the music button"""
+        if not self.game.settings.play_music:
+            self.music_state = "Music OFF"
+        else:
+            self.music_state = "Music ON"
+
+    def _change_sound_text(self):
+        """Helper method that changes what text is displayed on the sound button"""
+        if not self.game.settings.play_sfx:
+            self.sfx_state = "Sound OFF"
+        else:
+            self.sfx_state = "Sound ON"
+
+    def _change_movie_text(self):
+        """Helper method that changes what text is displayed on the VFX button"""
+        if not self.game.settings.cinematic_bars:
+            self.vfx_state = "Movie VFX OFF"
+        else:
+            self.vfx_state = "Movie VFX ON"
 
     def _change_fps(self):
         """Helper method that changes what the game's FPS is"""
@@ -127,9 +151,9 @@ class OptionsMenu:
 
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""
-        self.mute_button.toggle_color(self.game.settings.play_music)
-        self.sfx_button.toggle_color(self.game.settings.play_sfx)
-        self.cinematic_button.toggle_color(self.game.settings.cinematic_bars)
+        self.mute_button.toggle_color(self.game.settings.play_music, self.music_state)
+        self.sfx_button.toggle_color(self.game.settings.play_sfx, self.sfx_state)
+        self.cinematic_button.toggle_color(self.game.settings.cinematic_bars, self.vfx_state)
         self.turbo_button.toggle_color(not self.game.settings.turbo_speed, self.speed_state)
 
     def _check_mute_button(self, mouse_pos):
@@ -137,6 +161,7 @@ class OptionsMenu:
         button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.game.settings.play_music = not self.game.settings.play_music 
+            self._change_music_text()
             self.sound.play_sfx("options_menu")
 
     def _check_sfx_button(self, mouse_pos):
@@ -144,6 +169,7 @@ class OptionsMenu:
         button_clicked = self.sfx_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.game.settings.play_sfx = not self.game.settings.play_sfx 
+            self._change_sound_text()
             self.sound.play_sfx("options_menu")
 
     def _check_cinematic_button(self, mouse_pos):
@@ -151,6 +177,7 @@ class OptionsMenu:
         button_clicked = self.cinematic_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.game.settings.cinematic_bars = not self.game.settings.cinematic_bars
+            self._change_movie_text()
             self.sound.play_sfx("options_menu")
 
     def _check_turbo_button(self, mouse_pos):
@@ -223,7 +250,7 @@ class ControlsMenu:
         self.beam_button = Button(self, self.keybinds.beam_text, -250, 00)
         self.flip_button = Button(self, self.keybinds.flip_text, -250, -70)
         self.missile_button = Button(self, self.keybinds.shoot_text, -250, -140) 
-        self.mouse_button = Button(self, "USE MOUSE", -250, -210)
+        self.mouse_button = Button(self, "MOUSE COMBAT", -250, -210)
         self.back_button = Button(self, "Back", -250, -280)
         self.buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
                 self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 

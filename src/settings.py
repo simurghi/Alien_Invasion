@@ -43,7 +43,7 @@ class Settings:
             self.speed_mult = 1
             self.alien_points = 100
         self.ship_speed = 210 * self.speed_mult * self.bandaid
-        self.alien_speed = 180.00 * self.speed_mult * self.bandaid
+        self.alien_speed = 200.00 * self.speed_mult * self.bandaid
         self.bullet_speed = 240.00 * self.speed_mult * self.bandaid
         self.gunner_bullet_speed = 150 * self.speed_mult * self.bandaid
         self.mine_speed = 90 * self.speed_mult * self.bandaid
