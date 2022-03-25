@@ -239,6 +239,7 @@ class ControlsMenu:
         self.keybinds = ai_game.keybinds
         self.sound = ai_game.sound
         self.selected = False
+        self.mouse_text = "MOUSEFIRE OFF"
         self._create_controls_buttons()
 
     def _create_controls_buttons(self):
@@ -250,7 +251,7 @@ class ControlsMenu:
         self.beam_button = Button(self, self.keybinds.beam_text, -250, 00)
         self.flip_button = Button(self, self.keybinds.flip_text, -250, -70)
         self.missile_button = Button(self, self.keybinds.shoot_text, -250, -140) 
-        self.mouse_button = Button(self, "MOUSE COMBAT", -250, -210)
+        self.mouse_button = Button(self, self.mouse_text, -250, -210)
         self.back_button = Button(self, "Back", -250, -280)
         self.buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
                 self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
@@ -325,7 +326,7 @@ class ControlsMenu:
         """ Toggles colors for buttons that have on/off states."""
         for button, mapping in self.buttons.items():
             button.toggle_color(self._check_empty_key(mapping))
-        self.mouse_button.toggle_color(self.game.keybinds.use_mouse)
+        self.mouse_button.toggle_color(self.game.keybinds.use_mouse, self.mouse_text)
 
     def _check_empty_key(self, mapping):
         """ Checks if a key is empty or not."""
@@ -342,11 +343,19 @@ class ControlsMenu:
             self.game.state.state = self.game.state.OPTIONSMENU
             self.sound.play_sfx("options_menu")
 
+    def _change_mouse_text(self):
+        """Helper method that changes what the game's FPS is"""
+        if not self.game.keybinds.use_mouse:
+            self.mouse_text = "MOUSEFIRE OFF"
+        else:
+            self.mouse_text = "MOUSEFIRE ON"
+
     def _check_mouse_button(self, mouse_pos):
         """Enters the main menu from the options menu screen once clicked."""
         button_clicked = self.mouse_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.keybinds.use_mouse = not self.keybinds.use_mouse
+            self._change_mouse_text()
             self.sound.play_sfx("options_menu")
 
 class GameOverMenu:

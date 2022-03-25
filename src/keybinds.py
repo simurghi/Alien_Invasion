@@ -21,4 +21,6 @@ class Keybinds:
         self.menu_text = [self.move_left_text, self.move_right_text, self.move_up_text,
                 self.move_down_text, self.beam_text, self.flip_text, self.shoot_text]
 
+    
+
 

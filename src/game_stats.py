@@ -39,6 +39,7 @@ class GameStats:
         self.game.options_menu._change_gfx_text()
         self.game.options_menu._change_movie_text()
         self.game.options_menu._change_fps()
+        self.game.controls_menu._change_mouse_text()
         self.game.options_menu._change_window_size()
 
     def _read_stats_json(self):
