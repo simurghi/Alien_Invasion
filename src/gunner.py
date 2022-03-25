@@ -33,7 +33,8 @@ class Gunner(Sprite):
     def _set_gunner_stats(self):
         """Sets the combat stats for the gunner."""
         self.hitpoints = 9
-        self.fire_rate = 0
+        self.fire_delay = 1000
+        self.last_shot = pygame.time.get_ticks()
 
     def _set_initial_coordinates(self):
         """Sets the initial coordinates for gunners and their rects."""
@@ -45,14 +46,15 @@ class Gunner(Sprite):
     def update(self):
         """Update method for mines"""
         self._move_gunner()
-        self.fire_rate+=1
         self._fire_bullets()
         if self.gunner_bullets:
             self.gunner_bullets.update()
 
     def _fire_bullets(self):
         """Creates new bullets based on a cooldown"""
-        if self.fire_rate % 120 == 0:
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > self.fire_delay: 
+            self.last_shot = now
             new_gbullet = GunnerBullet(self.game, self)
             self.gunner_bullets.add(new_gbullet)
             self.game.sound.play_sfx("gunner")
