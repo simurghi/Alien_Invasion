@@ -279,7 +279,7 @@ class ControlsMenu:
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.sound.play_sfx("options_menu")
             self.selected = True
-            button.set_color((192,81,0), "Assign a key or hit ESC", 32)
+            button.set_color((192,81,0), "Press a key or hit ESC", 32)
             button.draw_button()
             pygame.display.update(button.rect)
             while not done:
