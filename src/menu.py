@@ -66,7 +66,7 @@ class OptionsMenu:
         self._create_options_buttons()
 
     def _set_initial_text(self):
-        self.speed_state = "Normal"
+        self.speed_state = "Normal Speed"
         self.gfx_state = "Scaled REZ"
         self.FPS_state = "60 FPS"
         self.sfx_state = "Sound ON"
@@ -101,9 +101,9 @@ class OptionsMenu:
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""
         if not self.game.settings.turbo_speed:
-            self.speed_state = "Normal"
+            self.speed_state = "Normal Speed"
         else:
-            self.speed_state = "Turbo"
+            self.speed_state = "Turbo Speed"
 
     def _change_gfx_text(self):
         """Helper method that changes what text is displayed on the resolution button"""
@@ -279,6 +279,9 @@ class ControlsMenu:
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.sound.play_sfx("options_menu")
             self.selected = True
+            button.set_color((192,81,0), "Assign a key or hit ESC", 32)
+            button.draw_button()
+            pygame.display.update(button.rect)
             while not done:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:

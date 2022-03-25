@@ -382,10 +382,14 @@ class AlienInvasion:
         mouse_pos = pygame.mouse.get_pos()
         if mouse_buttons[0] and (self.state.state != self.state.GAMEPLAY 
                 or self.state.state != self.state.PAUSE):
-            self.options_menu.check_options_menu_buttons(mouse_pos)
-            self.main_menu.check_main_menu_buttons(mouse_pos)
-            self.controls_menu.check_controls_menu_buttons(mouse_pos)
-            self.go_menu.check_game_over_buttons(mouse_pos)
+            if self.state.state == self.state.MAINMENU:
+                self.main_menu.check_main_menu_buttons(mouse_pos)
+            elif self.state.state == self.state.OPTIONSMENU:
+                self.options_menu.check_options_menu_buttons(mouse_pos)
+            elif self.state.state == self.state.CONTROLSMENU:
+                self.controls_menu.check_controls_menu_buttons(mouse_pos)
+            elif self.state.state == self.state.GAMEOVER:
+                self.go_menu.check_game_over_buttons(mouse_pos)
         elif mouse_buttons[2] and self.state.state == self.state.CONTROLSMENU:
             self.controls_menu.clear_keybind_button(mouse_pos)
 
