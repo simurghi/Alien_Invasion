@@ -1,1 +1,1 @@
-{"game_speed": false, "play_music": true, "play_sfx": true, "cinematic_mode": true, "window_mode": true, "controls": {"MOVELEFT": 97, "MOVERIGHT": 100, "MOVEUP": 119, "MOVEDOWN": 115, "MISSILEATTACK": 107, "BEAMATTACK": 104, "FLIPSHIP": 106}, "mouse_enabled": true, "high_FPS": false}
+{"game_speed": false, "play_music": true, "play_sfx": true, "cinematic_mode": true, "window_mode": true, "controls": {"MOVELEFT": 97, "MOVERIGHT": 100, "MOVEUP": 119, "MOVEDOWN": 115, "MISSILEATTACK": 107, "BEAMATTACK": 104, "FLIPSHIP": 106}, "mouse_enabled": true, "high_FPS": true}
