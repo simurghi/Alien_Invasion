@@ -22,14 +22,11 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 
 - Python 3.10 +
 - Pygame 2.1 + 
+- Pyinstaller 4.10 + (for building releases)
 
 NOTE: I have only tested with these versions installed. You can use older versions, but they might not be compatible! 
 
 ## <b>INSTALLATION:</b>
-
-### Releases:
-
-Download the latest release, extract the zip, and run the alien invasion launch script (Linux). There is also an experimental Windows exe built with wine available. 
 
 ### Cloning:
 
@@ -38,14 +35,26 @@ clone this repository using git in your terminal:
 ```
 $ git clone https://github.com/kck130030/alien_invasion.git
 
-$ cd alien_invasion
+$ cd alien_invasion/src
 
 $ python alien_invasion.py
 
 ```
 NOTE: Some systems need to run python 3 using "python3" instead of "python"
 
+### Releases:
 
+Download the latest release, extract the zip, and run the alien invasion launch script (Linux). There is also an experimental Windows exe built with wine available. 
+
+To create your own release, once you've cloned the repository, use :
+
+```
+cd alien_invasion/src
+
+pyinstaller -F -w src/alien_invasion.py
+
+```
+NOTE: The finished binary _must_ be able to find the stats and assets folders or else it won't work. You can move them into the same directory or use symlinks. 
 
 
 
@@ -66,7 +75,7 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 - X: Fire a missile
 - Z: Flip Ship across the y-axis
 - C: Fire a beam charge
-- Mouse Controls: Disabled
+- Mousefire: Disabled
 
 ##### CUSTOM:
 - The user can define their own preferred keyboard and mouse control scheme by assigning button presses as follows:
@@ -149,7 +158,7 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 - Mines will always spawn from the a left or center edge of the screen, so the middle or right will always be a safe spot.
 - Mines will play a sound and blink faster if near a player (150 pixels distance) 
 - Gunners will always spawn from the rightmost center of the screen before following your position.
-- Gunners fire every 1.5 seconds and will slowly move to your current y position, use this to your advantage.
+- Gunners fire on a cooldown and will slowly move to your current y position, use this to your advantage.
 - Gunners have 10 HP and take 1 damage from every missile shot, and 5 from every beam shot. 
 - There can only ever be one Gunner on the screen at once, if a gunner already exists when another one would spawn, a new enemy wave consisting of mines and trash mobs will be spawned instead.
 - There is enough room behind a gunner to perform a backstab
