@@ -1,0 +1,2 @@
+Fix animations not properly scaling with high FPS
+Add color changing and text to key rebinding menu to make it more clear

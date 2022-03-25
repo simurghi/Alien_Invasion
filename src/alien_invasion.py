@@ -81,7 +81,7 @@ class AlienInvasion:
                 self._update_bullets(dt)
                 self._update_beams(dt)
                 self._update_aliens(dt)
-                self.explosions.update()
+                self.explosions.update(dt)
                 self._adjust_difficulty(dt)
             self._check_mouse_visible()
             self._update_screen()

@@ -25,11 +25,11 @@ class Explosion(Sprite):
                 explosion = pygame.image.load(f"assets/images/explosion_big_{num}.png").convert_alpha()
             self.explosion_images.append(explosion)
 
-    def update(self):
+    def update(self, dt):
         """Update method for explosions"""
         # Playback speed at which our explosions cycle through, lower is faster
-        animation_speed = 8
-        self.counter += 1
+        animation_speed = 0.075
+        self.counter += 1 * dt
         if self.counter >= animation_speed and self.index < len(self.explosion_images) - 1:
             self.counter = 0
             self.index+= 1

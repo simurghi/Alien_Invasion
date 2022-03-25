@@ -39,8 +39,8 @@ class Beam(Sprite):
         self.x += self.settings.bullet_speed  * self.direction * 1.25 * dt
         self.rect.x = self.x
         # Playback speed at which our explosions cycle through, lower is faster
-        animation_speed = 4
-        self.counter += 1
+        animation_speed = 0.0375
+        self.counter += 1 * dt
         if self.counter >= animation_speed and self.index < len(self.beam_images) - 1:
             self.counter = 0
             self.index+= 1
