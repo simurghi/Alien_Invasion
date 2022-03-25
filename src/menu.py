@@ -378,9 +378,17 @@ class PauseMenu:
                 (255,255,255))
         self.pause_rect = self.pause_image.get_rect()
         self.pause_rect.center = self.screen_rect.center
+        self.state = ai_game.state
 
     def render_pause(self):
         """Renders and displays the pause message."""
         self.screen.blit(self.pause_image, self.pause_rect)
 
+    def check_pause(self):
+        """Checks to see if hitting ESC should pause or unpause the game."""
+        self.state.pause_state +=1 
+        if self.state.pause_state % 2 == 0 and self.state.state == self.state.PAUSE:
+            self.state.state = self.state.GAMEPLAY
+        elif self.state.pause_state % 2 and self.state.state == self.state.GAMEPLAY:
+            self.state.state = self.state.PAUSE
 

@@ -363,7 +363,7 @@ class AlienInvasion:
         elif event.key == self.keybinds.controls.get("MOVERIGHT"):
             self.ship.moving_right = True
         if event.key == pygame.K_ESCAPE:
-            self._check_pause()
+            self.pause.check_pause()
             self._check_exit()
         if event.key == pygame.K_BACKSPACE:
             self.stats.dump_stats_json()
@@ -419,13 +419,6 @@ class AlienInvasion:
         if event.key == self.keybinds.controls.get("MISSILEATTACK") and not self.keybinds.use_mouse:
             self.ship.is_firing = False
 
-    def _check_pause(self):
-        """Checks to see if hitting ESC should pause or unpause the game."""
-        self.state.pause_state +=1 
-        if self.state.pause_state % 2 == 0 and self.state.state == self.state.PAUSE:
-            self.state.state = self.state.GAMEPLAY
-        elif self.state.pause_state % 2 and self.state.state == self.state.GAMEPLAY:
-            self.state.state = self.state.PAUSE
 
     def _check_exit(self):
         """Checks to see if hitting ESC should exit the game."""
