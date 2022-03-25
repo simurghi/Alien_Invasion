@@ -48,7 +48,7 @@ class Gunner(Sprite):
         self._move_gunner(dt)
         self._fire_bullets()
         if self.gunner_bullets:
-            self.gunner_bullets.update()
+            self.gunner_bullets.update(dt)
 
     def _fire_bullets(self):
         """Creates new bullets based on a cooldown"""

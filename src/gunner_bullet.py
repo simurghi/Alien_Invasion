@@ -14,9 +14,9 @@ class GunnerBullet(Sprite):
         self.rect.center = gunner.rect.center
         self.x = float(self.rect.x)
 
-    def update(self):
+    def update(self, dt):
         """Move the bullet to the right of the screen and delete it if it goes offscreen."""
-        self.x -=  self.settings.gunner_bullet_speed
+        self.x -=  self.settings.gunner_bullet_speed * dt
         self.rect.x = self.x
         if self.x < -100:
             self.kill()

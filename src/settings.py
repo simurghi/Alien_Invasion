@@ -42,7 +42,7 @@ class Settings:
         self.ship_speed = 7.00 * self.speed_mult
         self.alien_speed = 6.00 * self.speed_mult
         self.bullet_speed = 8.00 * self.speed_mult
-        self.gunner_bullet_speed = 2.50 * self.speed_mult
+        self.gunner_bullet_speed = 5.00 * self.speed_mult
         self.mine_speed = 3.00 * self.speed_mult
         self.gunner_speed = 2.00 * self.speed_mult
         self.scroll_speed = -1.0
