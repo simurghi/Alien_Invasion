@@ -33,7 +33,8 @@ class Mine(Sprite):
         """Initializes dynamic settings for the mine like its animations and warning sounds."""
         self.random_pos = randint(1, 10)
         self.play_warning = False
-        self.audio_delay = 0
+        self.audio_delay = 1000
+        self.last_warning = pygame.time.get_ticks()
         self.index = 0
         self.counter = 0
 
@@ -105,12 +106,13 @@ class Mine(Sprite):
                 (self.ship.rect.centerx - self.rect.centerx)**2)
         formula_y = sqrt((self.ship.rect.centery - self.rect.centery)**2 + 
                 (self.ship.rect.centery - self.rect.centery)**2)
-        if formula_x < 176 and formula_y < 176:
-            if self.audio_delay % 120 == 0:
+        now = pygame.time.get_ticks()
+        if (formula_x < 176 and formula_y < 176 and 
+                now - self.last_warning > self.audio_delay): 
+                self.last_warning = now
                 self.sound.play_sfx("mine")
-                self.audio_delay += 1
                 self.play_warning = True
-            return 8
+                return 8
         else: 
             self.play_warning = False
             return 16

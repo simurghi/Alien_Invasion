@@ -24,14 +24,14 @@ class Settings:
         self.turbo_speed = False
         self.scaled_gfx = True 
         self.fire_mode = False
-        self.FPS = 120.0
+        self.FPS = 60.0
 
     def _initialize_static_settings(self):
         """Initialize settings that do not change throughout the game."""
         self.ship_limit = 3
         self.bullets_allowed = 5
         self.beam_limit = 3
-        self.speedup_scale = 1.00
+        self.speedup_scale = 60.00
 
     def _initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
