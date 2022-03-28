@@ -8,6 +8,7 @@ class Beam(Sprite):
         """Create a beam object at the ship's current position."""
         super().__init__()
         self._load_assets()
+        self.ai_game = ai_game
         self.screen = ai_game.screen
         self.settings = ai_game.settings 
         self._initialize_dynamic_settings()
@@ -15,13 +16,19 @@ class Beam(Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = ship.rect.center
         self.x = float(self.rect.x)
+        self.direction = 1
 
     def _load_assets(self):
         """Loads the necessary assets for beams to play."""
         self.beam_images = []
+        self.rev_beam_images = []
         for num in range(1, 5):
             bolt = pygame.image.load(f"assets/images/bolt{num}.png").convert_alpha()
             self.beam_images.append(bolt)
+        for num in range(1, 5):
+            bolt = pygame.image.load(f"assets/images/bolt{num}.png").convert_alpha()
+            bolt = pygame.transform.flip(bolt, True, False)
+            self.rev_beam_images.append(bolt)
 
     def _initialize_dynamic_settings(self):
         """Initializes dynamic settings for the beam like its animations and direction."""
@@ -32,7 +39,6 @@ class Beam(Sprite):
     def rotate_beam(self):
         """Flips the beam across the y-axis."""
         self.direction *= -1
-        self.image = pygame.transform.flip(self.image, True, False)
 
     def update(self, dt):
         """Update method for explosions"""
@@ -44,7 +50,10 @@ class Beam(Sprite):
         if self.counter >= animation_speed and self.index < len(self.beam_images) - 1:
             self.counter = 0
             self.index+= 1
-            self.image = self.beam_images[self.index]
+            if self.direction > 0:
+                self.image = self.beam_images[self.index]
+            else:
+                self.image = self.rev_beam_images[self.index]
         # Reset animation index if it completes
         if self.index >= len(self.beam_images) - 1 and self.counter >= animation_speed:
             self.index = 0

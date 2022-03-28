@@ -224,7 +224,7 @@ class OptionsMenu:
         """Changes the size of the game window based on user setting."""
         if self.game.settings.scaled_gfx:
             self.screen = pygame.display.set_mode(
-                    (self.game.settings.screen_width, self.game.settings.screen_height), pygame.SCALED)
+                    (self.game.settings.screen_width, self.game.settings.screen_height), pygame.SCALED+pygame.RESIZABLE)
         else:
             self.screen = pygame.display.set_mode(
                     (self.game.settings.screen_width, self.game.settings.screen_height))
