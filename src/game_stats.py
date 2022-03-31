@@ -24,7 +24,7 @@ class GameStats:
         """Sets current options preferences based on JSON file."""
         self.game.settings.play_music = self._read_music_json()
         self.game.settings.play_sfx = self._read_sfx_json()
-        self.game.settings.turbo_speed = self._read_turbo_json()
+        self.game.settings.speed = self._read_turbo_json()
         self.game.settings.cinematic_bars = self._read_vfx_json()
         self.game.keybinds.controls = self._read_keybinds_json()
         self.game.keybinds.use_mouse = self._read_mouse_json()
@@ -39,8 +39,8 @@ class GameStats:
         self.game.options_menu._change_gfx_text()
         self.game.options_menu._change_movie_text()
         self.game.options_menu._change_fps()
-        self.game.controls_menu._change_mouse_text()
         self.game.options_menu._change_window_size()
+        self.game.controls_menu._change_mouse_text()
 
     def _read_stats_json(self):
         """Reads the score.json file and sees if we already have a high score."""
@@ -141,9 +141,9 @@ class GameStats:
             if turbo_option is not None:
                 return turbo_option
             else:
-                return False
+                return 2
         else:
-            return False
+            return 2
 
 
     def _read_gfx_json(self):
@@ -175,7 +175,7 @@ class GameStats:
         with open("stats/score.json", 'w') as f:
             json.dump({"high_score" : self.game.stats.high_score}, f)
         with open("stats/settings.json", 'w') as f:
-            json.dump({"game_speed" : self.settings.turbo_speed,"play_music": self.settings.play_music,
+            json.dump({"game_speed" : self.settings.speed,"play_music": self.settings.play_music,
                 "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars, "window_mode":
                 self.settings.scaled_gfx, "controls": self.game.keybinds.controls, 
                 "mouse_enabled": self.game.keybinds.use_mouse, "high_FPS": self.settings.high_FPS}, f)
