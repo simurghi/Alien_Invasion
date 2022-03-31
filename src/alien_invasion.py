@@ -191,7 +191,7 @@ class AlienInvasion:
             if beam.rect.right > self.settings.screen_width or beam.rect.right < 0: 
                 self.beams.remove(beam)
         self._check_bullet_alien_collision(self.aliens, 0.5)
-        self._check_bullet_alien_collision(self.mines, 1)
+        self._check_bullet_alien_collision(self.mines, 0.75)
         self._check_bullet_alien_collision(self.gunners, 3.0)
 
     def _check_bullet_alien_collision(self, enemy_list, score_multiplier):
@@ -540,7 +540,7 @@ class AlienInvasion:
             self._play_explosion_on_death()
             self._create_fleet()
             self.ship.position_ship()
-            time.sleep(0.10)
+            time.sleep(0.15)
         else: 
             self.enter_game_over()
             self.scoreboard.prep_score_game_over()

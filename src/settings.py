@@ -44,10 +44,10 @@ class Settings:
             self.alien_points = 100
         self.ship_speed = 210 * self.speed_mult * self.bandaid
         self.alien_speed = 200.00 * self.speed_mult * self.bandaid
-        self.bullet_speed = 240.00 * self.speed_mult * self.bandaid
-        self.gunner_bullet_speed = 150 * self.speed_mult * self.bandaid
-        self.mine_speed = 90 * self.speed_mult * self.bandaid
-        self.gunner_speed = 60 * self.speed_mult * self.bandaid
+        self.bullet_speed = 200.00 * self.speed_mult * self.bandaid
+        self.gunner_bullet_speed = 175 * self.speed_mult * self.bandaid
+        self.mine_speed = 95 * self.speed_mult * self.bandaid
+        self.gunner_speed = 50 * self.speed_mult * self.bandaid
         self.scroll_speed = -1.0
         self.background_x = 0
         self.difficulty_counter = 0
@@ -66,7 +66,7 @@ class Settings:
         self.gunner_bullet_speed += self.speedup_scale * self.speed_add / 3
         self.alien_speed += self.speedup_scale * self.speed_add
         self.mine_speed += self.speedup_scale * self.speed_add / 3
-        self.alien_points += self.score_scale * self.speed_add
+        self.alien_points += self.score_scale 
         self.scroll_speed += -0.2
 
     def toggle_fps(self):

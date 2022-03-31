@@ -42,7 +42,7 @@ class Beam(Sprite):
 
     def update(self, dt):
         """Update method for explosions"""
-        self.x += self.settings.bullet_speed  * self.direction * 1.25 * dt
+        self.x += self.settings.bullet_speed  * self.direction * 1.50 * dt
         self.rect.x = self.x
         # Playback speed at which our explosions cycle through, lower is faster
         animation_speed = 0.0375

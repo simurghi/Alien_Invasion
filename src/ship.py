@@ -80,10 +80,10 @@ class Ship(Sprite):
     def _adjust_bullet_flipped(self):
         """Adjusts the speed and direction of flipped bullets."""
         if self.is_flipped:
-            self.settings.bullet_speed *= 2.00
+            self.settings.bullet_speed *= 2.50
             self.settings.ship_speed *= 1.25
         else: 
-            self.settings.bullet_speed *= 0.50
+            self.settings.bullet_speed *= 0.40
             self.settings.ship_speed *= 0.80
 
     def reset_ship_flip(self):

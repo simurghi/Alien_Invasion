@@ -7,6 +7,8 @@ class Keybinds:
                 "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
                 "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
         self.use_mouse = False
+        self.reserved_keys = (pygame.K_UNDERSCORE, pygame.K_ESCAPE, 
+                pygame.K_BACKSPACE, pygame.K_BACKQUOTE)
         self.init_menu_text()
 
     def init_menu_text(self):

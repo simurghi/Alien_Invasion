@@ -15,14 +15,16 @@ class MainMenu:
         """Creates the buttons for the main menu."""
         self.play_button = Button(ai_game, "Start", 250, 150)
         self.options_button = Button(ai_game, "Options", 250, 75)
-        self.exit_button = Button(ai_game, "Quit", 250, 0)
+        self.help_button = Button(ai_game, "Help", 250, 0)
+        self.exit_button = Button(ai_game, "Quit", 250, -75)
         self.buttons = [self.play_button,
-                self.options_button, self.exit_button]
+                self.options_button, self.help_button, self.exit_button]
 
     def check_main_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         self._check_play_button(mouse_pos)
         self._check_options_button(mouse_pos)
+        self._check_help_button(mouse_pos)
         self._check_exit_button(mouse_pos)
 
     def _check_play_button(self, mouse_pos):
@@ -38,6 +40,12 @@ class MainMenu:
         button_clicked = self.options_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
             self.game.state.state = self.game.state.OPTIONSMENU
+            self.sound.play_sfx("options_menu")
+
+    def _check_help_button(self, mouse_pos):
+        """Displays tutorial text from the main menu screen once clicked."""
+        button_clicked = self.options_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.state.state is self.game.state.MAINMENU:
             self.sound.play_sfx("options_menu")
 
     def _check_exit_button(self, mouse_pos):
@@ -238,7 +246,6 @@ class ControlsMenu:
         self.screen_rect = self.screen.get_rect()
         self.keybinds = ai_game.keybinds
         self.sound = ai_game.sound
-        self.selected = False
         self.mouse_text = "MOUSEFIRE OFF"
         self._create_controls_buttons()
 
@@ -262,15 +269,15 @@ class ControlsMenu:
         self.screen.blit(self.game.menu_image, (0, 0)) 
         self._toggle_colors()
         self._update_button_text()
-        for button in self.buttons:
-            button.draw_button()
+        for keybind_button in self.buttons:
+            keybind_button.draw_button()
         self.mouse_button.draw_button()
         self.back_button.draw_button()
 
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
-        for button, mapping in self.buttons.items():
-            self._check_keybind_button(mouse_pos, button, mapping) 
+        for keybind_button, mapping in self.buttons.items():
+            self._check_keybind_button(mouse_pos, keybind_button, mapping) 
         self._check_back_button(mouse_pos)
         self._check_mouse_button(mouse_pos)
 
@@ -279,7 +286,6 @@ class ControlsMenu:
         done = False
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.sound.play_sfx("options_menu")
-            self.selected = True
             button.set_color((192,81,0), "Press a key or hit ESC", 32)
             button.draw_button()
             pygame.display.update(button.rect)
@@ -287,22 +293,19 @@ class ControlsMenu:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         done = True
-                        self.selected = False
                         pygame.quit()
                         sys.exit()
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             done = True
-                            self.selected = False
                         elif event.key == pygame.K_BACKSPACE:
                             done = True
-                            self.selected = False
                             pygame.quit()
                             sys.exit()
-                        elif event.key not in self.keybinds.controls.values():
+                        elif (event.key not in self.keybinds.controls.values()
+                                and event.key not in self.keybinds.reserved_keys):
                             self.keybinds.controls[mapping] = event.key
                             done = True
-                            self.selected = False
 
     def clear_keybind_button(self, mouse_pos):
         """If right clicking a button, clear the input to free it for reassignment."""
