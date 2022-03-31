@@ -141,9 +141,9 @@ class GameStats:
             if turbo_option is not None:
                 return turbo_option
             else:
-                return 2
+                return 3
         else:
-            return 2
+            return 3
 
 
     def _read_gfx_json(self):

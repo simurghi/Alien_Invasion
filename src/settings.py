@@ -14,8 +14,9 @@ class Settings:
     def _init_option_states(self):
         """For options in the menu with multiple states."""
         self.BABY_SPEED = 1
-        self.NORMAL_SPEED = 2
-        self.TURBO_SPEED = 3
+        self.EASY_SPEED = 2
+        self.NORMAL_SPEED = 3
+        self.TURBO_SPEED = 4
 
     def _set_window_properties(self):
         """Sets the properties for the game window and background."""
@@ -44,8 +45,11 @@ class Settings:
         """Initialize settings that change throughout the game."""
         self.bandaid = 2
         if self.speed is self.BABY_SPEED:
-            self.speed_mult = 0.75
-            self.alien_points = 75
+            self.speed_mult = 0.50
+            self.alien_points = 50
+        elif self.speed is self.EASY_SPEED:
+            self.speed_mult = 0.80
+            self.alien_points = 80
         elif self.speed is self.NORMAL_SPEED: 
             self.speed_mult = 1
             self.alien_points = 100
@@ -56,7 +60,7 @@ class Settings:
         self.alien_speed = 200.00 * self.speed_mult * self.bandaid
         self.bullet_speed = 200.00 * self.speed_mult * self.bandaid
         self.gunner_bullet_speed = 175 * self.speed_mult * self.bandaid
-        self.mine_speed = 96 * self.speed_mult * self.bandaid
+        self.mine_speed = 90 * self.speed_mult * self.bandaid
         self.gunner_speed = 50 * self.speed_mult * self.bandaid
         self.scroll_speed = -1.0
         self.background_x = 0
@@ -65,9 +69,12 @@ class Settings:
 
     def increase_speed(self):
         """Increase speed and bonus point settings."""
-        if self.speed is self.BABY_SPEED:
-            self.speed_add = 0.04
-            self.score_scale = 2
+        if self.speed is self.EASY_SPEED:
+            self.speed_add = 0.02
+            self.score_scale = 1
+        elif self.speed is self.EASY_SPEED:
+            self.speed_add = 0.06
+            self.score_scale = 3
         elif self.speed is self.NORMAL_SPEED:
             self.speed_add = 0.1
             self.score_scale = 5

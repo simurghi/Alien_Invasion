@@ -112,8 +112,11 @@ class OptionsMenu:
             self.speed_state = "Normal Speed"
         elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
             self.speed_state = "Turbo Speed"
+        elif self.game.settings.speed is self.game.settings.EASY_SPEED:
+            self.speed_state = "Easy Speed"
         elif self.game.settings.speed is self.game.settings.BABY_SPEED:
             self.speed_state = "Baby Speed"
+
 
     def _change_gfx_text(self):
         """Helper method that changes what text is displayed on the resolution button"""
@@ -165,7 +168,6 @@ class OptionsMenu:
         self.mute_button.toggle_color(self.game.settings.play_music, self.music_state)
         self.sfx_button.toggle_color(self.game.settings.play_sfx, self.sfx_state)
         self.cinematic_button.toggle_color(self.game.settings.cinematic_bars, self.vfx_state)
-        #self.turbo_button.toggle_color(not self.game.settings.turbo_speed, self.speed_state)
 
     def _check_mute_button(self, mouse_pos):
         """ Toggles music when the player clicks 'Music'"""
@@ -192,14 +194,16 @@ class OptionsMenu:
             self.sound.play_sfx("options_menu")
 
     def _check_turbo_button(self, mouse_pos):
-        """Sets the game speed by 0.5x/1.0x/1.5x."""
+        """Sets the game speed to 0.5x/0.8x/1.0x/1.5x."""
         button_clicked = self.turbo_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
                 self.game.settings.speed = self.game.settings.TURBO_SPEED
             elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
                 self.game.settings.speed = self.game.settings.BABY_SPEED
-            elif self.game.settings.speed is self.game.settings.BABY_SPEED:
+            elif self.game.settings.speed == self.game.settings.BABY_SPEED:
+                self.game.settings.speed = self.game.settings.EASY_SPEED
+            elif self.game.settings.speed is self.game.settings.EASY_SPEED:
                 self.game.settings.speed = self.game.settings.NORMAL_SPEED
             self._change_turbo_text()
             self.sound.play_sfx("options_menu")
