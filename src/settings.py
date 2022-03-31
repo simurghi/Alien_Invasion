@@ -44,8 +44,8 @@ class Settings:
         """Initialize settings that change throughout the game."""
         self.bandaid = 2
         if self.speed is self.BABY_SPEED:
-            self.speed_mult = 0.5
-            self.alien_points = 50
+            self.speed_mult = 0.75
+            self.alien_points = 75
         elif self.speed is self.NORMAL_SPEED: 
             self.speed_mult = 1
             self.alien_points = 100
@@ -66,7 +66,7 @@ class Settings:
     def increase_speed(self):
         """Increase speed and bonus point settings."""
         if self.speed is self.BABY_SPEED:
-            self.speed_add = 0.02
+            self.speed_add = 0.04
             self.score_scale = 2
         elif self.speed is self.NORMAL_SPEED:
             self.speed_add = 0.1
