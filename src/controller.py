@@ -75,7 +75,12 @@ class Controller:
                 self.state.state = self.state.OPTIONSMENU
         elif self.state.state is self.state.OPTIONSMENU:
             if event.button == self.BTN_A: 
-                self.settings.scaled_gfx = not self.settings.scaled_gfx
+                if self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
+                    self.game.settings.gfx_mode = self.game.settings.SCALED_GFX
+                elif self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
+                    self.game.settings.gfx_mode = self.game.settings.FULLSCREEN_GFX
+                elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
+                    self.game.settings.gfx_mode = self.game.settings.NATIVE_GFX
                 self.options_menu._change_gfx_text()
                 self.options_menu._change_window_size()
                 self.sound.play_sfx("options_menu")
@@ -84,7 +89,16 @@ class Controller:
                 self.sound.play_sfx("options_menu")
                 self.game._check_exit()
             elif event.button == self.BTN_X: 
-                self.settings.turbo_speed = not self.settings.turbo_speed
+                if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
+                    self.game.settings.speed = self.game.settings.TURBO_SPEED
+                elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
+                    self.game.settings.speed = self.game.settings.LUDICROUS_SPEED
+                elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
+                    self.game.settings.speed = self.game.settings.BABY_SPEED
+                elif self.game.settings.speed == self.game.settings.BABY_SPEED:
+                    self.game.settings.speed = self.game.settings.EASY_SPEED
+                elif self.game.settings.speed is self.game.settings.EASY_SPEED:
+                    self.game.settings.speed = self.game.settings.NORMAL_SPEED
                 self.options_menu._change_turbo_text()
                 self.sound.play_sfx("options_menu")
             elif event.button == self.BTN_Y:

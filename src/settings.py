@@ -17,6 +17,10 @@ class Settings:
         self.EASY_SPEED = 2
         self.NORMAL_SPEED = 3
         self.TURBO_SPEED = 4
+        self.LUDICROUS_SPEED = 5
+        self.NATIVE_GFX = 1
+        self.SCALED_GFX = 2
+        self.FULLSCREEN_GFX = 3
 
     def _set_window_properties(self):
         """Sets the properties for the game window and background."""
@@ -30,7 +34,7 @@ class Settings:
         self.play_sfx = True
         self.cinematic_bars = True
         self.speed = self.NORMAL_SPEED
-        self.scaled_gfx = True 
+        self.gfx_mode = 1 
         self.high_FPS = False
         self.FPS = 60.0
 
@@ -45,8 +49,8 @@ class Settings:
         """Initialize settings that change throughout the game."""
         self.bandaid = 2
         if self.speed is self.BABY_SPEED:
-            self.speed_mult = 0.50
-            self.alien_points = 50
+            self.speed_mult = 0.60
+            self.alien_points = 60
         elif self.speed is self.EASY_SPEED:
             self.speed_mult = 0.80
             self.alien_points = 80
@@ -54,8 +58,11 @@ class Settings:
             self.speed_mult = 1
             self.alien_points = 100
         elif self.speed is self.TURBO_SPEED:
-            self.speed_mult = 1.5
-            self.alien_points = 150
+            self.speed_mult = 1.2
+            self.alien_points = 120
+        elif self.speed is self.LUDICROUS_SPEED:
+            self.speed_mult = 2.5
+            self.alien_points = 300
         self.ship_speed = 210 * self.speed_mult * self.bandaid
         self.alien_speed = 200.00 * self.speed_mult * self.bandaid
         self.bullet_speed = 200.00 * self.speed_mult * self.bandaid
@@ -70,17 +77,20 @@ class Settings:
     def increase_speed(self):
         """Increase speed and bonus point settings."""
         if self.speed is self.EASY_SPEED:
-            self.speed_add = 0.02
-            self.score_scale = 1
-        elif self.speed is self.EASY_SPEED:
             self.speed_add = 0.06
             self.score_scale = 3
+        elif self.speed is self.EASY_SPEED:
+            self.speed_add = 0.08
+            self.score_scale = 4
         elif self.speed is self.NORMAL_SPEED:
             self.speed_add = 0.1
             self.score_scale = 5
         elif self.speed is self.TURBO_SPEED:
-            self.speed_add = 0.2
-            self.score_scale = 10
+            self.speed_add = 0.12
+            self.score_scale = 6
+        elif self.speed is self.LUDICROUS_SPEED:
+            self.speed_add = 0.25
+            self.score_scale = 15
         self.ship_speed += self.speedup_scale * self.speed_add
         self.bullet_speed += self.speedup_scale * self.speed_add
         self.gunner_bullet_speed += self.speedup_scale * self.speed_add / 3

@@ -8,7 +8,7 @@ class Keybinds:
                 "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
         self.use_mouse = False
         self.reserved_keys = (pygame.K_UNDERSCORE, pygame.K_ESCAPE, 
-                pygame.K_BACKSPACE, pygame.K_BACKQUOTE)
+                pygame.K_BACKSPACE, pygame.K_BACKQUOTE, pygame.K_RETURN)
         self.init_menu_text()
 
     def init_menu_text(self):

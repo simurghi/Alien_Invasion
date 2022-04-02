@@ -28,7 +28,7 @@ class GameStats:
         self.game.settings.cinematic_bars = self._read_vfx_json()
         self.game.keybinds.controls = self._read_keybinds_json()
         self.game.keybinds.use_mouse = self._read_mouse_json()
-        self.game.settings.scaled_gfx = self._read_gfx_json()
+        self.game.settings.gfx_mode = self._read_gfx_json()
         self.game.settings.high_FPS = self._read_fps_json()
 
     def _update_menu_text_json(self):
@@ -145,7 +145,6 @@ class GameStats:
         else:
             return 3
 
-
     def _read_gfx_json(self):
         """Searches the dictionary created from the settings.json file 
         and sees if we already have an option for window size."""
@@ -154,9 +153,9 @@ class GameStats:
             if gfx_option is not None:
                 return gfx_option
             else:
-                return False
+                return 1
         else:
-            return False
+            return 1
 
     def _read_fps_json(self):
         """Searches the dictionary created from the settings.json file 
@@ -177,6 +176,6 @@ class GameStats:
         with open("stats/settings.json", 'w') as f:
             json.dump({"game_speed" : self.settings.speed,"play_music": self.settings.play_music,
                 "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars, "window_mode":
-                self.settings.scaled_gfx, "controls": self.game.keybinds.controls, 
+                self.settings.gfx_mode, "controls": self.game.keybinds.controls, 
                 "mouse_enabled": self.game.keybinds.use_mouse, "high_FPS": self.settings.high_FPS}, f)
 

@@ -9,6 +9,7 @@ class MainMenu:
         self.game = ai_game
         self.screen = ai_game.screen
         self.sound = ai_game.sound
+        self.index = 0
         self._create_main_buttons(ai_game)
 
     def _create_main_buttons(self, ai_game):
@@ -70,6 +71,7 @@ class OptionsMenu:
         self.game = ai_game
         self.screen = ai_game.screen
         self.sound = ai_game.sound
+        self.index = 0
         self._set_initial_text()
         self._create_options_buttons()
 
@@ -109,21 +111,24 @@ class OptionsMenu:
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""
         if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
-            self.speed_state = "Normal Speed"
+            self.speed_state = "Normal"
         elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
-            self.speed_state = "Turbo Speed"
+            self.speed_state = "Fast"
         elif self.game.settings.speed is self.game.settings.EASY_SPEED:
-            self.speed_state = "Easy Speed"
+            self.speed_state = "Slow"
         elif self.game.settings.speed is self.game.settings.BABY_SPEED:
-            self.speed_state = "Baby Speed"
-
+            self.speed_state = "Baby"
+        elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
+            self.speed_state = "Ludicrous"
 
     def _change_gfx_text(self):
         """Helper method that changes what text is displayed on the resolution button"""
-        if not self.game.settings.scaled_gfx:
+        if self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
             self.gfx_state = "Native REZ"
-        else:
+        elif self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
             self.gfx_state = "Scaled REZ"
+        elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
+            self.gfx_state = "Fullscreen REZ"
 
     def _change_music_text(self):
         """Helper method that changes what text is displayed on the music button"""
@@ -200,6 +205,8 @@ class OptionsMenu:
             if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
                 self.game.settings.speed = self.game.settings.TURBO_SPEED
             elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
+                self.game.settings.speed = self.game.settings.LUDICROUS_SPEED
+            elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
                 self.game.settings.speed = self.game.settings.BABY_SPEED
             elif self.game.settings.speed == self.game.settings.BABY_SPEED:
                 self.game.settings.speed = self.game.settings.EASY_SPEED
@@ -219,7 +226,12 @@ class OptionsMenu:
         """Changes the window size based on the current option."""
         button_clicked = self.gfx_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
-            self.game.settings.scaled_gfx = not self.game.settings.scaled_gfx
+            if self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
+                self.game.settings.gfx_mode = self.game.settings.SCALED_GFX
+            elif self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
+                self.game.settings.gfx_mode = self.game.settings.FULLSCREEN_GFX
+            elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
+                self.game.settings.gfx_mode = self.game.settings.NATIVE_GFX
             self._change_gfx_text()
             self._change_window_size()
             self.sound.play_sfx("options_menu")
@@ -242,12 +254,16 @@ class OptionsMenu:
 
     def _change_window_size(self):
         """Changes the size of the game window based on user setting."""
-        if self.game.settings.scaled_gfx:
+        if self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
             self.screen = pygame.display.set_mode(
                     (self.game.settings.screen_width, self.game.settings.screen_height), pygame.SCALED+pygame.RESIZABLE)
-        else:
+        elif self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
             self.screen = pygame.display.set_mode(
                     (self.game.settings.screen_width, self.game.settings.screen_height))
+        elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
+            self.screen = pygame.display.set_mode(
+                    (self.game.settings.screen_width, self.game.settings.screen_height), 
+                    pygame.SCALED+pygame.RESIZABLE+pygame.FULLSCREEN)
 
 class ControlsMenu:
     """Class the holds the state and behavior for the controls menu."""
@@ -259,6 +275,7 @@ class ControlsMenu:
         self.keybinds = ai_game.keybinds
         self.sound = ai_game.sound
         self.mouse_text = "MOUSEFIRE OFF"
+        self.index = 0
         self._create_controls_buttons()
 
     def _create_controls_buttons(self):
@@ -272,7 +289,7 @@ class ControlsMenu:
         self.missile_button = Button(self, self.keybinds.shoot_text, -250, -140) 
         self.mouse_button = Button(self, self.mouse_text, -250, -210)
         self.back_button = Button(self, "Back", -250, -280)
-        self.buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
+        self.key_buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
                 self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
                 self.flip_button: "FLIPSHIP", self.missile_button: "MISSILEATTACK"}
 
@@ -281,14 +298,14 @@ class ControlsMenu:
         self.screen.blit(self.game.menu_image, (0, 0)) 
         self._toggle_colors()
         self._update_button_text()
-        for keybind_button in self.buttons:
+        for keybind_button in self.key_buttons:
             keybind_button.draw_button()
         self.mouse_button.draw_button()
         self.back_button.draw_button()
 
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
-        for keybind_button, mapping in self.buttons.items():
+        for keybind_button, mapping in self.key_buttons.items():
             self._check_keybind_button(mouse_pos, keybind_button, mapping) 
         self._check_back_button(mouse_pos)
         self._check_mouse_button(mouse_pos)
@@ -321,7 +338,7 @@ class ControlsMenu:
 
     def clear_keybind_button(self, mouse_pos):
         """If right clicking a button, clear the input to free it for reassignment."""
-        for button, mapping in self.buttons.items():
+        for button, mapping in self.key_buttons.items():
             if button.rect.collidepoint(mouse_pos):
                 button_clicked = button.rect.collidepoint(mouse_pos)
                 key_val = mapping
@@ -334,12 +351,12 @@ class ControlsMenu:
     def _update_button_text(self):
         """Updates the keybinding based on the current value."""
         self.keybinds.init_menu_text()
-        for button in enumerate(self.buttons):
+        for button in enumerate(self.key_buttons):
             button[1]._prep_msg(self.keybinds.menu_text[button[0]])
 
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""
-        for button, mapping in self.buttons.items():
+        for button, mapping in self.key_buttons.items():
             button.toggle_color(self._check_empty_key(mapping))
         self.mouse_button.toggle_color(self.game.keybinds.use_mouse, self.mouse_text)
 
@@ -382,6 +399,7 @@ class GameOverMenu:
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
         self.sound = ai_game.sound
+        self.index = 0
         self.menu_button = Button(self, "Menu", 150, -50)
         self.restart_button = Button(self, "Restart", -150,-50)
         self.game_over_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)

@@ -107,7 +107,7 @@ class Mine(Sprite):
         formula_y = sqrt((self.ship.rect.centery - self.rect.centery)**2 + 
                 (self.ship.rect.centery - self.rect.centery)**2)
         now = pygame.time.get_ticks()
-        if (formula_x < 176 and formula_y < 176 and 
+        if (formula_x < 201 and formula_y < 201 and 
                 now - self.last_warning > self.audio_delay): 
                 self.last_warning = now
                 self.sound.play_sfx("mine")

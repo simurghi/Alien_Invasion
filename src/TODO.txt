@@ -1,0 +1,6 @@
+add "hover" effect when mouse is over a button and change the button's color
+add keyboard navigation to menus and redesign controller menus to utilize this
+add analogue stick support for controller
+finish help screen on the menu
+add fullscreen mode
+
