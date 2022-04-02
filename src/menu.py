@@ -116,8 +116,6 @@ class OptionsMenu:
             self.speed_state = "Fast"
         elif self.game.settings.speed is self.game.settings.EASY_SPEED:
             self.speed_state = "Slow"
-        elif self.game.settings.speed is self.game.settings.BABY_SPEED:
-            self.speed_state = "Baby"
         elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
             self.speed_state = "Ludicrous"
 
@@ -207,8 +205,6 @@ class OptionsMenu:
             elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
                 self.game.settings.speed = self.game.settings.LUDICROUS_SPEED
             elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
-                self.game.settings.speed = self.game.settings.BABY_SPEED
-            elif self.game.settings.speed == self.game.settings.BABY_SPEED:
                 self.game.settings.speed = self.game.settings.EASY_SPEED
             elif self.game.settings.speed is self.game.settings.EASY_SPEED:
                 self.game.settings.speed = self.game.settings.NORMAL_SPEED

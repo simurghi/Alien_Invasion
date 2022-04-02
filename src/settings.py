@@ -13,7 +13,6 @@ class Settings:
 
     def _init_option_states(self):
         """For options in the menu with multiple states."""
-        self.BABY_SPEED = 1
         self.EASY_SPEED = 2
         self.NORMAL_SPEED = 3
         self.TURBO_SPEED = 4
@@ -48,18 +47,15 @@ class Settings:
     def _initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
         self.bandaid = 2
-        if self.speed is self.BABY_SPEED:
-            self.speed_mult = 0.60
-            self.alien_points = 60
-        elif self.speed is self.EASY_SPEED:
+        if self.speed is self.EASY_SPEED:
             self.speed_mult = 0.80
-            self.alien_points = 80
+            self.alien_points = 75
         elif self.speed is self.NORMAL_SPEED: 
             self.speed_mult = 1
             self.alien_points = 100
         elif self.speed is self.TURBO_SPEED:
             self.speed_mult = 1.2
-            self.alien_points = 120
+            self.alien_points = 125
         elif self.speed is self.LUDICROUS_SPEED:
             self.speed_mult = 2.5
             self.alien_points = 300
@@ -77,9 +73,6 @@ class Settings:
     def increase_speed(self):
         """Increase speed and bonus point settings."""
         if self.speed is self.EASY_SPEED:
-            self.speed_add = 0.06
-            self.score_scale = 3
-        elif self.speed is self.EASY_SPEED:
             self.speed_add = 0.08
             self.score_scale = 4
         elif self.speed is self.NORMAL_SPEED:
