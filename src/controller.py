@@ -8,6 +8,7 @@ class Controller:
         self._check_gamepad()
         self._set_button_names()
         self._create_objects(ai_game)
+        self.analog_motion = [0,0]
 
     def _check_gamepad(self):
         """Checks if a gamepad is connected and assigns it to the first one if it is."""
@@ -126,6 +127,33 @@ class Controller:
                 self.game._clear_state()
                 self.sound.play_sfx("game_over")
                 self.state.state = self.state.GAMEPLAY
+
+    def check_joyaxismotion_events(self, event):
+        """respond to analogue stick input"""
+        if event.axis < 2: 
+            self.analog_motion[event.axis] = event.value
+            if abs(self.analog_motion[0]) < 0.1:
+                self.analog_motion[0] = 0
+            else:
+                if self.analog_motion[0] < -0.4:
+                    self.ship.moving_left = True
+                else:
+                    self.ship.moving_left = False
+                if self.analog_motion[0] > 0.4:
+                    self.ship.moving_right = True
+                else:
+                    self.ship.moving_right = False
+            if abs(self.analog_motion[1]) < 0.1:
+                self.analog_motion[1] = 0
+            else:
+                if self.analog_motion[1] < -0.4:
+                    self.ship.moving_up = True
+                else:
+                    self.ship.moving_up = False
+                if self.analog_motion[1] > 0.4:
+                    self.ship.moving_down = True
+                else:
+                    self.ship.moving_down = False
 
     def check_joyhatmotion_events(self, event):
         """respond to dpad presses on the gamepad.""" 

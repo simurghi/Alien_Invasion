@@ -125,6 +125,8 @@ class AlienInvasion:
                 self.controller.check_joybuttonup_events(event)
             elif event.type == pygame.JOYHATMOTION:
                 self.controller.check_joyhatmotion_events(event)
+            elif event.type == pygame.JOYAXISMOTION:
+                self.controller.check_joyaxismotion_events(event)
 
     def _update_screen(self):
         """Update images on the screen, and flip to the new screen."""
