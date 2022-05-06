@@ -78,8 +78,8 @@ class OptionsMenu:
     def _set_initial_text(self):
         self.speed_state = "Normal Speed"
         self.gfx_state = "Scaled REZ"
-        self.sfx_state = "Sound ON"
-        self.music_state = f"Music - {self.game.settings.music_volume * 100:.1f}%"
+        self.sfx_state = f"Sound - {self.game.settings.sound_volume * 100:.0f}%"
+        self.music_state = f"Music - {self.game.settings.music_volume * 100:.0f}%"
         self.vfx_state = "Movie VFX ON"
 
     def _create_options_buttons(self):
@@ -88,12 +88,11 @@ class OptionsMenu:
         self.controls_button = Button(self, "Keybindings", 0, 175)
         self.mute_button = Button(self, self.music_state, 0, 100)
         self.sfx_button = Button(self, self.sfx_state, 0, 25)
-        self.cinematic_button = Button(self, self.vfx_state, 0, -50)
         self.gfx_button = Button(self, self.gfx_state, 0, -125)
         self.back_button = Button(self, "Back", 0, -275)
         self.buttons = [self.turbo_button, self.controls_button,
-                self.mute_button, self.sfx_button, self.cinematic_button,
-                self.gfx_button, self.back_button]
+                self.mute_button, self.sfx_button, self.gfx_button,
+                self.back_button]
 
     def check_options_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
@@ -101,13 +100,12 @@ class OptionsMenu:
         self._check_controls_button(mouse_pos)
         self._check_mute_button(mouse_pos)
         self._check_sfx_button(mouse_pos)
-        self._check_cinematic_button(mouse_pos)
         self._check_gfx_button(mouse_pos)
         self._check_back_button(mouse_pos)
 
     def _change_music_text(self):
         """Helper method that changes what text is displayed on the music button."""
-        self.music_state = f"Music - {self.game.settings.music_volume * 100:.1f}%"
+        self.music_state = f"Music - {self.game.settings.music_volume * 100:.0f}%"
 
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""
@@ -131,23 +129,15 @@ class OptionsMenu:
 
     def _change_sound_text(self):
         """Helper method that changes what text is displayed on the sound button"""
-        if not self.game.settings.play_sfx:
-            self.sfx_state = "Sound OFF"
-        else:
-            self.sfx_state = "Sound ON"
+        self.sfx_state = f"Sound - {self.game.settings.sound_volume * 100:.0f}%"
 
-    def _change_movie_text(self):
-        """Helper method that changes what text is displayed on the VFX button"""
-        if not self.game.settings.cinematic_bars:
-            self.vfx_state = "Movie VFX OFF"
-        else:
-            self.vfx_state = "Movie VFX ON"
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
         self.gfx_button._prep_msg(self.gfx_state)
         self.mute_button._prep_msg(self.music_state)
+        self.sfx_button._prep_msg(self.sfx_state)
         self.turbo_button._prep_msg(self.speed_state)
         self._toggle_colors()
         for button in self.buttons:
@@ -155,9 +145,7 @@ class OptionsMenu:
 
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""
-        #self.mute_button.toggle_color(self.game.settings.play_music, self.music_state)
-        self.sfx_button.toggle_color(self.game.settings.play_sfx, self.sfx_state)
-        self.cinematic_button.toggle_color(self.game.settings.cinematic_bars, self.vfx_state)
+        pass
 
     def _check_mute_button(self, mouse_pos):
         """ Toggles music when the player clicks 'Music'"""
@@ -174,16 +162,11 @@ class OptionsMenu:
         """ Toggles sound when the player clicks 'Sound'"""
         button_clicked = self.sfx_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
-            self.game.settings.play_sfx = not self.game.settings.play_sfx 
+            if self.game.settings.sound_volume == 1.0:
+                self.game.settings.sound_volume = 0.0
+            elif self.game.settings.sound_volume < 1.0:
+                self.game.settings.sound_volume += 0.2
             self._change_sound_text()
-            self.sound.play_sfx("options_menu")
-
-    def _check_cinematic_button(self, mouse_pos):
-        """ Toggles "cinematic" black bars when the player clicks 'Movie Mode'"""
-        button_clicked = self.cinematic_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
-            self.game.settings.cinematic_bars = not self.game.settings.cinematic_bars
-            self._change_movie_text()
             self.sound.play_sfx("options_menu")
 
     def _check_turbo_button(self, mouse_pos):

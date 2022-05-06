@@ -31,8 +31,6 @@ class Settings:
         """Sets default preferences for user options."""
         self.music_volume = 1.0
         self.sound_volume = 1.0
-        self.play_sfx = True
-        self.cinematic_bars = True
         self.speed = self.NORMAL_SPEED
         self.gfx_mode = 1 
         self.high_FPS = False
@@ -69,6 +67,7 @@ class Settings:
         self.scroll_speed = -1.0
         self.background_x = 0
         self.difficulty_counter = 0
+        self.respawn_timer = -0.5
         self.adjust_beams = False
 
     def increase_speed(self):

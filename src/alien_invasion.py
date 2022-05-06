@@ -30,7 +30,6 @@ class AlienInvasion:
         self._make_game_objects()
         self._load_images()
         self._create_sprite_groups()
-        self._create_fleet()
 
     def _load_images(self):
         """Loads menu and game background images."""
@@ -82,6 +81,7 @@ class AlienInvasion:
                 self._update_beams(dt)
                 self._update_aliens(dt)
                 self.explosions.update(dt)
+                self._respawn_enemies(dt)
                 self._adjust_difficulty(dt)
             self._check_mouse_visible()
             self._update_screen()
@@ -172,9 +172,9 @@ class AlienInvasion:
         self.beams.empty()
         if self.gunners and self.gunners.sprite.gunner_bullets:
             self.gunners.sprite.gunner_bullets.empty()
-        self._create_fleet()
         self.ship.position_ship()
         self.ship.reset_ship_flip()
+        self.settings.respawn_timer = -0.5
 
     def _update_bullets(self, dt):
         """Update position of the bullets and get rid of the old bullets."""
@@ -204,8 +204,6 @@ class AlienInvasion:
                 self.beams, False, False)
         self._process_collision(collisions, enemy_list, score_multiplier, False)
         self._process_collision(collisions_beam, enemy_list, score_multiplier, True)
-        if not self.aliens: 
-            self._create_fleet()
     
     def _process_collision(self, collisions, enemy_list, score_multiplier, is_beam):
         """Processes the game logic based on the type of collision"""
@@ -540,9 +538,9 @@ class AlienInvasion:
             self.scoreboard.prep_ships()
             self._empty_enemies_on_death()
             self._play_explosion_on_death()
-            self._create_fleet()
             self.ship.position_ship()
-            time.sleep(0.15)
+            self.settings.respawn_timer = -0.5
+            time.sleep(0.10)
         else: 
             self.enter_game_over()
             self.scoreboard.prep_score_game_over()
@@ -550,10 +548,11 @@ class AlienInvasion:
 
     def _empty_enemies_on_death(self):
         """If the player dies, clear all enemies and projectiles
-        on the screen except for the gunner."""
+        on the screen."""
         self.aliens.empty()
         self.mines.empty()
         self.bullets.empty()
+        self.gunners.empty()
         if self.gunners and self.gunners.sprite.gunner_bullets:
                 self.gunners.sprite.gunner_bullets.empty()
 
@@ -570,11 +569,17 @@ class AlienInvasion:
             self.settings.difficulty_counter -= 20
             self.settings.increase_speed()
 
+    def _respawn_enemies(self, dt):
+        """Gradually increases the game speed as time elapses."""
+        self.settings.respawn_timer += 1 * dt
+        if self.settings.respawn_timer - 0.10 > 0 and not self.aliens: 
+            self.settings.respawn_timer -= 0.10
+            self._create_fleet()
+
     def _make_game_cinematic(self):
         """Draws cinematic black bars around the top and bottom of the screen, forcing a 16:9 aspect ratio."""
-        if self.settings.cinematic_bars:
-            self.top_bar.draw_bar()
-            self.bot_bar.draw_bar()
+        self.top_bar.draw_bar()
+        self.bot_bar.draw_bar()
 
     def enter_game_over(self):
         """Game Over Screen that plays when the player dies."""

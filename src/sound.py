@@ -23,20 +23,21 @@ class Sound:
 
     def _set_volume(self):
         """Sets the volumes for the game sounds."""
-        self.bullet_sfx.set_volume(0.40)
-        self.beam_sfx.set_volume(0.80)
-        self.explosion_sfx.set_volume(0.40)
-        self.menu_sfx.set_volume(0.40)
-        self.menu_unselect_sfx.set_volume(0.40)
-        self.flip_sfx.set_volume(0.40)
-        self.damage_sfx.set_volume(0.55)
-        self.beam_damage_sfx.set_volume(0.60)
-        self.gunner_sfx.set_volume(0.40)
-        self.detect_sfx.set_volume(0.75)
+        self.bullet_sfx.set_volume(0.40 * self.settings.sound_volume)
+        self.beam_sfx.set_volume(0.80 * self.settings.sound_volume)
+        self.explosion_sfx.set_volume(0.40 * self.settings.sound_volume)
+        self.menu_sfx.set_volume(0.40 * self.settings.sound_volume)
+        self.menu_unselect_sfx.set_volume(0.40 * self.settings.sound_volume)
+        self.flip_sfx.set_volume(0.40 * self.settings.sound_volume)
+        self.damage_sfx.set_volume(0.55 * self.settings.sound_volume)
+        self.beam_damage_sfx.set_volume(0.60 * self.settings.sound_volume)
+        self.gunner_sfx.set_volume(0.40 * self.settings.sound_volume)
+        self.detect_sfx.set_volume(0.75 * self.settings.sound_volume)
 
     def play_sfx(self, sound_event):
         """Checks to see if the game should play explosion SFX."""
-        if self.settings.play_sfx:
+        if self.settings.sound_volume:
+            self._set_volume()
             if (sound_event == "explosion" and 
                     self.state.state is self.state.GAMEPLAY):
                 self.explosion_sfx.play()
@@ -70,9 +71,9 @@ class Sound:
     def play_impact_sfx(self, beam_impact):
         """Checks to see if the game should play damage SFX
         and play beam or bullet sounds."""
-        if (self.settings.play_sfx and 
+        if (self.settings.sound_volume and 
                 self.state.state is self.state.GAMEPLAY and not beam_impact):
             self.damage_sfx.play()
-        elif (self.settings.play_sfx and 
+        elif (self.settings.sound_volume and 
                 self.state.state is self.state.GAMEPLAY and beam_impact):
             self.beam_damage_sfx.play()

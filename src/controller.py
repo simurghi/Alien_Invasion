@@ -101,7 +101,6 @@ class Controller:
                 self.options_menu._change_turbo_text()
                 self.sound.play_sfx("options_menu")
             elif event.button == self.BTN_Y:
-                self.settings.cinematic_bars = not self.settings.cinematic_bars
                 self.sound.play_sfx("options_menu")
             elif event.button == self.BTN_LB:
                 if self.settings.music_volume == 1.0:
@@ -110,7 +109,10 @@ class Controller:
                     self.settings.music_volume += 0.2
                 self.sound.play_sfx("options_menu")
             elif event.button == self.BTN_RB:
-                self.settings.play_sfx = not self.settings.play_sfx
+                if self.settings.sound_volume == 1.0:
+                    self.settings.sound_volume = 0.0
+                elif self.settings.sound_volume < 1.0:
+                    self.settings.sound_volume += 0.2
                 self.sound.play_sfx("options_menu")
             elif event.button == self.BTN_SELECT:
                 self.sound.play_sfx("options_menu")

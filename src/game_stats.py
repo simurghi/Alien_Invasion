@@ -23,9 +23,8 @@ class GameStats:
     def _set_json_options_settings(self):
         """Sets current options preferences based on JSON file."""
         self.game.settings.music_volume = self._read_music_json()
-        self.game.settings.play_sfx = self._read_sfx_json()
+        self.game.settings.sound_volume = self._read_sfx_json()
         self.game.settings.speed = self._read_turbo_json()
-        self.game.settings.cinematic_bars = self._read_vfx_json()
         self.game.keybinds.controls = self._read_keybinds_json()
         self.game.keybinds.use_mouse = self._read_mouse_json()
         self.game.settings.gfx_mode = self._read_gfx_json()
@@ -36,7 +35,6 @@ class GameStats:
         self.game.options_menu._change_music_text()
         self.game.options_menu._change_sound_text()
         self.game.options_menu._change_gfx_text()
-        self.game.options_menu._change_movie_text()
         self.game.options_menu._change_window_size()
         self.game.controls_menu._change_mouse_text()
 
@@ -111,25 +109,13 @@ class GameStats:
         """Searches the dictionary created from the settings.json file
         and sees if we already have an option for playing SFX."""
         if self.options_data:
-            sfx_option = self.options_data.get("play_sfx")
+            sfx_option = self.options_data.get("sound_volume")
             if sfx_option is not None:
                 return sfx_option
             else:
-                return True
+                return 1.0
         else:
-            return True
-
-    def _read_vfx_json(self):
-        """Searches the dictionary created from the settings.json file
-        and sees if we already have an option for cinematic bars."""
-        if self.options_data:
-            vfx_option = self.options_data.get("cinematic_mode")
-            if vfx_option is not None:
-                return vfx_option
-            else:
-                return True
-        else:
-            return True
+            return 1.0
 
     def _read_turbo_json(self):
         """Searches the dictionary created from the settings.json file
@@ -161,7 +147,6 @@ class GameStats:
             json.dump({"high_score" : self.game.stats.high_score}, f)
         with open("stats/settings.json", 'w') as f:
             json.dump({"game_speed" : self.settings.speed,"music_volume": self.settings.music_volume,
-                "play_sfx": self.settings.play_sfx, "cinematic_mode": self.settings.cinematic_bars, "window_mode":
-                self.settings.gfx_mode, "controls": self.game.keybinds.controls, 
-                "mouse_enabled": self.game.keybinds.use_mouse}, f)
+                "sound_volume": self.settings.sound_volume, "window_mode": self.settings.gfx_mode,
+                "controls": self.game.keybinds.controls, "mouse_enabled": self.game.keybinds.use_mouse}, f)
 
