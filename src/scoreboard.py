@@ -69,7 +69,7 @@ class Scoreboard:
         for charge in range (self.stats.charges_remaining):
             beam = Beam(self.ai_game, self.ai_game.ship)
             beam.rect.x = (self.screen_rect.right - 50) - charge * beam.rect.width
-            beam.rect.y = 0
+            beam.rect.y = 10
             self.beams.add(beam)
 
     def prep_missiles(self):
@@ -78,7 +78,7 @@ class Scoreboard:
         for missile in range (self.ai_game.settings.bullets_allowed - len(self.ai_game.bullets)):
             bullet = Bullet(self.ai_game, self.ai_game.ship, hud_scale = True)
             bullet.rect.x = self.screen_rect.centerx - missile * bullet.rect.width
-            bullet.rect.y = 0
+            bullet.rect.y = 15
             self.bullets.add(bullet)
         
     def prep_high_score_game_over(self):
