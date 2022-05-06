@@ -29,13 +29,14 @@ class Settings:
 
     def _initialize_user_preferences(self):
         """Sets default preferences for user options."""
-        self.play_music = True
+        self.music_volume = 1.0
+        self.sound_volume = 1.0
         self.play_sfx = True
         self.cinematic_bars = True
         self.speed = self.NORMAL_SPEED
         self.gfx_mode = 1 
         self.high_FPS = False
-        self.FPS = 60.0
+        self.FPS = 120.0
 
     def _initialize_static_settings(self):
         """Initialize settings that do not change throughout the game."""
@@ -91,11 +92,3 @@ class Settings:
         self.mine_speed += self.speedup_scale * self.speed_add / 3
         self.alien_points += self.score_scale 
         self.scroll_speed += -0.2
-
-    def toggle_fps(self):
-        """Toggles between high and low FPS based on settings."""
-        if self.high_FPS:
-            self.FPS = 120.0
-        else:
-            self.FPS = 60.0
-

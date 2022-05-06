@@ -104,15 +104,15 @@ class Controller:
                 self.settings.cinematic_bars = not self.settings.cinematic_bars
                 self.sound.play_sfx("options_menu")
             elif event.button == self.BTN_LB:
-                self.settings.play_music = not self.settings.play_music 
+                if self.settings.music_volume == 1.0:
+                    self.settings.music_volume = 0.0
+                elif self.settings.music_volume < 1.0:
+                    self.settings.music_volume += 0.2
                 self.sound.play_sfx("options_menu")
             elif event.button == self.BTN_RB:
                 self.settings.play_sfx = not self.settings.play_sfx
                 self.sound.play_sfx("options_menu")
             elif event.button == self.BTN_SELECT:
-                self.settings.high_FPS = not self.settings.high_FPS
-                self.settings.toggle_fps()
-                self.options_menu._change_fps()
                 self.sound.play_sfx("options_menu")
 
 

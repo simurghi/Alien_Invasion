@@ -78,9 +78,8 @@ class OptionsMenu:
     def _set_initial_text(self):
         self.speed_state = "Normal Speed"
         self.gfx_state = "Scaled REZ"
-        self.FPS_state = "60 FPS"
         self.sfx_state = "Sound ON"
-        self.music_state = "Music ON"
+        self.music_state = f"Music - {self.game.settings.music_volume * 100:.1f}%"
         self.vfx_state = "Movie VFX ON"
 
     def _create_options_buttons(self):
@@ -91,11 +90,10 @@ class OptionsMenu:
         self.sfx_button = Button(self, self.sfx_state, 0, 25)
         self.cinematic_button = Button(self, self.vfx_state, 0, -50)
         self.gfx_button = Button(self, self.gfx_state, 0, -125)
-        self.fps_button = Button(self, self.FPS_state, 0, -200)
         self.back_button = Button(self, "Back", 0, -275)
         self.buttons = [self.turbo_button, self.controls_button,
                 self.mute_button, self.sfx_button, self.cinematic_button,
-                self.gfx_button, self.fps_button, self.back_button]
+                self.gfx_button, self.back_button]
 
     def check_options_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
@@ -105,8 +103,11 @@ class OptionsMenu:
         self._check_sfx_button(mouse_pos)
         self._check_cinematic_button(mouse_pos)
         self._check_gfx_button(mouse_pos)
-        self._check_fps_button(mouse_pos)
         self._check_back_button(mouse_pos)
+
+    def _change_music_text(self):
+        """Helper method that changes what text is displayed on the music button."""
+        self.music_state = f"Music - {self.game.settings.music_volume * 100:.1f}%"
 
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""
@@ -128,13 +129,6 @@ class OptionsMenu:
         elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
             self.gfx_state = "Fullscreen REZ"
 
-    def _change_music_text(self):
-        """Helper method that changes what text is displayed on the music button"""
-        if not self.game.settings.play_music:
-            self.music_state = "Music OFF"
-        else:
-            self.music_state = "Music ON"
-
     def _change_sound_text(self):
         """Helper method that changes what text is displayed on the sound button"""
         if not self.game.settings.play_sfx:
@@ -149,18 +143,11 @@ class OptionsMenu:
         else:
             self.vfx_state = "Movie VFX ON"
 
-    def _change_fps(self):
-        """Helper method that changes what the game's FPS is"""
-        if not self.game.settings.high_FPS:
-            self.FPS_state = "60 FPS"
-        else:
-            self.FPS_state = "120 FPS"
-
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
         self.gfx_button._prep_msg(self.gfx_state)
-        self.fps_button._prep_msg(self.FPS_state)
+        self.mute_button._prep_msg(self.music_state)
         self.turbo_button._prep_msg(self.speed_state)
         self._toggle_colors()
         for button in self.buttons:
@@ -168,7 +155,7 @@ class OptionsMenu:
 
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""
-        self.mute_button.toggle_color(self.game.settings.play_music, self.music_state)
+        #self.mute_button.toggle_color(self.game.settings.play_music, self.music_state)
         self.sfx_button.toggle_color(self.game.settings.play_sfx, self.sfx_state)
         self.cinematic_button.toggle_color(self.game.settings.cinematic_bars, self.vfx_state)
 
@@ -176,7 +163,10 @@ class OptionsMenu:
         """ Toggles music when the player clicks 'Music'"""
         button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
-            self.game.settings.play_music = not self.game.settings.play_music 
+            if self.game.settings.music_volume == 1.0:
+                self.game.settings.music_volume = 0.0
+            elif self.game.settings.music_volume < 1.0:
+                self.game.settings.music_volume += 0.2
             self._change_music_text()
             self.sound.play_sfx("options_menu")
 
@@ -230,15 +220,6 @@ class OptionsMenu:
                 self.game.settings.gfx_mode = self.game.settings.NATIVE_GFX
             self._change_gfx_text()
             self._change_window_size()
-            self.sound.play_sfx("options_menu")
-
-    def _check_fps_button(self, mouse_pos):
-        """Changes the game's framerate based on the current option."""
-        button_clicked = self.fps_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
-            self.game.settings.high_FPS = not self.game.settings.high_FPS
-            self.game.settings.toggle_fps()
-            self._change_fps()
             self.sound.play_sfx("options_menu")
 
     def _check_back_button(self, mouse_pos):
@@ -372,7 +353,7 @@ class ControlsMenu:
             self.sound.play_sfx("options_menu")
 
     def _change_mouse_text(self):
-        """Helper method that changes what the game's FPS is"""
+        """Helper method that toggles if the mouse should be used in-game"""
         if not self.game.keybinds.use_mouse:
             self.mouse_text = "MOUSEFIRE OFF"
         else:
