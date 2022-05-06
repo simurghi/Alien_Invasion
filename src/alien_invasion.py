@@ -27,9 +27,9 @@ class AlienInvasion:
         """Initialize the game and create game resources."""
         pygame.init()
         pygame.display.set_caption("Alien Invasion")
+        self._create_sprite_groups()
         self._make_game_objects()
         self._load_images()
-        self._create_sprite_groups()
 
     def _load_images(self):
         """Loads menu and game background images."""
@@ -164,6 +164,7 @@ class AlienInvasion:
         self.scoreboard.prep_score()
         self.scoreboard.prep_ships()
         self.scoreboard.prep_beams()
+        self.scoreboard.prep_missiles()
         self.explosions.empty()
         self.mines.empty()
         self.gunners.empty()
@@ -540,7 +541,7 @@ class AlienInvasion:
             self._play_explosion_on_death()
             self.ship.position_ship()
             self.settings.respawn_timer = -0.5
-            time.sleep(0.10)
+            #time.sleep(0.10)
         else: 
             self.enter_game_over()
             self.scoreboard.prep_score_game_over()

@@ -4,14 +4,17 @@ from pygame.sprite import Sprite
 class Bullet(Sprite):
     """A class to manage bullets fired from the ship."""
 
-    def __init__(self, ai_game, ship, direction=1):
+    def __init__(self, ai_game, ship, direction=1, hud_scale=False):
         """Create a bullet object a the ship's current position."""
         super().__init__()
         self.screen = ai_game.screen
         self.settings = ai_game.settings 
         self.direction = direction
         self.ai_game = ai_game
-        self.image = pygame.image.load('assets/images/missile.bmp')
+        if not hud_scale:
+            self.image = pygame.image.load('assets/images/missile.bmp')
+        else: 
+            self.image = pygame.image.load('assets/images/missile_hud.bmp')
         self.rect = self.image.get_rect()
         self.rect.midright = ship.rect.midright
         self.x = float(self.rect.x)

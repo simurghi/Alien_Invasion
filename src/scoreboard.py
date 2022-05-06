@@ -2,6 +2,7 @@ import pygame.font
 from pygame.sprite import Group
 from ship import Ship
 from beam import Beam
+from bullet import Bullet
 
 class Scoreboard:
     """A class to report scoring information."""
@@ -22,6 +23,7 @@ class Scoreboard:
         self.prep_high_score()
         self.prep_ships()
         self.prep_beams()
+        self.prep_missiles()
 
     def prep_score(self):
         """Turn the score into a rendered image at the top right of the screen."""
@@ -29,16 +31,14 @@ class Scoreboard:
         self.score_image = self.font.render(score_str, True,
                 self.text_color)
         self.score_rect = self.score_image.get_rect()
-        self.score_rect.right = self.screen_rect.right - 20
-        self.score_rect.top = 0
+        self.score_rect.bottomleft = self.screen_rect.bottomleft
 
     def prep_high_score(self):
         """Turn the high score into a rendered image."""
         self.high_score_image = self.font.render(str(self.stats.high_score),
             True, self.text_color)
         self.high_score_rect = self.high_score_image.get_rect()
-        self.high_score_rect.centerx = self.screen_rect.centerx
-        self.high_score_rect.top = self.score_rect.top
+        self.high_score_rect.midbottom = self.screen_rect.midbottom
 
     def show_score(self):
         """Draw score and lives to the screen."""
@@ -46,6 +46,7 @@ class Scoreboard:
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.ships.draw(self.screen)
         self.beams.draw(self.screen)
+        self.bullets.draw(self.screen)
 
     def check_high_score(self):
         """Check to see if there's a new high score."""
@@ -67,10 +68,19 @@ class Scoreboard:
         self.beams = Group()
         for charge in range (self.stats.charges_remaining):
             beam = Beam(self.ai_game, self.ai_game.ship)
-            beam.rect.x = 10 + charge * beam.rect.width
-            beam.rect.y = self.screen_rect.bottom - 40
+            beam.rect.x = (self.screen_rect.right - 50) - charge * beam.rect.width
+            beam.rect.y = 0
             self.beams.add(beam)
 
+    def prep_missiles(self):
+        """Show how many missiles the player has left."""
+        self.bullets = Group()
+        for missile in range (self.ai_game.settings.bullets_allowed - len(self.ai_game.bullets)):
+            bullet = Bullet(self.ai_game, self.ai_game.ship, hud_scale = True)
+            bullet.rect.x = self.screen_rect.centerx - missile * bullet.rect.width
+            bullet.rect.y = 0
+            self.bullets.add(bullet)
+        
     def prep_high_score_game_over(self):
         """For the game over screen, turn the high score into a rendered image."""
         end_font = pygame.font.Font("assets/fonts/m5x7.ttf", 64)

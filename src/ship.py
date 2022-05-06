@@ -58,6 +58,7 @@ class Ship(Sprite):
             self._fire_bullet()
         self.rect.y = self.y 
         self.rect.x = self.x 
+        self.game.scoreboard.prep_missiles()
 
     def position_ship(self):
         """Position the ship on the midleft portion of the screen."""
