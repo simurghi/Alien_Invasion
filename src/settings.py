@@ -21,8 +21,13 @@ class Settings:
         self.SCALED_GFX = 2
         self.FULLSCREEN_GFX = 3
         self.HUD_A = 1
-        self.HUD_B = 2
-        self.HUD_C = 3
+        self.HUD_A_SMOLL = 2
+        self.HUD_B = 3
+        self.HUD_B_SMOLL = 4
+        self.HUD_C = 5
+        self.HUD_C_SMOLL = 6
+        self.HUD_D = 7
+        self.HUD_D_SMOLL = 8
 
     def _set_window_properties(self):
         """Sets the properties for the game window and background."""
@@ -38,7 +43,7 @@ class Settings:
         self.gfx_mode = 1 
         self.high_FPS = False
         self.FPS = 120.0
-        self.HUD = self.HUD_A
+        self.HUD = self.HUD_B_SMOLL
 
     def _initialize_static_settings(self):
         """Initialize settings that do not change throughout the game."""
