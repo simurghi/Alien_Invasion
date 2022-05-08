@@ -16,15 +16,17 @@ class MainMenu:
         """Creates the buttons for the main menu."""
         self.play_button = Button(ai_game, "Start", 250, 150)
         self.options_button = Button(ai_game, "Options", 250, 75)
-        self.help_button = Button(ai_game, "Help", 250, 0)
-        self.exit_button = Button(ai_game, "Quit", 250, -75)
-        self.buttons = [self.play_button,
-                self.options_button, self.help_button, self.exit_button]
+        self.controls_button = Button(self, "Controls", 250, 0)
+        self.help_button = Button(ai_game, "Help", 250, -75)
+        self.exit_button = Button(ai_game, "Quit", 250, -150)
+        self.buttons = (self.play_button, self.options_button, 
+                self.controls_button, self.help_button, self.exit_button)
 
     def check_main_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         self._check_play_button(mouse_pos)
         self._check_options_button(mouse_pos)
+        self._check_controls_button(mouse_pos)
         self._check_help_button(mouse_pos)
         self._check_exit_button(mouse_pos)
 
@@ -34,6 +36,13 @@ class MainMenu:
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
             self.game._clear_state()
             self.game.state.state = self.game.state.GAMEPLAY
+            self.sound.play_sfx("options_menu")
+
+    def _check_controls_button(self, mouse_pos):
+        """Changes the control scheme based on the current option."""
+        button_clicked = self.controls_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.state.state is self.game.state.MAINMENU:
+            self.game.state.state = self.game.state.CONTROLSMENU
             self.sound.play_sfx("options_menu")
 
     def _check_options_button(self, mouse_pos):
@@ -80,32 +89,41 @@ class OptionsMenu:
         self.gfx_state = "Scaled REZ"
         self.sfx_state = f"Sound - {self.game.settings.sound_volume * 100:.0f}%"
         self.music_state = f"Music - {self.game.settings.music_volume * 100:.0f}%"
-        self.vfx_state = "Movie VFX ON"
+        self.HUD_state = f"HUD: Classic"
+        self.score_state = "Score: ON"
 
     def _create_options_buttons(self):
         """Creates buttons for the options menu."""
         self.turbo_button = Button(self, self.speed_state, 0, 250)
-        self.controls_button = Button(self, "Keybindings", 0, 175)
-        self.mute_button = Button(self, self.music_state, 0, 100)
-        self.sfx_button = Button(self, self.sfx_state, 0, 25)
-        self.gfx_button = Button(self, self.gfx_state, 0, -125)
+        self.mute_button = Button(self, self.music_state, 0, 175)
+        self.sfx_button = Button(self, self.sfx_state, 0, 100)
+        self.gfx_button = Button(self, self.gfx_state, 0, 25)
+        self.score_button = Button(self, self.gfx_state, 0, -50)
+        self.HUD_button = Button(self, self.HUD_state, 0, -125)
         self.back_button = Button(self, "Back", 0, -275)
-        self.buttons = [self.turbo_button, self.controls_button,
-                self.mute_button, self.sfx_button, self.gfx_button,
-                self.back_button]
+        self.buttons = (self.turbo_button, self.mute_button, self.sfx_button, 
+                self.gfx_button, self.score_button, self.HUD_button, self.back_button)
 
     def check_options_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         self._check_turbo_button(mouse_pos)
-        self._check_controls_button(mouse_pos)
         self._check_mute_button(mouse_pos)
         self._check_sfx_button(mouse_pos)
         self._check_gfx_button(mouse_pos)
+        self._check_score_button(mouse_pos)
+        self._check_HUD_button(mouse_pos)
         self._check_back_button(mouse_pos)
 
     def _change_music_text(self):
         """Helper method that changes what text is displayed on the music button."""
         self.music_state = f"Music - {self.game.settings.music_volume * 100:.0f}%"
+
+    def _change_score_text(self):
+        """Helper method that changes what text is displayed on the score button."""
+        if self.game.settings.show_score:
+            self.score_state =  "Score: ON"
+        else:
+            self.score_state =  "Score: OFF"
 
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""
@@ -125,12 +143,22 @@ class OptionsMenu:
         elif self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
             self.gfx_state = "Scaled REZ"
         elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
-            self.gfx_state = "Fullscreen REZ"
+            self.gfx_state = "Full Scaled REZ"
 
     def _change_sound_text(self):
         """Helper method that changes what text is displayed on the sound button"""
         self.sfx_state = f"Sound - {self.game.settings.sound_volume * 100:.0f}%"
 
+    def _change_HUD_text(self):
+        """Helper method that changes what text is displayed on the HUD button"""
+        if self.game.settings.HUD is self.game.settings.HUD_A:
+            self.HUD_state = "HUD: Classic"
+        elif self.game.settings.HUD is self.game.settings.HUD_A_SMOLL:
+            self.HUD_state = "HUD: Compact"
+        elif self.game.settings.HUD is self.game.settings.HUD_B:
+            self.HUD_state = "HUD: Classic-2"
+        elif self.game.settings.HUD is self.game.settings.HUD_B_SMOLL:
+            self.HUD_state = "HUD: Compact-2"
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""
@@ -138,6 +166,8 @@ class OptionsMenu:
         self.gfx_button._prep_msg(self.gfx_state)
         self.mute_button._prep_msg(self.music_state)
         self.sfx_button._prep_msg(self.sfx_state)
+        self.score_button._prep_msg(self.score_state)
+        self.HUD_button._prep_msg(self.HUD_state)
         self.turbo_button._prep_msg(self.speed_state)
         self._toggle_colors()
         for button in self.buttons:
@@ -184,13 +214,6 @@ class OptionsMenu:
             self._change_turbo_text()
             self.sound.play_sfx("options_menu")
 
-    def _check_controls_button(self, mouse_pos):
-        """Changes the control scheme based on the current option."""
-        button_clicked = self.controls_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
-            self.game.state.state = self.game.state.CONTROLSMENU
-            self.sound.play_sfx("options_menu")
-
     def _check_gfx_button(self, mouse_pos):
         """Changes the window size based on the current option."""
         button_clicked = self.gfx_button.rect.collidepoint(mouse_pos)
@@ -203,6 +226,29 @@ class OptionsMenu:
                 self.game.settings.gfx_mode = self.game.settings.NATIVE_GFX
             self._change_gfx_text()
             self._change_window_size()
+            self.sound.play_sfx("options_menu")
+
+    def _check_score_button(self, mouse_pos):
+        """Toggles display of score in game."""
+        button_clicked = self.score_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
+            self.game.settings.show_score = not self.game.settings.show_score
+            self._change_score_text()
+            self.sound.play_sfx("options_menu")
+
+    def _check_HUD_button(self, mouse_pos):
+        """Toggles HUD preset in-game."""
+        button_clicked = self.HUD_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
+            if self.game.settings.HUD is self.game.settings.HUD_A:
+                self.game.settings.HUD = self.game.settings.HUD_A_SMOLL
+            elif self.game.settings.HUD is self.game.settings.HUD_A_SMOLL:
+                self.game.settings.HUD = self.game.settings.HUD_B
+            elif self.game.settings.HUD is self.game.settings.HUD_B:
+                self.game.settings.HUD = self.game.settings.HUD_B_SMOLL
+            elif self.game.settings.HUD is self.game.settings.HUD_B_SMOLL:
+                self.game.settings.HUD = self.game.settings.HUD_A
+            self._change_HUD_text()
             self.sound.play_sfx("options_menu")
 
     def _check_back_button(self, mouse_pos):
@@ -234,7 +280,6 @@ class ControlsMenu:
         self.screen_rect = self.screen.get_rect()
         self.keybinds = ai_game.keybinds
         self.sound = ai_game.sound
-        self.mouse_text = "MOUSEFIRE OFF"
         self.index = 0
         self._create_controls_buttons()
 
@@ -247,7 +292,6 @@ class ControlsMenu:
         self.beam_button = Button(self, self.keybinds.beam_text, -250, 00)
         self.flip_button = Button(self, self.keybinds.flip_text, -250, -70)
         self.missile_button = Button(self, self.keybinds.shoot_text, -250, -140) 
-        self.mouse_button = Button(self, self.mouse_text, -250, -210)
         self.back_button = Button(self, "Back", -250, -280)
         self.key_buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
                 self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
@@ -260,7 +304,6 @@ class ControlsMenu:
         self._update_button_text()
         for keybind_button in self.key_buttons:
             keybind_button.draw_button()
-        self.mouse_button.draw_button()
         self.back_button.draw_button()
 
     def check_controls_menu_buttons(self, mouse_pos):
@@ -268,7 +311,6 @@ class ControlsMenu:
         for keybind_button, mapping in self.key_buttons.items():
             self._check_keybind_button(mouse_pos, keybind_button, mapping) 
         self._check_back_button(mouse_pos)
-        self._check_mouse_button(mouse_pos)
 
     def _check_keybind_button(self, mouse_pos, button, mapping):
         button_clicked = button.rect.collidepoint(mouse_pos)
@@ -318,7 +360,6 @@ class ControlsMenu:
         """ Toggles colors for buttons that have on/off states."""
         for button, mapping in self.key_buttons.items():
             button.toggle_color(self._check_empty_key(mapping))
-        self.mouse_button.toggle_color(self.game.keybinds.use_mouse, self.mouse_text)
 
     def _check_empty_key(self, mapping):
         """ Checks if a key is empty or not."""
@@ -332,22 +373,7 @@ class ControlsMenu:
         button_clicked = self.back_button.rect.collidepoint(mouse_pos)
         if (button_clicked and pygame.K_UNDERSCORE not in self.keybinds.controls.values() and
                 self.game.state.state is self.game.state.CONTROLSMENU):
-            self.game.state.state = self.game.state.OPTIONSMENU
-            self.sound.play_sfx("options_menu")
-
-    def _change_mouse_text(self):
-        """Helper method that toggles if the mouse should be used in-game"""
-        if not self.game.keybinds.use_mouse:
-            self.mouse_text = "MOUSEFIRE OFF"
-        else:
-            self.mouse_text = "MOUSEFIRE ON"
-
-    def _check_mouse_button(self, mouse_pos):
-        """Enters the main menu from the options menu screen once clicked."""
-        button_clicked = self.mouse_button.rect.collidepoint(mouse_pos)
-        if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
-            self.keybinds.use_mouse = not self.keybinds.use_mouse
-            self._change_mouse_text()
+            self.game.state.state = self.game.state.MAINMENU
             self.sound.play_sfx("options_menu")
 
 class GameOverMenu:

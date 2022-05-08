@@ -370,11 +370,11 @@ class AlienInvasion:
             self.stats.dump_stats_json()
             pygame.quit()
             sys.exit()
-        if event.key == self.keybinds.controls.get("MISSILEATTACK") and not self.keybinds.use_mouse:
+        if event.key == self.keybinds.controls.get("MISSILEATTACK"):
             self.ship.is_firing = True
-        if event.key == self.keybinds.controls.get("BEAMATTACK") and not self.keybinds.use_mouse:
+        if event.key == self.keybinds.controls.get("BEAMATTACK"):
             self.ship.fire_beam()
-        if event.key == self.keybinds.controls.get("FLIPSHIP") and not self.keybinds.use_mouse:
+        if event.key == self.keybinds.controls.get("FLIPSHIP"):
             self.ship.flip_ship()
 
     def _check_mousedown_events(self):
@@ -394,7 +394,7 @@ class AlienInvasion:
         elif mouse_buttons[2] and self.state.state == self.state.CONTROLSMENU:
             self.controls_menu.clear_keybind_button(mouse_pos)
 
-        if self.keybinds.use_mouse and self.state.state == self.state.GAMEPLAY:
+        if self.state.state == self.state.GAMEPLAY:
             if mouse_buttons[0]:
                 self.ship.is_firing = True
             if mouse_buttons[1]:
@@ -406,7 +406,7 @@ class AlienInvasion:
         """respond to mouse releases.""" 
         mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
 
-        if self.keybinds.use_mouse and (self.state.state == self.state.GAMEPLAY 
+        if (self.state.state == self.state.GAMEPLAY 
                 or self.state.state == self.state.PAUSE):
             if not mouse_buttons[0]:
                 self.ship.is_firing = False
@@ -421,7 +421,7 @@ class AlienInvasion:
             self.ship.moving_left = False
         elif event.key == self.keybinds.controls.get("MOVERIGHT"):
             self.ship.moving_right = False
-        if event.key == self.keybinds.controls.get("MISSILEATTACK") and not self.keybinds.use_mouse:
+        if event.key == self.keybinds.controls.get("MISSILEATTACK"):
             self.ship.is_firing = False
 
 
@@ -431,7 +431,7 @@ class AlienInvasion:
             self.state.state = self.state.MAINMENU
         elif (self.state.state == self.state.CONTROLSMENU and 
                 pygame.K_UNDERSCORE not in self.keybinds.controls.values()):
-            self.state.state = self.state.OPTIONSMENU
+            self.state.state = self.state.MAINMENU
         elif self.state.state == self.state.MAINMENU or self.state.state == self.state.GAMEOVER:
             self.stats.dump_stats_json()
             pygame.quit()

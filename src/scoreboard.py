@@ -56,7 +56,7 @@ class Scoreboard:
 
     def show_score(self):
         """Draw score and lives to the screen."""
-        if self.ai_game.settings.HUD < 5:
+        if self.ai_game.settings.show_score:
             self.screen.blit(self.score_image, self.score_rect)
             self.screen.blit(self.high_score_image, self.high_score_rect)
         self.ships.draw(self.screen)
@@ -75,15 +75,11 @@ class Scoreboard:
         for life in range (self.stats.ships_remaining):
             ship = Ship(self.ai_game)
             if (self.ai_game.settings.HUD is self.ai_game.settings.HUD_A or 
-                    self.ai_game.settings.HUD is self.ai_game.settings.HUD_A_SMOLL or 
-                    self.ai_game.settings.HUD is self.ai_game.settings.HUD_C or
-                    self.ai_game.settings.HUD is self.ai_game.settings.HUD_C_SMOLL):
+                    self.ai_game.settings.HUD is self.ai_game.settings.HUD_A_SMOLL):
                 ship.rect.x = 10 + life * ship.rect.width
                 ship.rect.y = 10
             elif (self.ai_game.settings.HUD is self.ai_game.settings.HUD_B or 
-                    self.ai_game.settings.HUD is self.ai_game.settings.HUD_B_SMOLL or
-                    self.ai_game.settings.HUD is self.ai_game.settings.HUD_D or
-                    self.ai_game.settings.HUD is self.ai_game.settings.HUD_D_SMOLL):
+                    self.ai_game.settings.HUD is self.ai_game.settings.HUD_B_SMOLL):
                 ship.rect.x = 10 + life * ship.rect.width
                 ship.rect.y = self.screen_rect.bottom - ship.rect.height - 10
 
@@ -94,20 +90,16 @@ class Scoreboard:
         self.beams = Group()
         for charge in range (self.stats.charges_remaining):
             beam = Beam(self.ai_game, self.ai_game.ship)
-            if (self.ai_game.settings.HUD is self.ai_game.settings.HUD_A 
-                    or self.ai_game.settings.HUD is self.ai_game.settings.HUD_C):
+            if self.ai_game.settings.HUD is self.ai_game.settings.HUD_A:
                 beam.rect.x = (self.screen_rect.right - 50) - charge * beam.rect.width
                 beam.rect.y = 10
-            elif (self.ai_game.settings.HUD is self.ai_game.settings.HUD_A_SMOLL
-                    or self.ai_game.settings.HUD is self.ai_game.settings.HUD_C_SMOLL):
+            elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_A_SMOLL:
                 beam.rect.x = (320) - charge * beam.rect.width
                 beam.rect.y = 10
-            elif (self.ai_game.settings.HUD is self.ai_game.settings.HUD_B
-                    or self.ai_game.settings.HUD is self.ai_game.settings.HUD_D):
+            elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_B:
                 beam.rect.x = (self.screen_rect.right - 50) - charge * beam.rect.width
                 beam.rect.y = self.screen_rect.bottom - 10 - beam.rect.height
-            elif (self.ai_game.settings.HUD is self.ai_game.settings.HUD_B_SMOLL
-                    or self.ai_game.settings.HUD is self.ai_game.settings.HUD_D_SMOLL):
+            elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_B_SMOLL:
                 beam.rect.x = (320) - charge * beam.rect.width
                 beam.rect.y = self.screen_rect.bottom - 10 - beam.rect.height
 
@@ -118,20 +110,16 @@ class Scoreboard:
         self.bullets = Group()
         for missile in range (self.ai_game.settings.bullets_allowed - len(self.ai_game.bullets)):
             bullet = Bullet(self.ai_game, self.ai_game.ship, hud_scale = True)
-            if (self.ai_game.settings.HUD is self.ai_game.settings.HUD_A 
-                    or self.ai_game.settings.HUD is self.ai_game.settings.HUD_C):
+            if self.ai_game.settings.HUD is self.ai_game.settings.HUD_A:
                 bullet.rect.x = self.screen_rect.centerx - missile * bullet.rect.width
                 bullet.rect.y = 15
-            elif (self.ai_game.settings.HUD is self.ai_game.settings.HUD_A_SMOLL 
-                    or self.ai_game.settings.HUD is self.ai_game.settings.HUD_C_SMOLL):
+            elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_A_SMOLL:
                 bullet.rect.x = 180 - missile * bullet.rect.width
                 bullet.rect.y = 15
-            elif (self.ai_game.settings.HUD is self.ai_game.settings.HUD_B
-                    or self.ai_game.settings.HUD is self.ai_game.settings.HUD_D):
+            elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_B:
                 bullet.rect.x = self.screen_rect.centerx - missile * bullet.rect.width
                 bullet.rect.y = self.screen_rect.bottom - 15 - bullet.rect.height
-            elif (self.ai_game.settings.HUD is self.ai_game.settings.HUD_B_SMOLL
-                    or self.ai_game.settings.HUD is self.ai_game.settings.HUD_D_SMOLL):
+            elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_B_SMOLL:
                 bullet.rect.x = 180 - missile * bullet.rect.width
                 bullet.rect.y = self.screen_rect.bottom - 15 - bullet.rect.height
             self.bullets.add(bullet)

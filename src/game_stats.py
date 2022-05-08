@@ -26,8 +26,9 @@ class GameStats:
         self.game.settings.sound_volume = self._read_sfx_json()
         self.game.settings.speed = self._read_turbo_json()
         self.game.keybinds.controls = self._read_keybinds_json()
-        self.game.keybinds.use_mouse = self._read_mouse_json()
         self.game.settings.gfx_mode = self._read_gfx_json()
+        self.game.settings.HUD = self._read_HUD_json()
+        self.game.settings.show_score = self._read_score_json()
 
     def _update_menu_text_json(self):
         """Updates menu text based on JSON file preferences."""
@@ -36,7 +37,8 @@ class GameStats:
         self.game.options_menu._change_sound_text()
         self.game.options_menu._change_gfx_text()
         self.game.options_menu._change_window_size()
-        self.game.controls_menu._change_mouse_text()
+        self.game.options_menu._change_HUD_text()
+        self.game.options_menu._change_score_text()
 
     def _read_stats_json(self):
         """Reads the score.json file and sees if we already have a high score."""
@@ -93,18 +95,6 @@ class GameStats:
             "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
 
 
-    def _read_mouse_json(self):
-        """Searches the dictionary created from the settings.json file 
-        and sees if we already have an option for enabling mouse control ingame."""
-        if self.options_data:
-            mouse_option = self.options_data.get("mouse_enabled")
-            if mouse_option is not None: 
-                return mouse_option
-            else:
-                return False
-        else:
-            return False
-
     def _read_sfx_json(self):
         """Searches the dictionary created from the settings.json file
         and sees if we already have an option for playing SFX."""
@@ -141,6 +131,30 @@ class GameStats:
         else:
             return 1
 
+    def _read_HUD_json(self):
+        """Searches the dictionary created from the settings.json file 
+        and sees if we already have an option for HUD preset."""
+        if self.options_data:
+            HUD_option = self.options_data.get("HUD_preset")
+            if HUD_option is not None:
+                return HUD_option
+            else:
+                return 1
+        else:
+            return 1
+
+    def _read_score_json(self):
+        """Searches the dictionary created from the settings.json file 
+        and sees if we already have an option for displaying score."""
+        if self.options_data:
+            score_option = self.options_data.get("display_score")
+            if score_option is not None:
+                return score_option
+            else:
+                return True
+        else:
+            return True
+
     def dump_stats_json(self):
         """Dumps score and key game settings to a JSON file."""
         with open("stats/score.json", 'w') as f:
@@ -148,5 +162,6 @@ class GameStats:
         with open("stats/settings.json", 'w') as f:
             json.dump({"game_speed" : self.settings.speed,"music_volume": self.settings.music_volume,
                 "sound_volume": self.settings.sound_volume, "window_mode": self.settings.gfx_mode,
-                "controls": self.game.keybinds.controls, "mouse_enabled": self.game.keybinds.use_mouse}, f)
+                "display_score": self.settings.show_score, "HUD_preset": self.settings.HUD,
+                "controls": self.game.keybinds.controls}, f)
 
