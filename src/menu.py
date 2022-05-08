@@ -248,6 +248,7 @@ class OptionsMenu:
                 self.game.settings.HUD = self.game.settings.HUD_B_SMOLL
             elif self.game.settings.HUD is self.game.settings.HUD_B_SMOLL:
                 self.game.settings.HUD = self.game.settings.HUD_A
+            self.game.scoreboard.update_prep()
             self._change_HUD_text()
             self.sound.play_sfx("options_menu")
 

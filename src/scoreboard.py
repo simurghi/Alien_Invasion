@@ -25,11 +25,23 @@ class Scoreboard:
         self.prep_beams()
         self.prep_missiles()
 
+    def update_prep(self):
+        """Updates the HUD element positions."""
+        self._prep_high_score_position()
+        self._prep_score_position()
+        self.prep_ships()
+        self.prep_beams()
+        self.prep_missiles()
+
     def prep_score(self):
         """Turn the score into a rendered image at the top right of the screen."""
         score_str = str(self.stats.score)
         self.score_image = self.font.render(score_str, True,
                 self.text_color)
+        self._prep_score_position()
+
+    def _prep_score_position(self):
+        """Helper method that gets the rect and positions the score."""
         self.score_rect = self.score_image.get_rect()
         if self.ai_game.settings.HUD is self.ai_game.settings.HUD_A:
             self.score_rect.bottomleft = self.screen_rect.bottomleft
@@ -37,13 +49,16 @@ class Scoreboard:
             self.score_rect.x,y = self.high_score_rect.left - self.high_score_rect.left/6, self.screen_rect.top
         elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_B:
             self.score_rect.topleft = self.screen_rect.topleft
-        else:
+        elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_B_SMOLL:
             self.score_rect.x, self.score_rect.y = self.high_score_rect.left - self.high_score_rect.left/6, self.high_score_rect.y
 
     def prep_high_score(self):
         """Turn the high score into a rendered image."""
         self.high_score_image = self.font.render(str(self.stats.high_score),
             True, self.text_color)
+        self._prep_high_score_position()
+
+    def _prep_high_score_position(self):
         self.high_score_rect = self.high_score_image.get_rect()
         if self.ai_game.settings.HUD is self.ai_game.settings.HUD_A:
             self.high_score_rect.midbottom = self.screen_rect.midbottom
@@ -51,7 +66,7 @@ class Scoreboard:
             self.high_score_rect.topright = self.screen_rect.topright 
         elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_B:
             self.high_score_rect.midtop = self.screen_rect.midtop
-        else: 
+        elif self.ai_game.settings.HUD is self.ai_game.settings.HUD_B_SMOLL:
             self.high_score_rect.bottomright = self.screen_rect.bottomright 
 
     def show_score(self):
