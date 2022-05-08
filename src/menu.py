@@ -293,6 +293,7 @@ class ControlsMenu:
         self.beam_button = Button(self, self.keybinds.beam_text, -250, 00)
         self.flip_button = Button(self, self.keybinds.flip_text, -250, -70)
         self.missile_button = Button(self, self.keybinds.shoot_text, -250, -140) 
+        self.reset_button = Button(self, "Reset Controls", -250, -210)
         self.back_button = Button(self, "Back", -250, -280)
         self.key_buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
                 self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
@@ -305,12 +306,14 @@ class ControlsMenu:
         self._update_button_text()
         for keybind_button in self.key_buttons:
             keybind_button.draw_button()
+        self.reset_button.draw_button()
         self.back_button.draw_button()
 
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         for keybind_button, mapping in self.key_buttons.items():
             self._check_keybind_button(mouse_pos, keybind_button, mapping) 
+        self._check_reset_button(mouse_pos)
         self._check_back_button(mouse_pos)
 
     def _check_keybind_button(self, mouse_pos, button, mapping):
@@ -376,6 +379,16 @@ class ControlsMenu:
                 self.game.state.state is self.game.state.CONTROLSMENU):
             self.game.state.state = self.game.state.MAINMENU
             self.sound.play_sfx("options_menu")
+
+    def _check_reset_button(self, mouse_pos):
+        """Clears the custom keybinds and resets to initial options."""
+        button_clicked = self.reset_button.rect.collidepoint(mouse_pos)
+        if (button_clicked and self.game.state.state is self.game.state.CONTROLSMENU):
+            self.keybinds.controls = {"MOVELEFT": pygame.K_LEFT, "MOVERIGHT": pygame.K_RIGHT,
+                "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
+                "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
+            self.sound.play_sfx("options_menu")
+
 
 class GameOverMenu:
     """Class that holds the state and behavior for the game over screen."""
