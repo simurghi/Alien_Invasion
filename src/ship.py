@@ -1,7 +1,8 @@
 import pygame 
 from pygame.sprite import Sprite
-from bullet import Bullet
+from arrow import Arrow
 from beam import Beam
+from bullet import Bullet
 
 class Ship(Sprite):
     """A class to manage the ship."""
@@ -12,6 +13,7 @@ class Ship(Sprite):
         self._create_objects(ai_game)
         self.rect = self.image.get_rect()
         self.rect.midleft = self.screen_rect.midleft
+        self.arrow = Arrow(self.game, self)
         self.radius = 10
         self.fire_delay = 150
         self.last_shot = pygame.time.get_ticks()
@@ -71,6 +73,7 @@ class Ship(Sprite):
         if self.state.state == self.state.GAMEPLAY:
             self._rotate_ship()
             self._adjust_bullet_flipped()
+            self.arrow.flip_arrow()
             self.sound.play_sfx("flip")
 
     def _rotate_ship(self):

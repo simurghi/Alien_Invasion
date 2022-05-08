@@ -10,7 +10,7 @@ class Bullet(Sprite):
         self.screen = ai_game.screen
         self.settings = ai_game.settings 
         self.direction = direction
-        self.ai_game = ai_game
+        self.ship = ship
         if not hud_scale:
             self.image = pygame.image.load('assets/images/missile.bmp')
         else: 
@@ -30,6 +30,6 @@ class Bullet(Sprite):
         self.image = pygame.transform.flip(self.image, True, False)
         self.rect = self.image.get_rect()
         if self.direction > 0:
-            self.rect.midright = self.ai_game.ship.rect.midright
+            self.rect.midright = self.ship.rect.midright
         else:
-            self.rect.midleft = self.ai_game.ship.rect.midleft
+            self.rect.midleft = self.ship.rect.midleft

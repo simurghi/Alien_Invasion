@@ -91,6 +91,7 @@ class OptionsMenu:
         self.music_state = f"Music - {self.game.settings.music_volume * 100:.0f}%"
         self.HUD_state = f"HUD: Classic"
         self.score_state = "Score: ON"
+        self.dirarrow_state = "Dir Arrow: ON"
 
     def _create_options_buttons(self):
         """Creates buttons for the options menu."""
@@ -100,9 +101,11 @@ class OptionsMenu:
         self.gfx_button = Button(self, self.gfx_state, 0, 25)
         self.score_button = Button(self, self.gfx_state, 0, -50)
         self.HUD_button = Button(self, self.HUD_state, 0, -125)
+        self.dirarrow_button = Button(self, self.dirarrow_state, 0, -200)
         self.back_button = Button(self, "Back", 0, -275)
         self.buttons = (self.turbo_button, self.mute_button, self.sfx_button, 
-                self.gfx_button, self.score_button, self.HUD_button, self.back_button)
+                self.gfx_button, self.score_button, self.HUD_button, self.dirarrow_button, 
+                self.back_button)
 
     def check_options_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
@@ -112,6 +115,7 @@ class OptionsMenu:
         self._check_gfx_button(mouse_pos)
         self._check_score_button(mouse_pos)
         self._check_HUD_button(mouse_pos)
+        self._check_dirarrow_button(mouse_pos)
         self._check_back_button(mouse_pos)
 
     def _change_music_text(self):
@@ -124,6 +128,13 @@ class OptionsMenu:
             self.score_state =  "Score: ON"
         else:
             self.score_state =  "Score: OFF"
+
+    def _change_dirarrow_text(self):
+        """Helper method that changes what text is displayed on the direction arrow button."""
+        if self.game.settings.show_arrow:
+            self.dirarrow_state =  "Dir Arrow: ON"
+        else:
+            self.dirarrow_state =  "Dir Arrow: OFF"
 
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""
@@ -169,6 +180,7 @@ class OptionsMenu:
         self.score_button._prep_msg(self.score_state)
         self.HUD_button._prep_msg(self.HUD_state)
         self.turbo_button._prep_msg(self.speed_state)
+        self.dirarrow_button._prep_msg(self.dirarrow_state)
         self._toggle_colors()
         for button in self.buttons:
             button.draw_button()
@@ -234,6 +246,14 @@ class OptionsMenu:
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.game.settings.show_score = not self.game.settings.show_score
             self._change_score_text()
+            self.sound.play_sfx("options_menu")
+
+    def _check_dirarrow_button(self, mouse_pos):
+        """Toggles display of direction arrow in game."""
+        button_clicked = self.dirarrow_button.rect.collidepoint(mouse_pos)
+        if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
+            self.game.settings.show_arrow = not self.game.settings.show_arrow
+            self._change_dirarrow_text()
             self.sound.play_sfx("options_menu")
 
     def _check_HUD_button(self, mouse_pos):

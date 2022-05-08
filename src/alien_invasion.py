@@ -77,6 +77,7 @@ class AlienInvasion:
             self.music.play_music()
             if self.state.state is self.state.GAMEPLAY: 
                 self.ship.update(dt)
+                self.ship.arrow.update()
                 self._update_bullets(dt)
                 self._update_beams(dt)
                 self._update_aliens(dt)
@@ -133,6 +134,7 @@ class AlienInvasion:
         if self.state.state is self.state.GAMEPLAY:
             self._scroll_background()
             self.ship.blitme()
+            self.ship.arrow.blitme()
             self.bullets.draw(self.screen)
             self.beams.draw(self.screen)
             self.aliens.draw(self.screen)

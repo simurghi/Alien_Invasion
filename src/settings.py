@@ -37,9 +37,9 @@ class Settings:
         self.sound_volume = 1.0
         self.speed = self.NORMAL_SPEED
         self.gfx_mode = 1 
-        self.high_FPS = False
         self.FPS = 120.0
         self.show_score = True
+        self.show_arrow = True
         self.HUD = self.HUD_A
 
     def _initialize_static_settings(self):
