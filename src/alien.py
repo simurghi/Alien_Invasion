@@ -15,7 +15,7 @@ class Alien(Sprite):
         self.rect = self.image.get_rect()
         self.x = float(self.rect.x) 
         self.y = float(self.rect.y)
-        self.radius = 23
+        self.radius = 17
 
     def update(self, dt):
         """Move the alien to the left."""
