@@ -193,10 +193,10 @@ class OptionsMenu:
         """ Toggles music when the player clicks 'Music'"""
         button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
-            if self.game.settings.music_volume == 1.0:
+            if self.game.settings.music_volume >= 0.9:
                 self.game.settings.music_volume = 0.0
-            elif self.game.settings.music_volume < 1.0:
-                self.game.settings.music_volume += 0.2
+            elif self.game.settings.music_volume < 0.9:
+                self.game.settings.music_volume += 0.1
             self._change_music_text()
             self.sound.play_sfx("options_menu")
 
@@ -204,10 +204,10 @@ class OptionsMenu:
         """ Toggles sound when the player clicks 'Sound'"""
         button_clicked = self.sfx_button.rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
-            if self.game.settings.sound_volume == 1.0:
+            if self.game.settings.sound_volume >= 0.9:
                 self.game.settings.sound_volume = 0.0
-            elif self.game.settings.sound_volume < 1.0:
-                self.game.settings.sound_volume += 0.2
+            elif self.game.settings.sound_volume < 0.9:
+                self.game.settings.sound_volume += 0.1
             self._change_sound_text()
             self.sound.play_sfx("options_menu")
 
@@ -313,7 +313,7 @@ class ControlsMenu:
         self.beam_button = Button(self, self.keybinds.beam_text, -250, 00)
         self.flip_button = Button(self, self.keybinds.flip_text, -250, -70)
         self.missile_button = Button(self, self.keybinds.shoot_text, -250, -140) 
-        self.reset_button = Button(self, "Reset Controls", -250, -210)
+        self.reset_button = Button(self, "Reset Keys", -250, -210)
         self.back_button = Button(self, "Back", -250, -280)
         self.key_buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
                 self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
