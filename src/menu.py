@@ -85,10 +85,10 @@ class OptionsMenu:
         self._create_options_buttons()
 
     def _set_initial_text(self):
-        self.speed_state = "Normal Speed"
-        self.gfx_state = "Scaled REZ"
-        self.sfx_state = f"Sound - {self.game.settings.sound_volume * 100:.0f}%"
-        self.music_state = f"Music - {self.game.settings.music_volume * 100:.0f}%"
+        self.speed_state = "SPD: Normal"
+        self.gfx_state = "REZ: Scaled"
+        self.sfx_state = f"Sound: {self.game.settings.sound_volume * 100:.0f}%"
+        self.music_state = f"Music: {self.game.settings.music_volume * 100:.0f}%"
         self.HUD_state = f"HUD: Classic"
         self.score_state = "Score: ON"
         self.dirarrow_state = "Dir Arrow: ON"
@@ -120,7 +120,7 @@ class OptionsMenu:
 
     def _change_music_text(self):
         """Helper method that changes what text is displayed on the music button."""
-        self.music_state = f"Music - {self.game.settings.music_volume * 100:.0f}%"
+        self.music_state = f"Music: {self.game.settings.music_volume * 100:.0f}%"
 
     def _change_score_text(self):
         """Helper method that changes what text is displayed on the score button."""
@@ -139,26 +139,26 @@ class OptionsMenu:
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""
         if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
-            self.speed_state = "Normal"
+            self.speed_state = "SPD: Normal"
         elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
-            self.speed_state = "Fast"
+            self.speed_state = "SPD: Fast"
         elif self.game.settings.speed is self.game.settings.EASY_SPEED:
-            self.speed_state = "Slow"
+            self.speed_state = "SPD: Slow"
         elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
-            self.speed_state = "Ludicrous"
+            self.speed_state = "SPD: Ludicrous"
 
     def _change_gfx_text(self):
         """Helper method that changes what text is displayed on the resolution button"""
         if self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
-            self.gfx_state = "Native REZ"
+            self.gfx_state = "REZ: Native"
         elif self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
-            self.gfx_state = "Scaled REZ"
+            self.gfx_state = "REZ: Scaled"
         elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
-            self.gfx_state = "Full Scaled REZ"
+            self.gfx_state = "REZ: Full Scaled"
 
     def _change_sound_text(self):
         """Helper method that changes what text is displayed on the sound button"""
-        self.sfx_state = f"Sound - {self.game.settings.sound_volume * 100:.0f}%"
+        self.sfx_state = f"Sound: {self.game.settings.sound_volume * 100:.0f}%"
 
     def _change_HUD_text(self):
         """Helper method that changes what text is displayed on the HUD button"""
