@@ -29,6 +29,7 @@ class GameStats:
         self.game.settings.gfx_mode = self._read_gfx_json()
         self.game.settings.HUD = self._read_HUD_json()
         self.game.settings.show_score = self._read_score_json()
+        self.game.settings.show_arrow = self._read_dirarrow_json()
 
     def _update_menu_text_json(self):
         """Updates menu text based on JSON file preferences."""
@@ -39,6 +40,7 @@ class GameStats:
         self.game.options_menu._change_window_size()
         self.game.options_menu._change_HUD_text()
         self.game.options_menu._change_score_text()
+        self.game.options_menu._change_dirarrow_text()
 
     def _read_stats_json(self):
         """Reads the score.json file and sees if we already have a high score."""
@@ -155,6 +157,18 @@ class GameStats:
         else:
             return True
 
+    def _read_dirarrow_json(self):
+        """Searches the dictionary created from the settings.json file 
+        and sees if we already have an option for displaying the direction arrow."""
+        if self.options_data:
+            dirarrow_option = self.options_data.get("use_direction_arrow")
+            if dirarrow_option is not None:
+                return dirarrow_option
+            else:
+                return True
+        else:
+            return True
+
     def dump_stats_json(self):
         """Dumps score and key game settings to a JSON file."""
         with open("stats/score.json", 'w') as f:
@@ -163,5 +177,4 @@ class GameStats:
             json.dump({"game_speed" : self.settings.speed,"music_volume": self.settings.music_volume,
                 "sound_volume": self.settings.sound_volume, "window_mode": self.settings.gfx_mode,
                 "display_score": self.settings.show_score, "HUD_preset": self.settings.HUD,
-                "controls": self.game.keybinds.controls}, f)
-
+                "use_direction_arrow": self.settings.show_arrow, "controls": self.game.keybinds.controls,}, f)
