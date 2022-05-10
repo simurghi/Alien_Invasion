@@ -17,3 +17,4 @@ Code:
 -- CodeSurgeon --> properly capping game FPS
 -- /u/metulburr for distance formula
 -- CDCodes --> key rebinding menu
+-- skrx for pixel tinting.

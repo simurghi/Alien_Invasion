@@ -33,6 +33,7 @@ class Gunner(Sprite):
     def _set_gunner_stats(self):
         """Sets the combat stats for the gunner."""
         self.hitpoints = 9
+        self.berserk = False
         self.fire_delay = 1000
         self.last_shot = pygame.time.get_ticks()
 
@@ -47,6 +48,7 @@ class Gunner(Sprite):
         """Update method for mines"""
         self._move_gunner(dt)
         self._fire_bullets()
+        self._show_damage()
         if self.gunner_bullets:
             self.gunner_bullets.update(dt)
 
@@ -61,11 +63,20 @@ class Gunner(Sprite):
 
     def _move_gunner(self, dt):
         """Updates the position of the mines."""
+        speed_bonus = 1.25 if self.berserk else 1
+        self.fire_delay = 800 if self.berserk else 1000
         if self.x > self.screen_rect.right - 175:
-            self.x -= 2 * self.settings.gunner_speed * dt
+            self.x -= 2 * self.settings.gunner_speed * dt * speed_bonus
         if self.rect.centery < self.ship.rect.centery:
-            self.y += self.settings.gunner_speed * dt
+            self.y += self.settings.gunner_speed * dt * speed_bonus
         if self.rect.centery > self.ship.rect.centery:
-            self.y -= self.settings.gunner_speed * dt
+            self.y -= self.settings.gunner_speed * dt * speed_bonus
         self.rect.y = self.y 
         self.rect.x = self.x
+
+    def _show_damage(self):
+        """Updates the image of the gunner if it's low on HP."""
+        if self.hitpoints < 5:
+            self.image.fill((218,44,67), special_flags=pygame.BLEND_MIN)
+            self.berserk = True
+
