@@ -93,6 +93,7 @@ class Ship(Sprite):
     def reset_ship_flip(self):
         """Resets the orientation of the ship on each new game."""
         self.image = pygame.image.load('assets/images/ship.bmp')
+        self.arrow.reset_arrow()
         self.is_flipped = False
 
     def _fire_bullet(self):

@@ -91,7 +91,7 @@ class OptionsMenu:
         self.music_state = f"Music: {self.game.settings.music_volume * 100:.0f}%"
         self.HUD_state = f"HUD: Classic"
         self.score_state = "Score: ON"
-        self.dirarrow_state = "Dir Arrow: ON"
+        self.dirarrow_state = "HUD Arrows: ON"
 
     def _create_options_buttons(self):
         """Creates buttons for the options menu."""
@@ -132,9 +132,9 @@ class OptionsMenu:
     def _change_dirarrow_text(self):
         """Helper method that changes what text is displayed on the direction arrow button."""
         if self.game.settings.show_arrow:
-            self.dirarrow_state =  "Dir Arrow: ON"
+            self.dirarrow_state =  "HUD Arrows: ON"
         else:
-            self.dirarrow_state =  "Dir Arrow: OFF"
+            self.dirarrow_state =  "HUD Arrows: OFF"
 
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""

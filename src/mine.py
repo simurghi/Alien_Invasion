@@ -18,10 +18,9 @@ class Mine(Sprite):
         self.image = self.mine_images[self.index]
         self.rect = self.image.get_rect()
         self.set_random_position()
-        self.warning_arrow = WarningArrow(ai_game, self)
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
-        print(f"MINE X: {self.x}, MINE Y: {self.y}")
+        self.warning_arrow = WarningArrow(ai_game, self)
         self.radius = int(self.rect.width / 2) - 2
         pygame.draw.circle(self.image, (255,0,0), self.rect.center, self.radius)
 
@@ -66,8 +65,8 @@ class Mine(Sprite):
             speed_mult = 0.5
         elif self.y > 600:
             speed_mult = 0.5
-        elif animation_speed == 0.16:
-            speed_mult = 1.5
+        elif animation_speed == 0.05:
+            speed_mult = 1.25
         else:
             speed_mult = 1.0
         if self.x < self.ship.x:
@@ -123,7 +122,7 @@ class Mine(Sprite):
                 self.last_warning = now
                 self.sound.play_sfx("mine")
                 self.play_warning = True
-                return 0.16
+                return 0.05
         else: 
             self.play_warning = False
-            return 0.32
+            return 0.10

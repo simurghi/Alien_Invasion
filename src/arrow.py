@@ -32,6 +32,10 @@ class Arrow(Sprite):
         self.image = pygame.transform.flip(self.image, True, False)
         self.rect = self.image.get_rect()
 
+    def reset_arrow(self):
+        """Resets the position of the arrow on game reset."""
+        self.image = pygame.image.load('assets/images/dir_arrow_black_smol_2.bmp')
+
     def blitme(self):
         """Draw the arrow at its current location."""
         if self.settings.show_arrow:
@@ -46,7 +50,10 @@ class WarningArrow(Sprite):
         self.screen = ai_game.screen
         self.screen_rect = ai_game.screen.get_rect()
         self.settings = ai_game.settings 
-        self.image = pygame.image.load('assets/images/warning_arrow_bot.bmp')
+        if mine.y < 50:
+            self.image = pygame.image.load('assets/images/warning_arrow_top.bmp')
+        elif mine.y > 590:
+            self.image = pygame.image.load('assets/images/warning_arrow_bot.bmp')
         self.rect = self.image.get_rect()
         self.rect.x = mine.rect.x 
         self.x = float(self.rect.x)
@@ -55,15 +62,9 @@ class WarningArrow(Sprite):
     def update(self):
         if self.mine.y < 50:
             self.rect.y = self.screen_rect.top + 100
-            self.flip_arrow()
         elif self.mine.y > 590:
             self.rect.y = self.screen_rect.bottom - 100
 
-
-    def flip_arrow(self):
-        """Flips the arrow across the x-axis."""
-        self.image = pygame.transform.flip(self.image, False, True)
-        self.rect = self.image.get_rect()
 
     def blitme(self):
         """Draws the warning arrows at their current position."""

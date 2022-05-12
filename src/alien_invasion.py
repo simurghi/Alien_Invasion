@@ -460,7 +460,7 @@ class AlienInvasion:
     def _create_mine(self, spawn_number = 1):
         """Create an alien and place it in a column."""
         position_list = []
-        if len(self.mines) < 20:
+        if len(self.mines) < 1:
             for j in range(0,spawn_number):
                 mine = Mine(self)
                 self._check_unique_spawn(mine, position_list)
@@ -519,6 +519,8 @@ class AlienInvasion:
         elif wave_number == 8:
             self._create_trash_mobs(number_cols+3, number_aliens_y)
             self._create_mine(2)
+        else: 
+            self._create_mine(1)
 
     def _create_trash_mobs(self, number_cols, number_aliens_y):
         """Spawns waves of trash mobs based on wave pattern."""
