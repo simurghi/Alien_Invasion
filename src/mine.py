@@ -2,6 +2,7 @@ import pygame
 from pygame.sprite import Sprite
 from math import sqrt
 from random import randint
+from arrow import WarningArrow
 
 class Mine(Sprite):
     """A class to represent an elite mine enemy."""
@@ -17,8 +18,10 @@ class Mine(Sprite):
         self.image = self.mine_images[self.index]
         self.rect = self.image.get_rect()
         self.set_random_position()
+        self.warning_arrow = WarningArrow(ai_game, self)
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
+        print(f"MINE X: {self.x}, MINE Y: {self.y}")
         self.radius = int(self.rect.width / 2) - 2
         pygame.draw.circle(self.image, (255,0,0), self.rect.center, self.radius)
 
@@ -46,9 +49,9 @@ class Mine(Sprite):
 
     def update(self, dt):
         """Update method for mines"""
-        self._move_mine(dt)
         animation_speed = self._cqc_warning()
-        self.counter += 1
+        self._move_mine(dt, animation_speed)
+        self.counter += 1 * dt
         if self.counter >= animation_speed and self.index < len(self.mine_images) - 1:
             self.counter = 0
             self.index+= 1
@@ -57,16 +60,24 @@ class Mine(Sprite):
         if self.index >= len(self.mine_images) - 1 and self.counter >= animation_speed:
             self.index = 0
 
-    def _move_mine(self, dt):
+    def _move_mine(self, dt, animation_speed):
         """Updates the position of the mines."""
+        if self.y < 30:
+            speed_mult = 0.5
+        elif self.y > 600:
+            speed_mult = 0.5
+        elif animation_speed == 0.16:
+            speed_mult = 1.5
+        else:
+            speed_mult = 1.0
         if self.x < self.ship.x:
-            self.x += self.settings.mine_speed * dt
+            self.x += self.settings.mine_speed * dt * speed_mult
         if self.x > self.ship.x:
-            self.x -= self.settings.mine_speed * dt
+            self.x -= self.settings.mine_speed * dt * speed_mult
         if self.y < self.ship.y:
-            self.y += self.settings.mine_speed * dt
+            self.y += self.settings.mine_speed * dt * speed_mult
         if self.y > self.ship.y:
-            self.y -= self.settings.mine_speed * dt
+            self.y -= self.settings.mine_speed * dt * speed_mult
         self.rect.y = self.y 
         self.rect.x = self.x 
 
@@ -112,7 +123,7 @@ class Mine(Sprite):
                 self.last_warning = now
                 self.sound.play_sfx("mine")
                 self.play_warning = True
-                return 8
+                return 0.16
         else: 
             self.play_warning = False
-            return 16
+            return 0.32

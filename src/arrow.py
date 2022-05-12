@@ -15,7 +15,7 @@ class Arrow(Sprite):
         self.y = float(self.rect.y)
 
     def update(self):
-        """Move the bullet to the right of the screen."""
+        """Track the arrow with the ship's current position on the screen."""
         self.y = self.ship.y
         self.x = self.ship.x
         self.rect.y = self.y 
@@ -28,12 +28,44 @@ class Arrow(Sprite):
             self.rect.centery = self.ship.rect.centery
 
     def flip_arrow(self):
-        """Flips the bullet across the y-axis."""
+        """Flips the arrow across the y-axis."""
         self.image = pygame.transform.flip(self.image, True, False)
         self.rect = self.image.get_rect()
 
     def blitme(self):
-        """Draw the ship at its current location."""
+        """Draw the arrow at its current location."""
         if self.settings.show_arrow:
             self.screen.blit(self.image, self.rect) 
 
+
+class WarningArrow(Sprite):
+    """A class to manage the warning arrows."""
+    def __init__(self,ai_game, mine):
+        super().__init__()
+        self.mine = mine
+        self.screen = ai_game.screen
+        self.screen_rect = ai_game.screen.get_rect()
+        self.settings = ai_game.settings 
+        self.image = pygame.image.load('assets/images/warning_arrow_bot.bmp')
+        self.rect = self.image.get_rect()
+        self.rect.x = mine.rect.x 
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+
+    def update(self):
+        if self.mine.y < 50:
+            self.rect.y = self.screen_rect.top + 100
+            self.flip_arrow()
+        elif self.mine.y > 590:
+            self.rect.y = self.screen_rect.bottom - 100
+
+
+    def flip_arrow(self):
+        """Flips the arrow across the x-axis."""
+        self.image = pygame.transform.flip(self.image, False, True)
+        self.rect = self.image.get_rect()
+
+    def blitme(self):
+        """Draws the warning arrows at their current position."""
+        if self.settings.show_arrow and (self.mine.y < 50 or self.mine.y > 590):
+            self.screen.blit(self.image, self.rect)

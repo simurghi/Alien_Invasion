@@ -81,6 +81,8 @@ class AlienInvasion:
                 self._update_bullets(dt)
                 self._update_beams(dt)
                 self._update_aliens(dt)
+                for mine in self.mines:
+                    mine.warning_arrow.update()
                 self.explosions.update(dt)
                 self._respawn_enemies(dt)
                 self._adjust_difficulty(dt)
@@ -139,6 +141,8 @@ class AlienInvasion:
             self.beams.draw(self.screen)
             self.aliens.draw(self.screen)
             self.mines.draw(self.screen)
+            for mine in self.mines:
+                mine.warning_arrow.blitme()
             self.gunners.draw(self.screen)
             if self.gunners and self.gunners.sprite.gunner_bullets:
                 self.gunners.sprite.gunner_bullets.draw(self.screen)
