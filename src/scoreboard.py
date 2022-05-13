@@ -25,6 +25,12 @@ class Scoreboard:
         self.prep_beams()
         self.prep_missiles()
 
+    def create_countdown(self, text, x_offset=0, y_offset=0): 
+        """Creates countdown text for the game."""
+        self.countdown_image = self.font.render(text, True, 
+                self.text_color)
+        self.screen.blit(self.countdown_image, (self.screen_rect.centerx+x_offset, 
+            self.screen_rect.centery+y_offset))
     def update_prep(self):
         """Updates the HUD element positions."""
         self._prep_high_score_position()

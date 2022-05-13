@@ -21,3 +21,20 @@ class Alien(Sprite):
         """Move the alien to the left."""
         self.x -= self.settings.alien_speed * dt
         self.rect.x = self.x
+
+class ChonkyAlien(Alien): 
+    """A class to represent the champion alien."""
+    def __init__(self, ai_game):
+        super().__init__(ai_game)
+        self.image = pygame.image.load('assets/images/bigboi.bmp')
+        self.rect = self.image.get_rect()
+        self.radius = 17
+        self.hitpoints = 4
+
+    def update(self, dt):
+        """Move the alien to the left."""
+        self.x -= self.settings.alien_speed * dt
+        self.rect.x = self.x
+        pygame.draw.circle(self.image, (255,0,0), self.rect.center, self.radius)
+
+

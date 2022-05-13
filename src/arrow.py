@@ -35,6 +35,9 @@ class Arrow(Sprite):
     def reset_arrow(self):
         """Resets the position of the arrow on game reset."""
         self.image = pygame.image.load('assets/images/dir_arrow_black_smol_2.bmp')
+        self.rect.midleft = self.ship.rect.midright
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
 
     def blitme(self):
         """Draw the arrow at its current location."""

@@ -1,6 +1,6 @@
 import pygame, sys, time
 
-from alien import Alien
+from alien import Alien, ChonkyAlien
 from aspect_ratio import AspectRatio
 from beam import Beam
 from bullet import Bullet 
@@ -27,6 +27,8 @@ class AlienInvasion:
         """Initialize the game and create game resources."""
         pygame.init()
         pygame.display.set_caption("Alien Invasion")
+        self.countdown = 3
+        self.last_count = pygame.time.get_ticks()
         self._create_sprite_groups()
         self._make_game_objects()
         self._load_images()
@@ -75,7 +77,8 @@ class AlienInvasion:
             dt = self.calculate_delta_time()
             self._check_events()
             self.music.play_music()
-            if self.state.state is self.state.GAMEPLAY: 
+            self.start_counddown()
+            if self.state.state is self.state.GAMEPLAY and self.countdown <= 0: 
                 self.ship.update(dt)
                 self.ship.arrow.update()
                 self._update_bullets(dt)
@@ -149,6 +152,10 @@ class AlienInvasion:
             self.explosions.draw(self.screen)
             self._make_game_cinematic()
             self.scoreboard.show_score()
+            if self.countdown > 0: 
+                self.scoreboard.create_countdown("GET READY", x_offset = -100, y_offset=0)
+                self.scoreboard.create_countdown(str(self.countdown),
+                        x_offset=100, y_offset=0)
         elif self.state.state is self.state.PAUSE:
             self.pause.render_pause()
         elif self.state.state is self.state.GAMEOVER:
@@ -182,6 +189,8 @@ class AlienInvasion:
         self.ship.position_ship()
         self.ship.reset_ship_flip()
         self.settings.respawn_timer = -0.5
+        self.countdown = 3
+        self.last_count = pygame.time.get_ticks()
 
     def _update_bullets(self, dt):
         """Update position of the bullets and get rid of the old bullets."""
@@ -283,7 +292,7 @@ class AlienInvasion:
         self._calculate_beam_addition()
 
     def _calculate_beam_addition(self):
-        """Calculates if the player should received an additional beam charge or 1000 points
+        """Calculates if the player should received an additional beam charge or 500 points
         If they hit the score threshold."""
         if self.stats.hidden_score / 5000 >= 1 and not self.settings.adjust_beams:
             if self.stats.charges_remaining < self.settings.beam_limit:
@@ -520,7 +529,7 @@ class AlienInvasion:
             self._create_trash_mobs(number_cols+3, number_aliens_y)
             self._create_mine(2)
         else: 
-            self._create_mine(1)
+            self._create_trash_mobs(number_cols+3, number_aliens_y)
 
     def _create_trash_mobs(self, number_cols, number_aliens_y):
         """Spawns waves of trash mobs based on wave pattern."""
@@ -601,6 +610,12 @@ class AlienInvasion:
             pygame.mouse.set_visible(False)
         else:
             pygame.mouse.set_visible(True)
+
+    def start_counddown(self):
+        count_timer = pygame.time.get_ticks()
+        if count_timer - self.last_count > 1000:
+            self.countdown -= 1
+            self.last_count = count_timer
 
 if __name__ == '__main__':
     ai = AlienInvasion()

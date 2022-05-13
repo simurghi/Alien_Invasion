@@ -13,7 +13,7 @@ Code:
 -- ScriptLine Studios for Xbox Controller support
 -- u/iminurnamez for clock/time
 -- KidsCanCode --> circular collision detection
--- KidsCanCode + Coding With Russ --> explosion sprites
+-- KidsCanCode + Coding With Russ --> explosion sprites, countdown timer
 -- CodeSurgeon --> properly capping game FPS
 -- /u/metulburr for distance formula
 -- CDCodes --> key rebinding menu
