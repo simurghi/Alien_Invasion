@@ -16,7 +16,8 @@ class Settings:
         self.EASY_SPEED = 2
         self.NORMAL_SPEED = 3
         self.TURBO_SPEED = 4
-        self.LUDICROUS_SPEED = 5
+        self.CHEETAH_SPEED = 5
+        self.LUDICROUS_SPEED = 6
         self.NATIVE_GFX = 1
         self.SCALED_GFX = 2
         self.FULLSCREEN_GFX = 3
@@ -52,16 +53,19 @@ class Settings:
     def _initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
         self.bandaid = 2
-        if self.speed is self.EASY_SPEED:
+        if self.speed == self.EASY_SPEED:
             self.speed_mult = 0.80
             self.alien_points = 75
-        elif self.speed is self.NORMAL_SPEED: 
+        elif self.speed == self.NORMAL_SPEED: 
             self.speed_mult = 1
             self.alien_points = 100
-        elif self.speed is self.TURBO_SPEED:
+        elif self.speed == self.TURBO_SPEED:
             self.speed_mult = 1.2
             self.alien_points = 125
-        elif self.speed is self.LUDICROUS_SPEED:
+        elif self.speed == self.CHEETAH_SPEED:
+            self.speed_mult = 1.5
+            self.alien_points = 175
+        elif self.speed == self.LUDICROUS_SPEED:
             self.speed_mult = 2.5
             self.alien_points = 300
         self.ship_speed = 210 * self.speed_mult * self.bandaid
@@ -73,7 +77,7 @@ class Settings:
         self.scroll_speed = -1.0
         self.background_x = 0
         self.difficulty_counter = 0
-        self.respawn_timer = -0.5
+        self.respawn_timer = 0.0
         self.adjust_beams = False
 
     def increase_speed(self):
@@ -87,9 +91,12 @@ class Settings:
         elif self.speed is self.TURBO_SPEED:
             self.speed_add = 0.12
             self.score_scale = 6
+        elif self.speed is self.CHEETAH_SPEED:
+            self.speed_add = 0.15
+            self.score_scale = 10
         elif self.speed is self.LUDICROUS_SPEED:
             self.speed_add = 0.25
-            self.score_scale = 15
+            self.score_scale = 20
         self.ship_speed += self.speedup_scale * self.speed_add
         self.bullet_speed += self.speedup_scale * self.speed_add
         self.gunner_bullet_speed += self.speedup_scale * self.speed_add / 3

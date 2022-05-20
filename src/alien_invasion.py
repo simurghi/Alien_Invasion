@@ -188,7 +188,7 @@ class AlienInvasion:
             self.gunners.sprite.gunner_bullets.empty()
         self.ship.position_ship()
         self.ship.reset_ship_flip()
-        self.settings.respawn_timer = -0.5
+        self.settings.respawn_timer = 0.0
         self.countdown = 3
         self.last_count = pygame.time.get_ticks()
 
@@ -469,7 +469,7 @@ class AlienInvasion:
     def _create_mine(self, spawn_number = 1):
         """Create an alien and place it in a column."""
         position_list = []
-        if len(self.mines) < 1:
+        if len(self.mines) < 20:
             for j in range(0,spawn_number):
                 mine = Mine(self)
                 self._check_unique_spawn(mine, position_list)

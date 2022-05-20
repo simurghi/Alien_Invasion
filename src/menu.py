@@ -144,6 +144,8 @@ class OptionsMenu:
             self.speed_state = "SPD: Fast"
         elif self.game.settings.speed is self.game.settings.EASY_SPEED:
             self.speed_state = "SPD: Slow"
+        elif self.game.settings.speed is self.game.settings.CHEETAH_SPEED:
+            self.speed_state = "SPD: Very Fast"
         elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
             self.speed_state = "SPD: Ludicrous"
 
@@ -218,6 +220,8 @@ class OptionsMenu:
             if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
                 self.game.settings.speed = self.game.settings.TURBO_SPEED
             elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
+                self.game.settings.speed = self.game.settings.CHEETAH_SPEED
+            elif self.game.settings.speed is self.game.settings.CHEETAH_SPEED:
                 self.game.settings.speed = self.game.settings.LUDICROUS_SPEED
             elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
                 self.game.settings.speed = self.game.settings.EASY_SPEED
