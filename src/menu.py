@@ -22,54 +22,60 @@ class MainMenu:
         self.buttons = (self.play_button, self.options_button, 
                 self.controls_button, self.help_button, self.exit_button)
 
-    def check_main_menu_buttons(self, mouse_pos):
+    def check_main_menu_buttons(self):
         """Check main menu buttons for clicks."""
-        self._check_play_button(mouse_pos)
-        self._check_options_button(mouse_pos)
-        self._check_controls_button(mouse_pos)
-        self._check_help_button(mouse_pos)
-        self._check_exit_button(mouse_pos)
+        self._check_play_button()
+        self._check_options_button()
+        self._check_controls_button()
+        self._check_help_button()
+        self._check_exit_button()
 
-    def _check_play_button(self, mouse_pos):
+    def _check_play_button(self):
         """ Start a new game when the player clicks Play"""
-        button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.play_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
             self.game._clear_state()
             self.game.state.state = self.game.state.GAMEPLAY
             self.sound.play_sfx("options_menu")
 
-    def _check_controls_button(self, mouse_pos):
+    def _check_controls_button(self):
         """Changes the control scheme based on the current option."""
-        button_clicked = self.controls_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.controls_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
             self.game.state.state = self.game.state.CONTROLSMENU
             self.sound.play_sfx("options_menu")
 
-    def _check_options_button(self, mouse_pos):
+    def _check_options_button(self):
         """Enters the options menu from the main menu screen once clicked."""
-        button_clicked = self.options_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.options_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
             self.game.state.state = self.game.state.OPTIONSMENU
             self.sound.play_sfx("options_menu")
 
-    def _check_help_button(self, mouse_pos):
+    def _check_help_button(self):
         """Displays tutorial text from the main menu screen once clicked."""
-        button_clicked = self.options_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.help_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
             self.sound.play_sfx("options_menu")
 
-    def _check_exit_button(self, mouse_pos):
+    def _check_exit_button(self):
         """ Exits the game from the main menu once clicked."""
-        button_clicked = self.exit_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.exit_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
             self.sound.play_sfx("options_menu")
             self.game.stats.dump_stats_json()
             pygame.quit()
             sys.exit()
 
+    def _highlight_colors(self):
+        """ Toggles colors for buttons that are being selected."""
+        for button in self.buttons:
+            button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
+
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
+        self._highlight_colors()
         for button in self.buttons:
             button.draw_button()
 
@@ -107,16 +113,16 @@ class OptionsMenu:
                 self.gfx_button, self.score_button, self.HUD_button, self.dirarrow_button, 
                 self.back_button)
 
-    def check_options_menu_buttons(self, mouse_pos):
+    def check_options_menu_buttons(self):
         """Check main menu buttons for clicks."""
-        self._check_turbo_button(mouse_pos)
-        self._check_mute_button(mouse_pos)
-        self._check_sfx_button(mouse_pos)
-        self._check_gfx_button(mouse_pos)
-        self._check_score_button(mouse_pos)
-        self._check_HUD_button(mouse_pos)
-        self._check_dirarrow_button(mouse_pos)
-        self._check_back_button(mouse_pos)
+        self._check_turbo_button()
+        self._check_mute_button()
+        self._check_sfx_button()
+        self._check_gfx_button()
+        self._check_score_button()
+        self._check_HUD_button()
+        self._check_dirarrow_button()
+        self._check_back_button()
 
     def _change_music_text(self):
         """Helper method that changes what text is displayed on the music button."""
@@ -176,6 +182,7 @@ class OptionsMenu:
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
+        self._highlight_colors()
         self.gfx_button._prep_msg(self.gfx_state)
         self.mute_button._prep_msg(self.music_state)
         self.sfx_button._prep_msg(self.sfx_state)
@@ -187,13 +194,18 @@ class OptionsMenu:
         for button in self.buttons:
             button.draw_button()
 
+    def _highlight_colors(self):
+        """ Toggles colors for buttons that are being selected."""
+        for button in self.buttons:
+            button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
+
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""
         pass
 
-    def _check_mute_button(self, mouse_pos):
+    def _check_mute_button(self):
         """ Toggles music when the player clicks 'Music'"""
-        button_clicked = self.mute_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.mute_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             if self.game.settings.music_volume >= 0.9:
                 self.game.settings.music_volume = 0.0
@@ -202,9 +214,9 @@ class OptionsMenu:
             self._change_music_text()
             self.sound.play_sfx("options_menu")
 
-    def _check_sfx_button(self, mouse_pos):
+    def _check_sfx_button(self):
         """ Toggles sound when the player clicks 'Sound'"""
-        button_clicked = self.sfx_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.sfx_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             if self.game.settings.sound_volume >= 0.9:
                 self.game.settings.sound_volume = 0.0
@@ -213,9 +225,9 @@ class OptionsMenu:
             self._change_sound_text()
             self.sound.play_sfx("options_menu")
 
-    def _check_turbo_button(self, mouse_pos):
+    def _check_turbo_button(self):
         """Sets the game speed to 0.5x/0.8x/1.0x/1.5x."""
-        button_clicked = self.turbo_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.turbo_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
                 self.game.settings.speed = self.game.settings.TURBO_SPEED
@@ -230,9 +242,9 @@ class OptionsMenu:
             self._change_turbo_text()
             self.sound.play_sfx("options_menu")
 
-    def _check_gfx_button(self, mouse_pos):
+    def _check_gfx_button(self):
         """Changes the window size based on the current option."""
-        button_clicked = self.gfx_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.gfx_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             if self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
                 self.game.settings.gfx_mode = self.game.settings.SCALED_GFX
@@ -244,25 +256,25 @@ class OptionsMenu:
             self._change_window_size()
             self.sound.play_sfx("options_menu")
 
-    def _check_score_button(self, mouse_pos):
+    def _check_score_button(self):
         """Toggles display of score in game."""
-        button_clicked = self.score_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.score_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.game.settings.show_score = not self.game.settings.show_score
             self._change_score_text()
             self.sound.play_sfx("options_menu")
 
-    def _check_dirarrow_button(self, mouse_pos):
+    def _check_dirarrow_button(self):
         """Toggles display of direction arrow in game."""
-        button_clicked = self.dirarrow_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.dirarrow_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.game.settings.show_arrow = not self.game.settings.show_arrow
             self._change_dirarrow_text()
             self.sound.play_sfx("options_menu")
 
-    def _check_HUD_button(self, mouse_pos):
+    def _check_HUD_button(self):
         """Toggles HUD preset in-game."""
-        button_clicked = self.HUD_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.HUD_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             if self.game.settings.HUD is self.game.settings.HUD_A:
                 self.game.settings.HUD = self.game.settings.HUD_A_SMOLL
@@ -276,9 +288,9 @@ class OptionsMenu:
             self._change_HUD_text()
             self.sound.play_sfx("options_menu")
 
-    def _check_back_button(self, mouse_pos):
+    def _check_back_button(self):
         """Enters the main menu from the options menu screen once clicked."""
-        button_clicked = self.back_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.back_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.game.state.state = self.game.state.MAINMENU
             self.sound.play_sfx("options_menu")
@@ -322,32 +334,39 @@ class ControlsMenu:
         self.key_buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
                 self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
                 self.flip_button: "FLIPSHIP", self.missile_button: "MISSILEATTACK"}
+        self.buttons = [self.reset_button, self.back_button]
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
         self._toggle_colors()
         self._update_button_text()
+        self._highlight_colors()
         for keybind_button in self.key_buttons:
             keybind_button.draw_button()
-        self.reset_button.draw_button()
-        self.back_button.draw_button()
+        for button in self.buttons:
+            button.draw_button()
+
+    def _highlight_colors(self):
+        """ Toggles colors for buttons that are being selected."""
+        for button in self.buttons:
+            button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
 
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         for keybind_button, mapping in self.key_buttons.items():
             self._check_keybind_button(mouse_pos, keybind_button, mapping) 
-        self._check_reset_button(mouse_pos)
-        self._check_back_button(mouse_pos)
+        self._check_reset_button()
+        self._check_back_button()
 
     def _check_keybind_button(self, mouse_pos, button, mapping):
-        button_clicked = button.rect.collidepoint(mouse_pos)
+        button_clicked = button.top_rect.collidepoint(mouse_pos)
         done = False
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.sound.play_sfx("options_menu")
             button.set_color((192,81,0), "Press a key or hit ESC", 32)
             button.draw_button()
-            pygame.display.update(button.rect)
+            pygame.display.update(button.top_rect)
             while not done:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -369,11 +388,11 @@ class ControlsMenu:
     def clear_keybind_button(self, mouse_pos):
         """If right clicking a button, clear the input to free it for reassignment."""
         for button, mapping in self.key_buttons.items():
-            if button.rect.collidepoint(mouse_pos):
-                button_clicked = button.rect.collidepoint(mouse_pos)
+            if button.top_rect.collidepoint(mouse_pos):
+                button_clicked = button.top_rect.collidepoint(mouse_pos)
                 key_val = mapping
                 break
-        button_clicked = button.rect.collidepoint(mouse_pos)
+        button_clicked = button.top_rect.collidepoint(mouse_pos)
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.sound.play_sfx("options_menu_unselect")
             self.keybinds.controls[key_val] = pygame.K_UNDERSCORE
@@ -396,17 +415,17 @@ class ControlsMenu:
         else: 
             return True
 
-    def _check_back_button(self, mouse_pos):
+    def _check_back_button(self):
         """Enters the main menu from the options menu screen once clicked."""
-        button_clicked = self.back_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.back_button.check_left_mouse_click()
         if (button_clicked and pygame.K_UNDERSCORE not in self.keybinds.controls.values() and
                 self.game.state.state is self.game.state.CONTROLSMENU):
             self.game.state.state = self.game.state.MAINMENU
             self.sound.play_sfx("options_menu")
 
-    def _check_reset_button(self, mouse_pos):
+    def _check_reset_button(self):
         """Clears the custom keybinds and resets to initial options."""
-        button_clicked = self.reset_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.reset_button.check_left_mouse_click()
         if (button_clicked and self.game.state.state is self.game.state.CONTROLSMENU):
             self.keybinds.controls = {"MOVELEFT": pygame.K_LEFT, "MOVERIGHT": pygame.K_RIGHT,
                 "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
@@ -426,28 +445,29 @@ class GameOverMenu:
         self.index = 0
         self.menu_button = Button(self, "Menu", 150, -50)
         self.restart_button = Button(self, "Restart", -150,-50)
+        self.buttons = [self.menu_button, self.restart_button]
         self.game_over_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
         self.game_over_image = self.game_over_font.render("GAME OVER", True,
                 (255,255,255))
         self.game_over_rect = self.game_over_image.get_rect()
         self.game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
 
-    def check_game_over_buttons(self, mouse_pos):
+    def check_game_over_buttons(self):
         """Check main menu buttons for clicks."""
-        self._check_menu_button(mouse_pos)
-        self._check_restart_button(mouse_pos)
+        self._check_menu_button()
+        self._check_restart_button()
 
-    def _check_restart_button(self, mouse_pos):
+    def _check_restart_button(self):
         """ Enters the game from the game over screen once clicked."""
-        button_clicked = self.restart_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.restart_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.GAMEOVER:
             self.sound.play_sfx("game_over")
             self.game._clear_state()
             self.game.state.state = self.game.state.GAMEPLAY
 
-    def _check_menu_button(self, mouse_pos):
+    def _check_menu_button(self):
         """Enters the main menu from the game over screen once clicked."""
-        button_clicked = self.menu_button.rect.collidepoint(mouse_pos)
+        button_clicked = self.menu_button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.GAMEOVER:
             self.sound.play_sfx("game_over")
             self.game._clear_state()
@@ -458,10 +478,21 @@ class GameOverMenu:
         self.screen.fill(self.game.settings.bg_color)
         self.screen.blit(self.game_over_image, self.game_over_rect)
 
+    def _highlight_colors(self):
+        """ Toggles colors for buttons that are being selected."""
+        for button in self.buttons:
+            button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
+
     def draw_buttons(self):
         """ Draws buttons to the screen."""
-        self.menu_button.draw_button()
-        self.restart_button.draw_button()
+        self._highlight_colors()
+        for button in self.buttons:
+            button.draw_button()
+
+    def _highlight_colors(self):
+        """ Toggles colors for buttons that are being selected."""
+        for button in self.buttons:
+            button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
 
 class PauseMenu:
 
