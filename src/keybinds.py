@@ -3,9 +3,9 @@ import pygame
 class Keybinds:
     """A class to manage keybindings"""
     def __init__(self):
-        self.controls = {"MOVELEFT": pygame.K_LEFT, "MOVERIGHT": pygame.K_RIGHT,
-                "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
-                "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
+        self.controls = {"MOVELEFT": pygame.K_a, "MOVERIGHT": pygame.K_d,
+                "MOVEUP": pygame.K_w, "MOVEDOWN": pygame.K_s, "MISSILEATTACK": pygame.K_j, 
+                "BEAMATTACK": pygame.K_l, "FLIPSHIP": pygame.K_k}
         self.reserved_keys = (pygame.K_UNDERSCORE, pygame.K_ESCAPE, 
                 pygame.K_BACKSPACE, pygame.K_BACKQUOTE, pygame.K_RETURN)
         self.init_menu_text()

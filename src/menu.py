@@ -86,7 +86,7 @@ class OptionsMenu(Menu):
         self.music_state = f"Music: {self.game.settings.music_volume * 100:.0f}%"
         self.HUD_state = self.game.settings.HUD_SETTINGS[self.game.settings.HUD_counter]
         self.score_state = "Score: ON"
-        self.dirarrow_state = "Arrows: ON"
+        self.dirarrow_state = "Arrows: Player"
 
     def _create_options_buttons(self):
         """Creates buttons for the options menu."""
@@ -103,61 +103,81 @@ class OptionsMenu(Menu):
                 self.back_button)
 
     def _check_button(self, button):
-        '''Responds based on button press:
-            Turbo Button - Game Speed / Difficulty
-            SFX Button - Game Sound Volume 
-            Mute Button - Game Music Volume
-            GFX Button - Game Resolution / Window Size
-            Dir Arrow - HUD Warning/Direction Arrows
-            HUD Button - In-Game HUD presets
-            Score Button - In-Game Score Display toggle
-            Back Button - Returns to main menu.'''
+        '''Responds to button press and performs an action based on collision type.'''
         button_clicked = button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.sound.play_sfx("options_menu")
             if button is self.turbo_button:
-                if self.game.settings.speed_counter < len(self.game.settings.GAME_SPEEDS)-1:
-                    self.game.settings.speed_counter += 1
-                else: 
-                    self.game.settings.speed_counter = 0
-                self.game.settings.speed = self.game.settings.GAME_SPEEDS[self.game.settings.speed_counter]
-                self._change_turbo_text()
+                self._change_difficulty()
             elif button is self.sfx_button:
-                if self.game.settings.sound_volume >= 0.9:
-                    self.game.settings.sound_volume = 0.0
-                elif self.game.settings.sound_volume < 0.9:
-                    self.game.settings.sound_volume += 0.1
-                self._change_sound_text()
+                self._change_sound_volume()
             elif button is self.mute_button:
-                if self.game.settings.music_volume >= 0.9:
-                    self.game.settings.music_volume = 0.0
-                elif self.game.settings.music_volume < 0.9:
-                    self.game.settings.music_volume += 0.1
-                self._change_music_text()
+                self._change_music_volume()
             elif button is self.gfx_button:
-                if self.game.settings.gfx_counter < len(self.game.settings.GFX_SETTINGS)-1:
-                    self.game.settings.gfx_counter += 1
-                else: 
-                    self.game.settings.gfx_counter = 0
-                self.game.settings.gfx_mode = self.game.settings.GFX_SETTINGS[self.game.settings.gfx_counter]
-                self._change_gfx_text()
-                self._change_window_size()
+                self._change_game_resolution()
             elif button is self.dirarrow_button:
-                self.game.settings.show_arrow = not self.game.settings.show_arrow
-                self._change_dirarrow_text()
+                self._change_game_arrow()
             elif button is self.HUD_button:
-                if self.game.settings.HUD_counter < len(self.game.settings.HUD_SETTINGS)-1:
-                    self.game.settings.HUD_counter += 1
-                else: 
-                    self.game.settings.HUD_counter = 0
-                self.game.settings.HUD = self.game.settings.HUD_SETTINGS[self.game.settings.HUD_counter]
-                self.game.scoreboard.update_prep()
-                self._change_HUD_text()
+                self._change_game_HUD()
             elif button is self.back_button:
                 self.game.state.state = self.game.state.MAINMENU
             elif button is self.score_button:
                 self.game.settings.show_score = not self.game.settings.show_score
                 self._change_score_text()
+
+    def _change_difficulty(self):
+        """Helper method that changes the difficulty of the game when a button is clicked."""
+        if self.game.settings.speed_counter < len(self.game.settings.GAME_SPEEDS)-1:
+            self.game.settings.speed_counter += 1
+        else: 
+            self.game.settings.speed_counter = 0
+        self.game.settings.speed = self.game.settings.GAME_SPEEDS[self.game.settings.speed_counter]
+        self._change_turbo_text()
+
+    def _change_sound_volume(self):
+        """Helper method that changes the loudness of the game's sound when button is clicked."""
+        if self.game.settings.sound_volume >= 0.9:
+            self.game.settings.sound_volume = 0.0
+        elif self.game.settings.sound_volume < 0.9:
+            self.game.settings.sound_volume += 0.1
+        self._change_sound_text()
+
+    def _change_music_volume(self):
+        """Helper method that changes the loudness of the game's music when button is clicked."""
+        if self.game.settings.music_volume >= 0.9:
+            self.game.settings.music_volume = 0.0
+        elif self.game.settings.music_volume < 0.9:
+            self.game.settings.music_volume += 0.1
+        self._change_music_text()
+
+    def _change_game_resolution(self):
+        """Helper method that changes the game's resolution scale when button is clicked."""
+        if self.game.settings.gfx_counter < len(self.game.settings.GFX_SETTINGS)-1:
+            self.game.settings.gfx_counter += 1
+        else: 
+            self.game.settings.gfx_counter = 0
+        self.game.settings.gfx_mode = self.game.settings.GFX_SETTINGS[self.game.settings.gfx_counter]
+        self._change_gfx_text()
+        self._change_window_size()
+
+    def _change_game_HUD(self):
+        """Helper method that changes the in-game combat HUD when button is clicked."""
+        if self.game.settings.HUD_counter < len(self.game.settings.HUD_SETTINGS)-1:
+            self.game.settings.HUD_counter += 1
+        else: 
+            self.game.settings.HUD_counter = 0
+        self.game.settings.HUD = self.game.settings.HUD_SETTINGS[self.game.settings.HUD_counter]
+        self.game.scoreboard.update_prep()
+        self._change_HUD_text()
+
+    def _change_game_arrow(self):
+        """Helper method that changes the in-game arrow indicators when button is clicked."""
+        if self.game.settings.arrow_counter < len(self.game.settings.ARROW_SETTINGS)-1:
+            self.game.settings.arrow_counter += 1
+        else: 
+            self.game.settings.arrow_counter = 0
+        self.game.settings.arrow_mode = self.game.settings.ARROW_SETTINGS[self.game.settings.arrow_counter]
+        self._change_dirarrow_text()
 
     def _change_music_text(self):
         """Helper method that changes what text is displayed on the music button."""
@@ -172,10 +192,7 @@ class OptionsMenu(Menu):
 
     def _change_dirarrow_text(self):
         """Helper method that changes what text is displayed on the direction arrow button."""
-        if self.game.settings.show_arrow:
-            self.dirarrow_state =  "Arrows: ON"
-        else:
-            self.dirarrow_state =  "Arrows: OFF"
+        self.dirarrow_state = self.game.settings.ARROW_SETTINGS[self.game.settings.arrow_counter]
 
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""
@@ -332,9 +349,9 @@ class ControlsMenu(Menu):
         """Clears the custom keybinds and resets to initial options."""
         button_clicked = self.reset_button.check_left_mouse_click()
         if (button_clicked and self.game.state.state is self.game.state.CONTROLSMENU):
-            self.keybinds.controls = {"MOVELEFT": pygame.K_LEFT, "MOVERIGHT": pygame.K_RIGHT,
-                "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
-                "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
+            self.keybinds.controls = {"MOVELEFT": pygame.K_a, "MOVERIGHT": pygame.K_d,
+                    "MOVEUP": pygame.K_w, "MOVEDOWN": pygame.K_s, "MISSILEATTACK": pygame.K_j, 
+                    "BEAMATTACK": pygame.K_l, "FLIPSHIP": pygame.K_k}
             self.sound.play_sfx("options_menu")
 
 class GameOverMenu(Menu):

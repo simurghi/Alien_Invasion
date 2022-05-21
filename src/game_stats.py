@@ -32,7 +32,8 @@ class GameStats:
         self.game.settings.HUD = self._read_HUD_json()
         self.game.settings.HUD_counter = self._read_HUD_counter_json()
         self.game.settings.show_score = self._read_score_json()
-        self.game.settings.show_arrow = self._read_dirarrow_json()
+        self.game.settings.arrow_mode = self._read_dirarrow_json()
+        self.game.settings.arrow_counter = self._read_dirarrow_counter_json()
 
     def _update_menu_text_json(self):
         """Updates menu text based on JSON file preferences."""
@@ -91,14 +92,13 @@ class GameStats:
             if controls_option is not None: 
                 return controls_option
             else:
-                return {"MOVELEFT": pygame.K_LEFT, "MOVERIGHT": pygame.K_RIGHT,
-                "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
-                "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
+                return {"MOVELEFT": pygame.K_a, "MOVERIGHT": pygame.K_d,
+                "MOVEUP": pygame.K_w, "MOVEDOWN": pygame.K_s, "MISSILEATTACK": pygame.K_j, 
+                "BEAMATTACK": pygame.K_l, "FLIPSHIP": pygame.K_k}
         else:
-            return {"MOVELEFT": pygame.K_LEFT, "MOVERIGHT": pygame.K_RIGHT,
-            "MOVEUP": pygame.K_UP, "MOVEDOWN": pygame.K_DOWN, "MISSILEATTACK": pygame.K_x, 
-            "BEAMATTACK": pygame.K_c, "FLIPSHIP": pygame.K_z}
-
+            return {"MOVELEFT": pygame.K_a, "MOVERIGHT": pygame.K_d,
+                "MOVEUP": pygame.K_w, "MOVEDOWN": pygame.K_s, "MISSILEATTACK": pygame.K_j, 
+                "BEAMATTACK": pygame.K_l, "FLIPSHIP": pygame.K_k}
 
     def _read_sfx_json(self):
         """Searches the dictionary created from the settings.json file
@@ -200,13 +200,25 @@ class GameStats:
         """Searches the dictionary created from the settings.json file 
         and sees if we already have an option for displaying the direction arrow."""
         if self.options_data:
-            dirarrow_option = self.options_data.get("use_direction_arrow")
+            dirarrow_option = self.options_data.get("arrow_setting")
             if dirarrow_option is not None:
                 return dirarrow_option
             else:
-                return True
+                return self.game.settings.ARROW_SETTINGS[0]
         else:
-            return True
+            return self.game.settings.ARROW_SETTINGS[0]
+
+    def _read_dirarrow_counter_json(self):
+        """Searches the dictionary created from the settings.json file 
+        and sees if we already have an option for displaying the direction arrow."""
+        if self.options_data:
+            dirarrow_counter_option = self.options_data.get("arrow_counter")
+            if dirarrow_counter_option is not None:
+                return dirarrow_counter_option
+            else:
+                return 0
+        else:
+            return 0
 
     def dump_stats_json(self):
         """Dumps score and key game settings to a JSON file."""
@@ -216,5 +228,6 @@ class GameStats:
             json.dump({"game_speed" : self.settings.speed,"music_volume": self.settings.music_volume,
                 "sound_volume": self.settings.sound_volume, "window_mode": self.settings.gfx_mode,
                 "display_score": self.settings.show_score, "HUD_preset": self.settings.HUD,
-                "use_direction_arrow": self.settings.show_arrow, "controls": self.game.keybinds.controls, "HUD_counter": self.settings.HUD_counter,
+                "arrow_setting": self.settings.arrow_mode, "arrow_counter": self.settings.arrow_counter, 
+                "controls": self.game.keybinds.controls, "HUD_counter": self.settings.HUD_counter,
                 "gfx_counter": self.settings.gfx_counter, "speed_counter": self.settings.speed_counter}, f)

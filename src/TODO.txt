@@ -1,5 +1,4 @@
-add "hover" effect when mouse is over a button and change the button's color
+add hover effect to key rebinding buttons
 add keyboard navigation to menus and redesign controller menus to utilize this
-add analogue stick support for controller
 finish help screen on the menu
 add SFX to countdown ticks and play custom music for it.

@@ -17,6 +17,7 @@ class Settings:
                 "SPD: Very Fast", "SPD: Ludicrous")
         self.GFX_SETTINGS = ("REZ: Native", "REZ: Scaled", "REZ: Full Scaled")
         self.HUD_SETTINGS = ("HUD: Classic", "HUD: Alt", "HUD: OFF")
+        self.ARROW_SETTINGS = ("Arrows: ALL", "Arrows: Mine", "Arrows: Ship", "Arrows: OFF")
 
     def _set_window_properties(self):
         """Sets the properties for the game window and background."""
@@ -34,9 +35,10 @@ class Settings:
         self.gfx_mode = self.GFX_SETTINGS[0]
         self.gfx_counter = 0
         self.show_score = True
-        self.show_arrow = True
         self.HUD = self.HUD_SETTINGS[0]
         self.HUD_counter = 0
+        self.arrow_mode = self.ARROW_SETTINGS[0]
+        self.arrow_counter = 0
 
     def _initialize_static_settings(self):
         """Initialize settings that do not change throughout the game."""
