@@ -107,39 +107,30 @@ class OptionsMenu(Menu):
         '''Responds to button press and performs an action based on collision type.'''
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
-            self.sound.play_sfx("options_menu")
+            if button is not self.back_button:
+                self.sound.play_sfx("options_menu")
             if button.lmb_pressed and not button.rmb_pressed:
-                if button is self.turbo_button:
-                    self._change_difficulty(direction = 1)
-                elif button is self.sfx_button:
-                    self._change_sound_volume(direction = 1)
-                elif button is self.mute_button:
-                    self._change_music_volume(direction = 1)
-                elif button is self.gfx_button:
-                    self._change_game_resolution(direction = 1)
-                elif button is self.dirarrow_button:
-                    self._change_game_arrow(direction = 1)
-                elif button is self.HUD_button:
-                    self._change_game_HUD(direction = 1)
-                elif button is self.back_button:
-                    self.game.state.state = self.game.state.MAINMENU
-                elif button is self.score_button:
-                    self.game.settings.show_score = not self.game.settings.show_score
-                    self._change_score_text()
-            elif button.rmb_pressed and not button.lmb_pressed: 
-                if button is self.turbo_button:
-                    self._change_difficulty(direction = -1)
-                elif button is self.sfx_button:
-                    self._change_sound_volume(direction = -1)
-                elif button is self.mute_button:
-                    self._change_music_volume(direction = -1)
-                elif button is self.gfx_button:
-                    self._change_game_resolution(direction = -1)
-                elif button is self.dirarrow_button:
-                    self._change_game_arrow(direction = -1)
-                elif button is self.HUD_button:
-                    self._change_game_HUD(direction = -1)
-
+                direction = 1
+            elif button.rmb_pressed and not button.lmb_pressed:
+                direction = -1
+            if button is self.turbo_button:
+                self._change_difficulty(direction)
+            elif button is self.sfx_button:
+                self._change_sound_volume(direction)
+            elif button is self.mute_button:
+                self._change_music_volume(direction)
+            elif button is self.gfx_button:
+                self._change_game_resolution(direction)
+            elif button is self.dirarrow_button:
+                self._change_game_arrow(direction)
+            elif button is self.HUD_button:
+                self._change_game_HUD(direction)
+            elif button is self.back_button and direction > 0:
+                self.game.state.state = self.game.state.MAINMENU
+                self.sound.play_sfx("options_menu")
+            elif button is self.score_button:
+                self.game.settings.show_score = not self.game.settings.show_score
+                self._change_score_text()
 
     def _change_difficulty(self, direction):
         """Helper method that changes the difficulty of the game when a button is clicked."""

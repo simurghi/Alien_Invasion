@@ -395,19 +395,18 @@ class AlienInvasion:
         """respond to mouse clicks.""" 
         mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
         mouse_pos = pygame.mouse.get_pos()
-        if (mouse_buttons[0] or mouse_buttons[2]) and (self.state.state != self.state.GAMEPLAY 
-                or self.state.state != self.state.PAUSE):
+        if mouse_buttons[0] and self.state.state == self.state.CONTROLSMENU:
+            self.controls_menu.check_controls_menu_buttons(mouse_pos)
+        if mouse_buttons[2] and self.state.state == self.state.CONTROLSMENU:
+            self.controls_menu.clear_keybind_button(mouse_pos)
+        elif ((mouse_buttons[0] or mouse_buttons[2]) and (self.state.state != self.state.GAMEPLAY 
+                or self.state.state != self.state.PAUSE or self.state.state != self.state.CONTROLSMENU)):
             if self.state.state == self.state.MAINMENU:
                 self.main_menu.check_menu_buttons()
             elif self.state.state == self.state.OPTIONSMENU:
                 self.options_menu.check_menu_buttons()
-            elif self.state.state == self.state.CONTROLSMENU:
-                self.controls_menu.check_controls_menu_buttons(mouse_pos)
             elif self.state.state == self.state.GAMEOVER:
                 self.go_menu.check_menu_buttons()
-        elif mouse_buttons[2] and self.state.state == self.state.CONTROLSMENU:
-            self.controls_menu.clear_keybind_button(mouse_pos)
-
         if self.state.state == self.state.GAMEPLAY:
             if mouse_buttons[0]:
                 self.ship.is_firing = True
