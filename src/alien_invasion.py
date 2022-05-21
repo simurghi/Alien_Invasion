@@ -9,7 +9,7 @@ from explosion import Explosion
 from game_stats import GameStats
 from gunner import Gunner
 from keybinds import Keybinds
-from math import sqrt
+from math import sqrt, floor
 from mine import Mine
 from menu import MainMenu, OptionsMenu, GameOverMenu, PauseMenu, ControlsMenu
 from music import Music
@@ -90,7 +90,7 @@ class AlienInvasion:
                 self._respawn_enemies(dt)
                 self._adjust_difficulty(dt)
             self._check_mouse_visible()
-            self._update_screen()
+            self._update_screen(dt)
             self.set_fps_cap()
 
     def calculate_delta_time(self):
@@ -134,10 +134,10 @@ class AlienInvasion:
             elif event.type == pygame.JOYAXISMOTION:
                 self.controller.check_joyaxismotion_events(event)
 
-    def _update_screen(self):
+    def _update_screen(self, dt):
         """Update images on the screen, and flip to the new screen."""
         if self.state.state is self.state.GAMEPLAY:
-            self._scroll_background()
+            self._scroll_background(dt)
             self.ship.blitme()
             self.ship.arrow.blitme()
             self.bullets.draw(self.screen)
@@ -359,14 +359,14 @@ class AlienInvasion:
             if alien.rect.left < -100: 
                 self.aliens.remove(alien)
 
-    def _scroll_background(self):
+    def _scroll_background(self, dt):
         """Smoothly scrolls the background image on the screen to give illusion of movement."""
         self.rel_background_x = self.settings.background_x % self.background_image.get_rect().width
         self.screen.blit(self.background_image, (
             self.rel_background_x - self.background_image.get_rect().width, 0))
         if self.rel_background_x < self.settings.screen_width:
             self.screen.blit(self.background_image, (self.rel_background_x, 0))
-        self.settings.background_x += self.settings.scroll_speed
+        self.settings.background_x += floor((self.settings.scroll_speed * dt * 10)/10)
     
     def _check_keydown_events(self, event):
         """respond to keypresses.""" 
@@ -541,7 +541,7 @@ class AlienInvasion:
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
         alien.rect.y = alien_height + (1.65 * alien_height * alien_number) +  alien.random_y
-        alien.rect.x = (self.settings.screen_width ) + alien_width + int((2.25 * alien_width * col_number))
+        alien.rect.x = (self.settings.screen_width + 100) + alien_width + int((2.25 * alien_width * col_number))
         alien.x = float(alien.rect.x) 
         alien.y = float(alien.rect.y)
         self.aliens.add(alien)

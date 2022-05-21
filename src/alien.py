@@ -28,7 +28,7 @@ class ChonkyAlien(Alien):
         super().__init__(ai_game)
         self.image = pygame.image.load('assets/images/bigboi.bmp')
         self.rect = self.image.get_rect()
-        self.radius = 17
+        self.radius = 15
         self.hitpoints = 4
 
     def update(self, dt):

@@ -24,7 +24,7 @@ class Settings:
         """Sets the properties for the game window and background."""
         self.screen_width = 960
         self.screen_height = 640
-        self.FPS = 120.0
+        self.FPS = 240.0
         self.bg_color = (0,0,0)
 
     def _initialize_user_preferences(self):
@@ -74,7 +74,7 @@ class Settings:
         self.gunner_bullet_speed = 175 * self.speed_mult * self.bandaid
         self.mine_speed = 90 * self.speed_mult * self.bandaid
         self.gunner_speed = 50 * self.speed_mult * self.bandaid
-        self.scroll_speed = -1.0
+        self.scroll_speed = -240.0
         self.background_x = 0
         self.difficulty_counter = 0
         self.respawn_timer = 0.0
@@ -103,4 +103,4 @@ class Settings:
         self.alien_speed += self.speedup_scale * self.speed_add
         self.mine_speed += self.speedup_scale * self.speed_add / 3
         self.alien_points += self.score_scale 
-        self.scroll_speed += -0.2
+        self.scroll_speed += -240

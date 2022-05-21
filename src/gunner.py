@@ -16,6 +16,7 @@ class Gunner(Sprite):
         self._make_game_objects(ai_game)
         self._set_gunner_stats()
         self._set_initial_coordinates()
+        self.radius = 50
 
     def _set_assets(self, ai_game):
         """Loads the audio and images for the gunner and sets their properties."""
