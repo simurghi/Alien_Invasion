@@ -1,1 +1,1 @@
-{"game_speed": 6, "music_volume": 0.5, "sound_volume": 0.5, "window_mode": 3, "display_score": true, "HUD_preset": 2, "use_direction_arrow": true, "controls": {"MOVELEFT": 97, "MOVERIGHT": 100, "MOVEUP": 119, "MOVEDOWN": 115, "MISSILEATTACK": 106, "BEAMATTACK": 107, "FLIPSHIP": 104}}
+{"game_speed": 4, "music_volume": 0.5, "sound_volume": 0.5, "window_mode": 3, "display_score": true, "HUD_preset": 2, "use_direction_arrow": true, "controls": {"MOVELEFT": 97, "MOVERIGHT": 100, "MOVEUP": 119, "MOVEDOWN": 115, "MISSILEATTACK": 106, "BEAMATTACK": 107, "FLIPSHIP": 104}}
