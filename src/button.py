@@ -35,19 +35,25 @@ class Button:
         pygame.draw.rect(self.screen, self.border_color,  self.top_rect, border_radius=5, width = 2)
         self.screen.blit(self.msg_image, self.msg_image_rect)
 
-    def check_left_mouse_click(self): 
-        """Checks if left mouse clicked on the button."""
+    def check_mouse_click(self): 
+        """Checks if left or right mouse clicked on the button."""
         self.lmb_pressed = False
+        self.rmb_pressed = False
         mouse_pos = pygame.mouse.get_pos()
         if self.top_rect.collidepoint(mouse_pos):
             if pygame.mouse.get_pressed()[0]:
                 self.lmb_pressed = True
+                self.rmb_pressed = False
+            elif pygame.mouse.get_pressed()[2]:
+                self.lmb_pressed = False
+                self.rmb_pressed = True
             else:
                 if self.lmb_pressed:
                     self.lmb_pressed = False
+                    self.rmb_pressed = False
         else:
             pass
-        return True if self.lmb_pressed else False
+        return True if self.lmb_pressed or self.rmb_pressed else False
 
     def toggle_color(self, cursor_button_collide, is_key_empty, msg='', msg_size=48):
         """Receives a boolean and adjusts the color of the button based on the values."""

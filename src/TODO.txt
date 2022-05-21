@@ -1,4 +1,3 @@
-add hover effect to key rebinding buttons
 add keyboard navigation to menus and redesign controller menus to utilize this
 finish help screen on the menu
 add SFX to countdown ticks and play custom music for it.

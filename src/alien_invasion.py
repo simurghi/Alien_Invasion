@@ -395,7 +395,7 @@ class AlienInvasion:
         """respond to mouse clicks.""" 
         mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
         mouse_pos = pygame.mouse.get_pos()
-        if mouse_buttons[0] and (self.state.state != self.state.GAMEPLAY 
+        if (mouse_buttons[0] or mouse_buttons[2]) and (self.state.state != self.state.GAMEPLAY 
                 or self.state.state != self.state.PAUSE):
             if self.state.state == self.state.MAINMENU:
                 self.main_menu.check_menu_buttons()
