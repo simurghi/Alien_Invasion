@@ -10,7 +10,7 @@ class Button:
         self.msg = msg
         self.x_offset = x_offset
         self.y_offset = y_offset
-        self.top_rect = pygame.Rect(0,0, self.width, self.height)
+        self.top_rect = pygame.Rect(0,0, self.width-2, self.height-2)
         self.top_rect.center = self.screen_rect.centerx - x_offset, self.screen_rect.centery - y_offset
         self._prep_msg(msg)
 
@@ -18,6 +18,7 @@ class Button:
         """Sets the size, color, and font of the button."""
         self.width, self.height = width, height
         self.top_button_color = (34, 139, 34)
+        self.border_color = (208, 219, 97)
         self.text_color = (255, 255, 255)
         self.font = pygame.font.Font('assets/fonts/m5x7.ttf', 48)
 
@@ -31,7 +32,7 @@ class Button:
     def draw_button(self):
         """ Draw blank button and then draw message."""
         pygame.draw.rect(self.screen, self.top_button_color, self.top_rect, border_radius=5)
-        #self.screen.fill(self.top_button_color, self.top_rect)
+        pygame.draw.rect(self.screen, self.border_color,  self.top_rect, border_radius=5, width = 2)
         self.screen.blit(self.msg_image, self.msg_image_rect)
 
     def check_left_mouse_click(self): 

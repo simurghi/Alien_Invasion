@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 
 class Settings:
     """A class to store all settings for Alien Invasion."""
@@ -13,35 +13,30 @@ class Settings:
 
     def _init_option_states(self):
         """For options in the menu with multiple states."""
-        self.EASY_SPEED = 2
-        self.NORMAL_SPEED = 3
-        self.TURBO_SPEED = 4
-        self.CHEETAH_SPEED = 5
-        self.LUDICROUS_SPEED = 6
-        self.NATIVE_GFX = 1
-        self.SCALED_GFX = 2
-        self.FULLSCREEN_GFX = 3
-        self.HUD_A = 1
-        self.HUD_A_SMOLL = 2
-        self.HUD_B = 3
-        self.HUD_B_SMOLL = 4
+        self.GAME_SPEEDS = ("SPD: Slow", "SPD: Normal", "SPD: Fast",
+                "SPD: Very Fast", "SPD: Ludicrous")
+        self.GFX_SETTINGS = ("REZ: Native", "REZ: Scaled", "REZ: Full Scaled")
+        self.HUD_SETTINGS = ("HUD: Classic", "HUD: Alt", "HUD: OFF")
 
     def _set_window_properties(self):
         """Sets the properties for the game window and background."""
         self.screen_width = 960
         self.screen_height = 640
+        self.FPS = 120.0
         self.bg_color = (0,0,0)
 
     def _initialize_user_preferences(self):
         """Sets default preferences for user options."""
         self.music_volume = 1.0
         self.sound_volume = 1.0
-        self.speed = self.NORMAL_SPEED
-        self.gfx_mode = 1 
-        self.FPS = 120.0
+        self.speed = self.GAME_SPEEDS[1]
+        self.speed_counter = 1
+        self.gfx_mode = self.GFX_SETTINGS[0]
+        self.gfx_counter = 0
         self.show_score = True
         self.show_arrow = True
-        self.HUD = self.HUD_A
+        self.HUD = self.HUD_SETTINGS[0]
+        self.HUD_counter = 0
 
     def _initialize_static_settings(self):
         """Initialize settings that do not change throughout the game."""
@@ -53,19 +48,19 @@ class Settings:
     def _initialize_dynamic_settings(self):
         """Initialize settings that change throughout the game."""
         self.bandaid = 2
-        if self.speed == self.EASY_SPEED:
+        if self.speed == self.GAME_SPEEDS[0]:
             self.speed_mult = 0.80
             self.alien_points = 75
-        elif self.speed == self.NORMAL_SPEED: 
+        elif self.speed == self.GAME_SPEEDS[1]:
             self.speed_mult = 1
             self.alien_points = 100
-        elif self.speed == self.TURBO_SPEED:
+        elif self.speed == self.GAME_SPEEDS[2]:
             self.speed_mult = 1.2
             self.alien_points = 125
-        elif self.speed == self.CHEETAH_SPEED:
+        elif self.speed == self.GAME_SPEEDS[3]:
             self.speed_mult = 1.5
             self.alien_points = 175
-        elif self.speed == self.LUDICROUS_SPEED:
+        elif self.speed == self.GAME_SPEEDS[4]:
             self.speed_mult = 2.5
             self.alien_points = 300
         self.ship_speed = 210 * self.speed_mult * self.bandaid
@@ -82,19 +77,19 @@ class Settings:
 
     def increase_speed(self):
         """Increase speed and bonus point settings."""
-        if self.speed is self.EASY_SPEED:
+        if self.speed == self.GAME_SPEEDS[0]:
             self.speed_add = 0.08
             self.score_scale = 4
-        elif self.speed is self.NORMAL_SPEED:
+        elif self.speed == self.GAME_SPEEDS[1]:
             self.speed_add = 0.1
             self.score_scale = 5
-        elif self.speed is self.TURBO_SPEED:
+        elif self.speed == self.GAME_SPEEDS[2]:
             self.speed_add = 0.12
             self.score_scale = 6
-        elif self.speed is self.CHEETAH_SPEED:
+        elif self.speed == self.GAME_SPEEDS[3]:
             self.speed_add = 0.15
             self.score_scale = 10
-        elif self.speed is self.LUDICROUS_SPEED:
+        elif self.speed == self.GAME_SPEEDS[4]:
             self.speed_add = 0.25
             self.score_scale = 20
         self.ship_speed += self.speedup_scale * self.speed_add

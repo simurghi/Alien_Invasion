@@ -80,11 +80,11 @@ class OptionsMenu(Menu):
         self._create_options_buttons()
 
     def _set_initial_text(self):
-        self.speed_state = "SPD: Normal"
-        self.gfx_state = "REZ: Scaled"
+        self.speed_state = self.game.settings.GAME_SPEEDS[self.game.settings.speed_counter]
+        self.gfx_state = self.game.settings.GFX_SETTINGS[self.game.settings.gfx_counter]
         self.sfx_state = f"Sound: {self.game.settings.sound_volume * 100:.0f}%"
         self.music_state = f"Music: {self.game.settings.music_volume * 100:.0f}%"
-        self.HUD_state = f"HUD: Classic"
+        self.HUD_state = self.game.settings.HUD_SETTINGS[self.game.settings.HUD_counter]
         self.score_state = "Score: ON"
         self.dirarrow_state = "Arrows: ON"
 
@@ -102,17 +102,6 @@ class OptionsMenu(Menu):
                 self.gfx_button, self.score_button, self.HUD_button, self.dirarrow_button, 
                 self.back_button)
 
-    def check_options_menu_buttons(self):
-        """Check main menu buttons for clicks."""
-        self._check_turbo_button()
-        self._check_mute_button()
-        self._check_sfx_button()
-        self._check_gfx_button()
-        self._check_score_button()
-        self._check_HUD_button()
-        self._check_dirarrow_button()
-        self._check_back_button()
-
     def _check_button(self, button):
         '''Responds based on button press:
             Turbo Button - Game Speed / Difficulty
@@ -127,16 +116,11 @@ class OptionsMenu(Menu):
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             self.sound.play_sfx("options_menu")
             if button is self.turbo_button:
-                if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
-                    self.game.settings.speed = self.game.settings.TURBO_SPEED
-                elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
-                    self.game.settings.speed = self.game.settings.CHEETAH_SPEED
-                elif self.game.settings.speed is self.game.settings.CHEETAH_SPEED:
-                    self.game.settings.speed = self.game.settings.LUDICROUS_SPEED
-                elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
-                    self.game.settings.speed = self.game.settings.EASY_SPEED
-                elif self.game.settings.speed is self.game.settings.EASY_SPEED:
-                    self.game.settings.speed = self.game.settings.NORMAL_SPEED
+                if self.game.settings.speed_counter < len(self.game.settings.GAME_SPEEDS)-1:
+                    self.game.settings.speed_counter += 1
+                else: 
+                    self.game.settings.speed_counter = 0
+                self.game.settings.speed = self.game.settings.GAME_SPEEDS[self.game.settings.speed_counter]
                 self._change_turbo_text()
             elif button is self.sfx_button:
                 if self.game.settings.sound_volume >= 0.9:
@@ -151,26 +135,22 @@ class OptionsMenu(Menu):
                     self.game.settings.music_volume += 0.1
                 self._change_music_text()
             elif button is self.gfx_button:
-                if self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
-                    self.game.settings.gfx_mode = self.game.settings.SCALED_GFX
-                elif self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
-                    self.game.settings.gfx_mode = self.game.settings.FULLSCREEN_GFX
-                elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
-                    self.game.settings.gfx_mode = self.game.settings.NATIVE_GFX
+                if self.game.settings.gfx_counter < len(self.game.settings.GFX_SETTINGS)-1:
+                    self.game.settings.gfx_counter += 1
+                else: 
+                    self.game.settings.gfx_counter = 0
+                self.game.settings.gfx_mode = self.game.settings.GFX_SETTINGS[self.game.settings.gfx_counter]
                 self._change_gfx_text()
                 self._change_window_size()
             elif button is self.dirarrow_button:
                 self.game.settings.show_arrow = not self.game.settings.show_arrow
                 self._change_dirarrow_text()
             elif button is self.HUD_button:
-                if self.game.settings.HUD is self.game.settings.HUD_A:
-                    self.game.settings.HUD = self.game.settings.HUD_A_SMOLL
-                elif self.game.settings.HUD is self.game.settings.HUD_A_SMOLL:
-                    self.game.settings.HUD = self.game.settings.HUD_B
-                elif self.game.settings.HUD is self.game.settings.HUD_B:
-                    self.game.settings.HUD = self.game.settings.HUD_B_SMOLL
-                elif self.game.settings.HUD is self.game.settings.HUD_B_SMOLL:
-                    self.game.settings.HUD = self.game.settings.HUD_A
+                if self.game.settings.HUD_counter < len(self.game.settings.HUD_SETTINGS)-1:
+                    self.game.settings.HUD_counter += 1
+                else: 
+                    self.game.settings.HUD_counter = 0
+                self.game.settings.HUD = self.game.settings.HUD_SETTINGS[self.game.settings.HUD_counter]
                 self.game.scoreboard.update_prep()
                 self._change_HUD_text()
             elif button is self.back_button:
@@ -199,53 +179,32 @@ class OptionsMenu(Menu):
 
     def _change_turbo_text(self):
         """Helper method that changes what text is displayed on the turbo button"""
-        if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
-            self.speed_state = "SPD: Normal"
-        elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
-            self.speed_state = "SPD: Fast"
-        elif self.game.settings.speed is self.game.settings.EASY_SPEED:
-            self.speed_state = "SPD: Slow"
-        elif self.game.settings.speed is self.game.settings.CHEETAH_SPEED:
-            self.speed_state = "SPD: Very Fast"
-        elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
-            self.speed_state = "SPD: Ludicrous"
+        self.speed_state = self.game.settings.GAME_SPEEDS[self.game.settings.speed_counter]
 
     def _change_gfx_text(self):
         """Helper method that changes what text is displayed on the resolution button"""
-        if self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
-            self.gfx_state = "REZ: Native"
-        elif self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
-            self.gfx_state = "REZ: Scaled"
-        elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
-            self.gfx_state = "REZ: Full Scaled"
+        self.gfx_state = self.game.settings.GFX_SETTINGS[self.game.settings.gfx_counter]
 
     def _change_sound_text(self):
         """Helper method that changes what text is displayed on the sound button"""
         self.sfx_state = f"Sound: {self.game.settings.sound_volume * 100:.0f}%"
 
+    def _change_HUD_text(self):
+        """Helper method that changes what text is displayed on the HUD button"""
+        self.HUD_state = self.game.settings.HUD_SETTINGS[self.game.settings.HUD_counter]
+
     def _change_window_size(self):
         """Changes the size of the game window based on user setting."""
-        if self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
-            self.screen = pygame.display.set_mode(
-                    (self.game.settings.screen_width, self.game.settings.screen_height), pygame.SCALED+pygame.RESIZABLE)
-        elif self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
+        if self.game.settings.gfx_mode == self.game.settings.GFX_SETTINGS[0]:
             self.screen = pygame.display.set_mode(
                     (self.game.settings.screen_width, self.game.settings.screen_height))
-        elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
+        elif self.game.settings.gfx_mode == self.game.settings.GFX_SETTINGS[1]:
+            self.screen = pygame.display.set_mode(
+                    (self.game.settings.screen_width, self.game.settings.screen_height), pygame.SCALED+pygame.RESIZABLE)
+        elif self.game.settings.gfx_mode == self.game.settings.GFX_SETTINGS[2]:
             self.screen = pygame.display.set_mode(
                     (self.game.settings.screen_width, self.game.settings.screen_height), 
                     pygame.SCALED+pygame.RESIZABLE+pygame.FULLSCREEN)
-
-    def _change_HUD_text(self):
-        """Helper method that changes what text is displayed on the HUD button"""
-        if self.game.settings.HUD is self.game.settings.HUD_A:
-            self.HUD_state = "HUD: Classic"
-        elif self.game.settings.HUD is self.game.settings.HUD_A_SMOLL:
-            self.HUD_state = "HUD: Compact"
-        elif self.game.settings.HUD is self.game.settings.HUD_B:
-            self.HUD_state = "HUD: Classic-2"
-        elif self.game.settings.HUD is self.game.settings.HUD_B_SMOLL:
-            self.HUD_state = "HUD: Compact-2"
 
     def draw_buttons(self):
         """ Draws buttons to the screen."""

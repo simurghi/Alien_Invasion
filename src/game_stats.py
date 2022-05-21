@@ -25,9 +25,12 @@ class GameStats:
         self.game.settings.music_volume = self._read_music_json()
         self.game.settings.sound_volume = self._read_sfx_json()
         self.game.settings.speed = self._read_turbo_json()
+        self.game.settings.speed_counter = self._read_turbo_counter_json()
         self.game.keybinds.controls = self._read_keybinds_json()
         self.game.settings.gfx_mode = self._read_gfx_json()
+        self.game.settings.gfx_counter = self._read_gfx_counter_json()
         self.game.settings.HUD = self._read_HUD_json()
+        self.game.settings.HUD_counter = self._read_HUD_counter_json()
         self.game.settings.show_score = self._read_score_json()
         self.game.settings.show_arrow = self._read_dirarrow_json()
 
@@ -117,9 +120,21 @@ class GameStats:
             if turbo_option is not None:
                 return turbo_option
             else:
-                return 3
+                return self.game.settings.GAME_SPEEDS[1]
         else:
-            return 3
+            return self.game.settings.GAME_SPEEDS[1]
+
+    def _read_turbo_counter_json(self):
+        """Searches the dictionary created from the settings.json file
+        and sees if we already have an option for turbo mode."""
+        if self.options_data:
+            turbo_count_option = self.options_data.get("speed_counter")
+            if turbo_count_option is not None:
+                return turbo_count_option
+            else:
+                return 1
+        else:
+            return 1
 
     def _read_gfx_json(self):
         """Searches the dictionary created from the settings.json file 
@@ -129,9 +144,21 @@ class GameStats:
             if gfx_option is not None:
                 return gfx_option
             else:
-                return 1
+                return self.game.settings.GFX_SETTINGS[0]
         else:
-            return 1
+            return self.game.settings.GFX_SETTINGS[0]
+
+    def _read_gfx_counter_json(self):
+        """Searches the dictionary created from the settings.json file 
+        and sees if we already have an option for window size."""
+        if self.options_data:
+            gfx_count_option = self.options_data.get("gfx_counter")
+            if gfx_count_option is not None:
+                return gfx_count_option
+            else:
+                return 0
+        else:
+            return 0
 
     def _read_HUD_json(self):
         """Searches the dictionary created from the settings.json file 
@@ -141,9 +168,21 @@ class GameStats:
             if HUD_option is not None:
                 return HUD_option
             else:
-                return 1
+                return self.game.settings.HUD_SETTINGS[0]
         else:
-            return 1
+            return self.game.settings.HUD_SETTINGS[0]
+
+    def _read_HUD_counter_json(self):
+        """Searches the dictionary created from the settings.json file 
+        and sees if we already have an option for HUD preset."""
+        if self.options_data:
+            HUD_count_option = self.options_data.get("HUD_counter")
+            if HUD_count_option is not None:
+                return HUD_count_option
+            else:
+                return 0
+        else:
+            return 0
 
     def _read_score_json(self):
         """Searches the dictionary created from the settings.json file 
@@ -177,4 +216,5 @@ class GameStats:
             json.dump({"game_speed" : self.settings.speed,"music_volume": self.settings.music_volume,
                 "sound_volume": self.settings.sound_volume, "window_mode": self.settings.gfx_mode,
                 "display_score": self.settings.show_score, "HUD_preset": self.settings.HUD,
-                "use_direction_arrow": self.settings.show_arrow, "controls": self.game.keybinds.controls,}, f)
+                "use_direction_arrow": self.settings.show_arrow, "controls": self.game.keybinds.controls, "HUD_counter": self.settings.HUD_counter,
+                "gfx_counter": self.settings.gfx_counter, "speed_counter": self.settings.speed_counter}, f)

@@ -74,49 +74,6 @@ class Controller:
             elif event.button == self.BTN_X:
                 self.sound.play_sfx("options_menu")
                 self.state.state = self.state.OPTIONSMENU
-        elif self.state.state is self.state.OPTIONSMENU:
-            if event.button == self.BTN_A: 
-                if self.game.settings.gfx_mode is self.game.settings.NATIVE_GFX:
-                    self.game.settings.gfx_mode = self.game.settings.SCALED_GFX
-                elif self.game.settings.gfx_mode is self.game.settings.SCALED_GFX:
-                    self.game.settings.gfx_mode = self.game.settings.FULLSCREEN_GFX
-                elif self.game.settings.gfx_mode is self.game.settings.FULLSCREEN_GFX:
-                    self.game.settings.gfx_mode = self.game.settings.NATIVE_GFX
-                self.options_menu._change_gfx_text()
-                self.options_menu._change_window_size()
-                self.sound.play_sfx("options_menu")
-                self.game._check_exit()
-            elif event.button == self.BTN_B:
-                self.sound.play_sfx("options_menu")
-                self.game._check_exit()
-            elif event.button == self.BTN_X: 
-                if self.game.settings.speed is self.game.settings.NORMAL_SPEED:
-                    self.game.settings.speed = self.game.settings.TURBO_SPEED
-                elif self.game.settings.speed is self.game.settings.TURBO_SPEED:
-                    self.game.settings.speed = self.game.settings.LUDICROUS_SPEED
-                elif self.game.settings.speed is self.game.settings.LUDICROUS_SPEED:
-                    self.game.settings.speed = self.game.settings.EASY_SPEED
-                elif self.game.settings.speed is self.game.settings.EASY_SPEED:
-                    self.game.settings.speed = self.game.settings.NORMAL_SPEED
-                self.options_menu._change_turbo_text()
-                self.sound.play_sfx("options_menu")
-            elif event.button == self.BTN_Y:
-                self.sound.play_sfx("options_menu")
-            elif event.button == self.BTN_LB:
-                if self.settings.music_volume == 1.0:
-                    self.settings.music_volume = 0.0
-                elif self.settings.music_volume < 1.0:
-                    self.settings.music_volume += 0.2
-                self.sound.play_sfx("options_menu")
-            elif event.button == self.BTN_RB:
-                if self.settings.sound_volume == 1.0:
-                    self.settings.sound_volume = 0.0
-                elif self.settings.sound_volume < 1.0:
-                    self.settings.sound_volume += 0.2
-                self.sound.play_sfx("options_menu")
-            elif event.button == self.BTN_SELECT:
-                self.sound.play_sfx("options_menu")
-
 
     def _check_game_over_controls(self, event):
         """Handles input while in the game over screen."""
