@@ -31,7 +31,8 @@ class GameStats:
         self.game.settings.gfx_counter = self._read_gfx_counter_json()
         self.game.settings.HUD = self._read_HUD_json()
         self.game.settings.HUD_counter = self._read_HUD_counter_json()
-        self.game.settings.show_score = self._read_score_json()
+        self.game.settings.score_mode = self._read_score_json()
+        self.game.settings.score_counter = self._read_score_counter_json()
         self.game.settings.arrow_mode = self._read_dirarrow_json()
         self.game.settings.arrow_counter = self._read_dirarrow_counter_json()
 
@@ -192,9 +193,21 @@ class GameStats:
             if score_option is not None:
                 return score_option
             else:
-                return True
+                return self.game.settings.SCORE_SETTINGS[0]
         else:
-            return True
+            return self.game.settings.SCORE_SETTINGS[0]
+
+    def _read_score_counter_json(self):
+        """Searches the dictionary created from the settings.json file 
+        and sees if we already have an option for displaying score."""
+        if self.options_data:
+            score_counter_option = self.options_data.get("score_counter")
+            if score_counter_option is not None:
+                return score_counter_option
+            else:
+                return 0
+        else:
+            return 0
 
     def _read_dirarrow_json(self):
         """Searches the dictionary created from the settings.json file 
@@ -227,7 +240,8 @@ class GameStats:
         with open("stats/settings.json", 'w') as f:
             json.dump({"game_speed" : self.settings.speed,"music_volume": self.settings.music_volume,
                 "sound_volume": self.settings.sound_volume, "window_mode": self.settings.gfx_mode,
-                "display_score": self.settings.show_score, "HUD_preset": self.settings.HUD,
-                "arrow_setting": self.settings.arrow_mode, "arrow_counter": self.settings.arrow_counter, 
-                "controls": self.game.keybinds.controls, "HUD_counter": self.settings.HUD_counter,
-                "gfx_counter": self.settings.gfx_counter, "speed_counter": self.settings.speed_counter}, f)
+                "display_score": self.settings.score_mode, "score_counter": self.settings.score_counter, 
+                "HUD_preset": self.settings.HUD, "arrow_setting": self.settings.arrow_mode, 
+                "arrow_counter": self.settings.arrow_counter, "controls": self.game.keybinds.controls, 
+                "HUD_counter": self.settings.HUD_counter, "gfx_counter": self.settings.gfx_counter, 
+                "speed_counter": self.settings.speed_counter}, f)

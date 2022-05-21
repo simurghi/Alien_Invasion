@@ -163,6 +163,7 @@ class AlienInvasion:
             self.scoreboard.show_scores_go()
         elif self.state.state is self.state.MAINMENU:
             self.main_menu.draw_buttons()
+            self.scoreboard.show_scores_mm()
         elif self.state.state is self.state.OPTIONSMENU:
             self.options_menu.draw_buttons()
         elif self.state.state is self.state.CONTROLSMENU:

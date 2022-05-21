@@ -67,13 +67,14 @@ class Scoreboard:
         if self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[0]:
             self.high_score_rect.topright = self.screen_rect.topright 
         elif self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[1]:
-            self.high_score_rect.bottomright = self.screen_rect.bottomright 
+            self.high_score_rect.bottomright = self.screen_rect.bottomright
         else:
             self.high_score_rect.topright = self.screen_rect.topright 
 
     def show_score(self):
         """Draw score and lives to the screen."""
-        if self.ai_game.settings.show_score:
+        if (self.ai_game.settings.score_mode == self.ai_game.settings.SCORE_SETTINGS[0] 
+                or self.ai_game.settings.score_mode == self.ai_game.settings.SCORE_SETTINGS[1]):
             self.screen.blit(self.score_image, self.score_rect)
             self.screen.blit(self.high_score_image, self.high_score_rect)
         if self.ai_game.settings.HUD != self.ai_game.settings.HUD_SETTINGS[2]:
@@ -135,6 +136,15 @@ class Scoreboard:
                 bullet.rect.y = self.screen_rect.bottom - 15 - bullet.rect.height
             self.bullets.add(bullet)
         
+    def prep_high_score_main_menu(self):
+        """For the game over screen, turn the high score into a rendered image."""
+        end_font = pygame.font.Font("assets/fonts/m5x7.ttf", 48)
+        max_score = str(self.stats.high_score)
+        self.high_score_image_mm = end_font.render(f"HIGH SCORE: {max_score}", True, self.text_color)
+        self.high_score_rect_mm = self.high_score_image_mm.get_rect()
+        self.high_score_rect_mm.x = self.screen_rect.centerx / 6
+        self.high_score_rect_mm.y = self.screen_rect.bottom - 50
+
     def prep_high_score_game_over(self):
         """For the game over screen, turn the high score into a rendered image."""
         end_font = pygame.font.Font("assets/fonts/m5x7.ttf", 64)
@@ -157,3 +167,9 @@ class Scoreboard:
         """Draw current and high scores on the screen in a game over."""
         self.screen.blit(self.score_image_go, self.score_rect_go)
         self.screen.blit(self.high_score_image_go, self.high_score_rect_go)
+
+    def show_scores_mm(self):
+        """Draws high score on the screen in the main menu."""
+        if (self.ai_game.settings.score_mode == self.ai_game.settings.SCORE_SETTINGS[0] 
+                or self.ai_game.settings.score_mode == self.ai_game.settings.SCORE_SETTINGS[2]):
+            self.screen.blit(self.high_score_image_mm, self.high_score_rect_mm)

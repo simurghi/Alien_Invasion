@@ -49,9 +49,11 @@ class MainMenu(Menu):
         self.options_button = Button(ai_game, "Options", 250, 75)
         self.controls_button = Button(self, "Controls", 250, 0)
         self.help_button = Button(ai_game, "Help", 250, -75)
-        self.exit_button = Button(ai_game, "Quit", 250, -150)
+        self.credits_button = Button(ai_game, "Credits", 250, -150)
+        self.exit_button = Button(ai_game, "Quit", 250, -225)
         self.buttons = (self.play_button, self.options_button, 
-                self.controls_button, self.help_button, self.exit_button)
+                self.controls_button, self.help_button, self.credits_button,
+                self.exit_button)
 
     def _check_button(self, button):
         button_clicked = button.check_mouse_click()
@@ -67,10 +69,20 @@ class MainMenu(Menu):
                     self.game.state.state = self.game.state.CONTROLSMENU
                 elif button is self.help_button:
                     pass
+                elif button is self.credits_button:
+                    pass
                 elif button is self.exit_button:
                     self.game.stats.dump_stats_json()
                     pygame.quit()
                     sys.exit()
+
+    def draw_buttons(self):
+        """ Draws buttons to the screen."""
+        self.screen.blit(self.game.menu_image, (0, 0)) 
+        self.game.scoreboard.prep_high_score_main_menu()
+        self._highlight_colors()
+        for button in self.buttons:
+            button.draw_button()
 
 class OptionsMenu(Menu):
     """Class that holds state and behaviour for the options menu."""
@@ -129,7 +141,7 @@ class OptionsMenu(Menu):
                 self.game.state.state = self.game.state.MAINMENU
                 self.sound.play_sfx("options_menu")
             elif button is self.score_button:
-                self.game.settings.show_score = not self.game.settings.show_score
+                self._change_game_score(direction)
                 self._change_score_text()
 
     def _change_difficulty(self, direction):
@@ -214,16 +226,28 @@ class OptionsMenu(Menu):
         self.game.settings.arrow_mode = self.game.settings.ARROW_SETTINGS[self.game.settings.arrow_counter]
         self._change_dirarrow_text()
 
+    def _change_game_score(self, direction):
+        """Helper method that changes the in-game and menu score displays when button is clicked."""
+        if self.game.settings.score_counter < len(self.game.settings.SCORE_SETTINGS)-1 and direction > 0:
+            self.game.settings.score_counter += 1
+        elif self.game.settings.score_counter > 0 and direction < 0:
+            self.game.settings.score_counter -= 1
+        else: 
+            if direction > 0:
+                self.game.settings.score_counter = 0
+            elif direction < 0:
+                self.game.settings.score_counter = len(self.game.settings.SCORE_SETTINGS)-1
+        self.game.settings.score_mode = self.game.settings.SCORE_SETTINGS[self.game.settings.score_counter]
+        self.game.scoreboard.update_prep()
+        self._change_HUD_text()
+
     def _change_music_text(self):
         """Helper method that changes what text is displayed on the music button."""
         self.music_state = f"Music: {self.game.settings.music_volume * 100:.0f}%"
 
     def _change_score_text(self):
         """Helper method that changes what text is displayed on the score button."""
-        if self.game.settings.show_score:
-            self.score_state =  "Score: ON"
-        else:
-            self.score_state =  "Score: OFF"
+        self.score_state = self.game.settings.SCORE_SETTINGS[self.game.settings.score_counter]
 
     def _change_dirarrow_text(self):
         """Helper method that changes what text is displayed on the direction arrow button."""
