@@ -56,20 +56,17 @@ class MainMenu(Menu):
     def _check_button(self, button):
         button_clicked = button.check_left_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
+            self.sound.play_sfx("options_menu")
             if button is self.play_button:
                 self.game._clear_state()
                 self.game.state.state = self.game.state.GAMEPLAY
-                self.sound.play_sfx("options_menu")
             elif button is self.options_button:
                 self.game.state.state = self.game.state.OPTIONSMENU
-                self.sound.play_sfx("options_menu")
             elif button is self.controls_button:
                 self.game.state.state = self.game.state.CONTROLSMENU
-                self.sound.play_sfx("options_menu")
             elif button is self.help_button:
-                self.sound.play_sfx("options_menu")
+                pass
             elif button is self.exit_button:
-                self.sound.play_sfx("options_menu")
                 self.game.stats.dump_stats_json()
                 pygame.quit()
                 sys.exit()
