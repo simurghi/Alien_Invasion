@@ -49,39 +49,31 @@ class Button:
             pass
         return True if self.lmb_pressed else False
 
-    def toggle_color(self, color_switch, msg='', msg_size=48):
+    def toggle_color(self, cursor_button_collide, is_key_empty, msg='', msg_size=48):
         """Receives a boolean and adjusts the color of the button based on the values."""
-        if color_switch:
+        if cursor_button_collide:# and not is_key_empty:
+            self.top_button_color = (46, 139, 87)
+        elif not cursor_button_collide and is_key_empty:
             self.top_button_color = (34, 139, 34)
-            self.font = pygame.font.Font('assets/fonts/m5x7.ttf', msg_size)
-            if msg =='':
-                self._prep_msg(self.msg)
-            else:
-                self._prep_msg(msg)
-        elif not color_switch:
+        elif not cursor_button_collide and not is_key_empty:
             self.top_button_color = (178, 34, 34)
-            self.font = pygame.font.Font('assets/fonts/m5x7.ttf', msg_size)
-            if msg =='':
-                self._prep_msg(self.msg)
-            else:
-                self._prep_msg(msg)
+        self.font = pygame.font.Font('assets/fonts/m5x7.ttf', msg_size)
+        if msg =='':
+            self._prep_msg(self.msg)
+        else:
+            self._prep_msg(msg)
 
     def highlight_color(self, color_switch, msg='', msg_size=48):
         """Receives a boolean and adjusts the color of the button based on the values."""
         if color_switch:
             self.top_button_color = (46, 139, 87)
-            self.font = pygame.font.Font('assets/fonts/m5x7.ttf', msg_size)
-            if msg =='':
-                self._prep_msg(self.msg)
-            else:
-                self._prep_msg(msg)
         elif not color_switch:
             self.top_button_color = (34, 139, 34)
-            self.font = pygame.font.Font('assets/fonts/m5x7.ttf', msg_size)
-            if msg =='':
-                self._prep_msg(self.msg)
-            else:
-                self._prep_msg(msg)
+        self.font = pygame.font.Font('assets/fonts/m5x7.ttf', msg_size)
+        if msg =='':
+            self._prep_msg(self.msg)
+        else:
+            self._prep_msg(msg)
 
     def set_color(self, button_color, msg='', msg_size=48):
         """Receives a color value and adjusts the color of the button based on the values."""

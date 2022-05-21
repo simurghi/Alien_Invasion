@@ -266,9 +266,10 @@ class ControlsMenu(Menu):
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
-        self._toggle_colors()
-        self._update_button_text()
         self._highlight_colors()
+        self._toggle_colors()
+        #self._highlight_keybind_colors()
+        self._update_button_text()
         for keybind_button in self.key_buttons:
             keybind_button.draw_button()
         for button in self.buttons:
@@ -280,6 +281,11 @@ class ControlsMenu(Menu):
             self._check_keybind_button(mouse_pos, keybind_button, mapping) 
         self._check_reset_button()
         self._check_back_button()
+
+    def _highlight_keybind_colors(self):
+        """ Toggles colors for buttons that are being selected."""
+        for button in self.key_buttons:
+            button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
 
     def _check_keybind_button(self, mouse_pos, button, mapping):
         button_clicked = button.top_rect.collidepoint(mouse_pos)
@@ -328,7 +334,8 @@ class ControlsMenu(Menu):
     def _toggle_colors(self):
         """ Toggles colors for buttons that have on/off states."""
         for button, mapping in self.key_buttons.items():
-            button.toggle_color(self._check_empty_key(mapping))
+            button.toggle_color(button.top_rect.collidepoint(pygame.mouse.get_pos()), 
+                self._check_empty_key(mapping))
 
     def _check_empty_key(self, mapping):
         """ Checks if a key is empty or not."""
