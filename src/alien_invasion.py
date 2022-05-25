@@ -6,6 +6,7 @@ from beam import Beam
 from bullet import Bullet 
 from controller import Controller
 from controls_menu import ControlsMenu
+from credits_menu import CreditsMenu
 from explosion import Explosion
 from game_stats import GameStats
 from gunner import Gunner
@@ -57,6 +58,7 @@ class AlienInvasion:
         self.sound = Sound(self)
         self.main_menu = MainMenu(self)
         self.help_menu = HelpMenu(self)
+        self.credits_menu = CreditsMenu(self)
         self.options_menu = OptionsMenu(self)
         self.controls_menu = ControlsMenu(self)
         self.go_menu = GameOverMenu(self)
@@ -176,6 +178,8 @@ class AlienInvasion:
             self.controls_menu.draw_buttons()
         elif self.state.state is self.state.HELPMENU:
             self.help_menu.draw_buttons()
+        elif self.state.state is self.state.CREDITSMENU:
+            self.credits_menu.draw_buttons()
         pygame.display.flip()
 
     def _clear_state(self):
@@ -418,6 +422,8 @@ class AlienInvasion:
                 self.go_menu.check_menu_buttons()
             elif self.state.state == self.state.HELPMENU:
                 self.help_menu.check_menu_buttons()
+            elif self.state.state == self.state.CREDITSMENU:
+                self.credits_menu.check_menu_buttons()
         if self.state.state == self.state.GAMEPLAY:
             if mouse_buttons[0]:
                 self.ship.is_firing = True
