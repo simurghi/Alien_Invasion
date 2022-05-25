@@ -1,3 +1,11 @@
+convert animations to use spritesheets instead of individual images
 add keyboard navigation to menus and redesign controller menus to utilize this
 finish help screen on the menu
 add SFX to countdown ticks and play custom music for it.
+finish credits section on the menu
+add a boss enemy
+add a new sniper enemy
+add local co-op
+add powerups 
+Alternative soundtrack? 
+

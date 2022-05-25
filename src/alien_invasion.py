@@ -5,14 +5,18 @@ from aspect_ratio import AspectRatio
 from beam import Beam
 from bullet import Bullet 
 from controller import Controller
+from controls_menu import ControlsMenu
 from explosion import Explosion
 from game_stats import GameStats
 from gunner import Gunner
 from keybinds import Keybinds
 from math import sqrt, floor
 from mine import Mine
-from menu import MainMenu, OptionsMenu, GameOverMenu, PauseMenu, ControlsMenu
+from gameover_menu import GameOverMenu
+from main_menu import MainMenu
 from music import Music
+from options_menu import OptionsMenu
+from pause_menu import PauseMenu
 from random import randint
 from scoreboard import Scoreboard 
 from ship import Ship 
