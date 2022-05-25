@@ -9,6 +9,7 @@ from controls_menu import ControlsMenu
 from explosion import Explosion
 from game_stats import GameStats
 from gunner import Gunner
+from help_menu import HelpMenu
 from keybinds import Keybinds
 from math import sqrt, floor
 from mine import Mine
@@ -55,6 +56,7 @@ class AlienInvasion:
         self.music = Music(self)
         self.sound = Sound(self)
         self.main_menu = MainMenu(self)
+        self.help_menu = HelpMenu(self)
         self.options_menu = OptionsMenu(self)
         self.controls_menu = ControlsMenu(self)
         self.go_menu = GameOverMenu(self)
@@ -172,6 +174,8 @@ class AlienInvasion:
             self.options_menu.draw_buttons()
         elif self.state.state is self.state.CONTROLSMENU:
             self.controls_menu.draw_buttons()
+        elif self.state.state is self.state.HELPMENU:
+            self.help_menu.draw_buttons()
         pygame.display.flip()
 
     def _clear_state(self):
@@ -412,6 +416,8 @@ class AlienInvasion:
                 self.options_menu.check_menu_buttons()
             elif self.state.state == self.state.GAMEOVER:
                 self.go_menu.check_menu_buttons()
+            elif self.state.state == self.state.HELPMENU:
+                self.help_menu.check_menu_buttons()
         if self.state.state == self.state.GAMEPLAY:
             if mouse_buttons[0]:
                 self.ship.is_firing = True

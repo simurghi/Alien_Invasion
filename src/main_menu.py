@@ -33,7 +33,7 @@ class MainMenu(Menu):
                 elif button is self.controls_button:
                     self.game.state.state = self.game.state.CONTROLSMENU
                 elif button is self.help_button:
-                    pass
+                    self.game.state.state = self.game.state.HELPMENU
                 elif button is self.credits_button:
                     pass
                 elif button is self.exit_button:

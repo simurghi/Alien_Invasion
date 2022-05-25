@@ -1,14 +1,14 @@
 Art:
 -- Ship, Missles, and Enemies are from Matt Walkden (mattwalkden.itch.io)
 -- Parallaxing Background image by Ansimuz licensed under Creative Commons CC BY 4.0. 
-   (https://creativecommons.org/licenses/by/4.0/#). Image has been scaled up in Gimp to 4x the original resolution for my game. 
+   (https://creativecommons.org/licenses/by/4.0/#). 
 -- Daniel Linssen for m5x7 ttf font
 -- GameSupplyGuy for Missle SFX
 -- Space Music Pack by Goose Ninja
 -- [Disengage] by Studio Meow Meow (CC BY)
 	https://thricedotted.itch.io/looptober-2021-variety-pack
 Code:
--- Python Crash Course by Eric Matthes for general project idea and base code
+-- Python Crash Course by Eric Matthes for general project idea and base space invaders code
 -- code.Pylet for background parallax image scrolling
 -- ScriptLine Studios for Xbox Controller support
 -- u/iminurnamez for clock/time
@@ -18,3 +18,5 @@ Code:
 -- /u/metulburr for distance formula
 -- CDCodes --> key rebinding menu
 -- skrx for pixel tinting.
+-- Clear Code for menu highlighting
+-- DaFluffyPotato for delta time

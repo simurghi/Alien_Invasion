@@ -8,7 +8,7 @@
 - If both multipliers are active, you instead receive a larger score multiplier (10x instead of 8x)
 - If on normal speed, the game will speed up by +10% (base) every 20 seconds and increase score by 5 points.
 - If on turbo speed, the game will speed up by +20% (base) every 20 seconds and increases by 10 points.
-- Every 5000 points earns you a beam charge. If you're at capacity (3), then you instead earn 1000 bonus points.
+- Every 5000 points earns you a beam charge. If you're at capacity (3), then you instead earn 500 bonus points.
 - Hitboxes for mines and trash mobs are circular, not rectangular, so you have some room to dodge and flank enemies.
 - Hitboxes for Gunners and their bullets are pixel accurate, so you can die if you clip into their wings. 
 - Movement is restricted in the top and bottom of the screen (60 pixels for each). Cinematic Bars will help cover this up.
