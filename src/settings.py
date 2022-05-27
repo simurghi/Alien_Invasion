@@ -18,7 +18,7 @@ class Settings:
         self.GFX_SETTINGS = ("REZ: Native", "REZ: Scaled", "REZ: Full Scaled")
         self.HUD_SETTINGS = ("HUD: Classic", "HUD: Alt", "HUD: OFF")
         self.ARROW_SETTINGS = ("Arrows: ALL", "Arrows: Mine", "Arrows: Ship", "Arrows: OFF")
-        self.SCORE_SETTINGS = ("SCORE: ALL", "SCORE: Game", "Score: Menu", "Score: OFF")
+        self.SCORE_SETTINGS = ("Score: ALL", "Score: Game", "Score: Menu", "Score: OFF")
 
     def _set_window_properties(self):
         """Sets the properties for the game window and background."""
