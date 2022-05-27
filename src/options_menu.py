@@ -95,7 +95,7 @@ class OptionsMenu(Menu):
         elif self.game.settings.music_volume > 0.1 and direction < 0:
             self.game.settings.music_volume -= 0.1
         elif self.game.settings.music_volume < 0.1 and direction < 0:
-            self.game.settings.sound_volume = 1.0
+            self.game.settings.music_volume = 1.0
         self._change_music_text()
 
     def _change_game_resolution(self, direction):
