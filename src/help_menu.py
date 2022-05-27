@@ -94,6 +94,16 @@ class HelpMenu(Menu):
                                 button.display = False
                     self.game.state.state = self.game.state.MAINMENU
 
+    def _highlight_colors(self):
+        """ Toggles colors for buttons that are being selected."""
+        for button_list in self.display_buttons:
+            for button in button_list:
+                if button.display:
+                    button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()), 
+                            msg_size=32, small_font = True)
+        for button in self.buttons:
+            button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
+
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 

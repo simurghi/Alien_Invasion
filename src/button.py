@@ -73,13 +73,16 @@ class Button:
         else:
             self._prep_msg(msg)
 
-    def highlight_color(self, color_switch, msg='', msg_size=48):
+    def highlight_color(self, color_switch, msg='', msg_size=48, small_font = False):
         """Receives a boolean and adjusts the color of the button based on the values."""
         if color_switch:
             self.top_button_color = (46, 139, 87)
         elif not color_switch:
             self.top_button_color = (34, 139, 34)
-        self.font = pygame.font.Font('assets/fonts/m5x7.ttf', msg_size)
+        if not small_font:
+            self.font = pygame.font.Font('assets/fonts/m5x7.ttf', msg_size)
+        else:
+            self.font = pygame.font.Font("assets/fonts/m3x6.ttf", msg_size)
         if msg =='':
             self._prep_msg(self.msg)
         else:
