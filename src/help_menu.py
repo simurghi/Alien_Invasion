@@ -4,7 +4,7 @@ class HelpMenu(Menu):
     """Class to hold helpful tutorial information."""
     def __init__(self, ai_game):
         super().__init__(ai_game)
-        self.ai_game = ai_game
+        self.game = ai_game
         self._create_help_buttons(ai_game)
         self._create_help_descriptions(ai_game)
         self._create_help_windows(ai_game)
@@ -113,7 +113,7 @@ class HelpMenu(Menu):
                 font_size=32, small_font = True)
         self.basic_misc_window4 = Button(ai_game, self.basic_misc_desc4, -175, 60, 580, 35,
                 font_size=32, small_font = True)
-        self.basic_misc_window5 = Button(ai_game, self.basic_misc_desc4, -175, 40, 580, 35,
+        self.basic_misc_window5 = Button(ai_game, self.basic_misc_desc5, -175, 20, 580, 35,
                 font_size=32, small_font = True)
         self.basic_misc_windows = (self.basic_misc_window0, self.basic_misc_window1,
                 self.basic_misc_window2, self.basic_misc_window3, self.basic_misc_window4,
@@ -179,7 +179,7 @@ class HelpMenu(Menu):
                 elif button is self.adv_enemies_button:
                     self._check_adv_enemies_button()
                 elif button is self.back_button:
-                    self_check_back_button()
+                    self._check_back_button()
 
     def _check_controls_button(self):
         """displays only the controls tutorial when clicked."""
@@ -256,7 +256,7 @@ class HelpMenu(Menu):
     def draw_buttons(self):
         """ Draws buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0)) 
-        self.ai_game.keybinds.init_menu_text()
+        self.game.keybinds.init_menu_text()
         self._highlight_colors()
         for button in self.buttons:
             button.draw_button()
