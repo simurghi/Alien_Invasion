@@ -2,29 +2,33 @@ import pygame.font, pygame
 
 class Button:
 
-    def __init__(self, ai_game, msg, x_offset = 0, y_offset = 0, width = 250, height = 50, font_size = 48):
+    def __init__(self, ai_game, msg, x_offset = 0, y_offset = 0, width = 250, height = 50, font_size = 48, small_font = False):
         """Initialize button attributes."""
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
         self.msg = msg
-        self._set_button_properties(width, height, font_size)
+        self._set_button_properties(width, height, font_size, small_font)
         self.x_offset = x_offset
         self.y_offset = y_offset
         self.top_rect = pygame.Rect(0,0, self.width-2, self.height-2)
         self.top_rect.center = self.screen_rect.centerx - x_offset, self.screen_rect.centery - y_offset
         self._prep_msg(msg)
+        self.display = False
 
-    def _set_button_properties(self, width, height, font_size):
+    def _set_button_properties(self, width, height, font_size, small_font):
         """Sets the size, color, and font of the button."""
         self.width, self.height = width, height
         self.top_button_color = (34, 139, 34)
         self.border_color = (208, 219, 97)
         self.text_color = (255, 255, 255)
-        self.font = pygame.font.Font('assets/fonts/m5x7.ttf', font_size)
+        if not small_font: 
+            self.font = pygame.font.Font('assets/fonts/m5x7.ttf', font_size)
+        else:
+            self.font = pygame.font.Font("assets/fonts/m3x6.ttf", font_size)
 
     def _prep_msg(self, msg):
         """Turn msg into a rendered image and center text on the button."""
-        self.msg_image = self.font.render(msg, True, self.text_color, 
+        self.msg_image = self.font.render(msg, False, self.text_color, 
                 self.top_button_color)
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.top_rect.center

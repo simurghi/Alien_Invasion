@@ -11,15 +11,15 @@ class ControlsMenu(Menu):
 
     def _create_controls_buttons(self):
         """Creates buttons for the options menu."""
-        self.left_button = Button(self, self.keybinds.move_left_text, 0, 280)
-        self.right_button = Button(self, self.keybinds.move_right_text, 0, 210)
-        self.up_button = Button(self, self.keybinds.move_up_text, 0, 140)
-        self.down_button = Button(self, self.keybinds.move_down_text, 0, 70)
-        self.beam_button = Button(self, self.keybinds.beam_text, 0, 00)
-        self.flip_button = Button(self, self.keybinds.flip_text, 0, -70)
-        self.missile_button = Button(self, self.keybinds.shoot_text, 0, -140) 
-        self.reset_button = Button(self, "Reset Keys", 0, -210)
-        self.back_button = Button(self, "Back", 0, -280)
+        self.left_button = Button(self, self.keybinds.move_left_text, 250, 280)
+        self.right_button = Button(self, self.keybinds.move_right_text, 250, 210)
+        self.up_button = Button(self, self.keybinds.move_up_text, 250, 140)
+        self.down_button = Button(self, self.keybinds.move_down_text, 250, 70)
+        self.beam_button = Button(self, self.keybinds.beam_text, 250, 0)
+        self.flip_button = Button(self, self.keybinds.flip_text, 250, -70)
+        self.missile_button = Button(self, self.keybinds.shoot_text, 250, -140) 
+        self.reset_button = Button(self, "Reset Keys", 250, -210)
+        self.back_button = Button(self, "Back", 250, -280)
         self.key_buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
                 self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
                 self.flip_button: "FLIPSHIP", self.missile_button: "MISSILEATTACK"}

@@ -19,14 +19,14 @@ class OptionsMenu(Menu):
 
     def _create_options_buttons(self):
         """Creates buttons for the options menu."""
-        self.turbo_button = Button(self, self.speed_state, 0, 250)
-        self.mute_button = Button(self, self.music_state, 0, 175)
-        self.sfx_button = Button(self, self.sfx_state, 0, 100)
-        self.gfx_button = Button(self, self.gfx_state, 0, 25)
-        self.score_button = Button(self, self.gfx_state, 0, -50)
-        self.HUD_button = Button(self, self.HUD_state, 0, -125)
-        self.dirarrow_button = Button(self, self.dirarrow_state, 0, -200)
-        self.back_button = Button(self, "Back", 0, -275)
+        self.turbo_button = Button(self, self.speed_state, 250, 250)
+        self.mute_button = Button(self, self.music_state, 250, 175)
+        self.sfx_button = Button(self, self.sfx_state, 250, 100)
+        self.gfx_button = Button(self, self.gfx_state, 250, 25)
+        self.score_button = Button(self, self.gfx_state, 250, -50)
+        self.HUD_button = Button(self, self.HUD_state, 250, -125)
+        self.dirarrow_button = Button(self, self.dirarrow_state, 250, -200)
+        self.back_button = Button(self, "Back", 250, -275)
         self.buttons = (self.turbo_button, self.mute_button, self.sfx_button, 
                 self.gfx_button, self.score_button, self.HUD_button, self.dirarrow_button, 
                 self.back_button)
