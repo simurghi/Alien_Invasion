@@ -14,6 +14,7 @@ class Button:
         self.top_rect.center = self.screen_rect.centerx - x_offset, self.screen_rect.centery - y_offset
         self._prep_msg(msg)
         self.display = False
+        self.display_main = True
 
     def _set_button_properties(self, width, height, font_size, small_font):
         """Sets the size, color, and font of the button."""
