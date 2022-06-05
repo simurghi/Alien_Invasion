@@ -6,6 +6,7 @@ class Music:
     def __init__(self, ai_game):
         """Initialize music state."""
         self.state = ai_game.state
+        self.game = ai_game
         self.settings = ai_game.settings
 
     def play_music(self):
@@ -17,7 +18,14 @@ class Music:
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
                 self.state.music_state["MENU"] = True
-        elif self.state.state is self.state.GAMEPLAY and not self.state.music_state["GAMEPLAY"]:
+        elif (self.state.state is self.state.GAMEPLAY and self.game.countdown > 0
+                and not self.state.music_state["COUNTDOWN"]):
+                pygame.mixer.music.load("assets/audio/start-level.wav")
+                pygame.mixer.music.play(1)
+                self._clear_music_state()
+                self.state.music_state["COUNTDOWN"] = True
+        elif (self.state.state is self.state.GAMEPLAY and self.game.countdown <= 0 
+                and not self.state.music_state["GAMEPLAY"]):
                 pygame.mixer.music.load("assets/audio/battle.wav")
                 pygame.mixer.music.play(-1)
                 self._clear_music_state()
