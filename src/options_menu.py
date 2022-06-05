@@ -45,8 +45,10 @@ class OptionsMenu(Menu):
                 self._change_difficulty(direction)
             elif button is self.sfx_button:
                 self._change_sound_volume(direction)
+                print(f"SOUND VOLUME: {self.game.settings.sound_volume}")
             elif button is self.mute_button:
                 self._change_music_volume(direction)
+                print(f"MUSIC VOLUME: {self.game.settings.music_volume}")
             elif button is self.gfx_button:
                 self._change_game_resolution(direction)
             elif button is self.dirarrow_button:
@@ -82,7 +84,7 @@ class OptionsMenu(Menu):
             self.game.settings.sound_volume += 0.1
         elif self.game.settings.sound_volume > 0.1 and direction < 0:
             self.game.settings.sound_volume -= 0.1
-        elif self.game.settings.sound_volume < 0.1 and direction < 0:
+        elif self.game.settings.sound_volume <= 0.1 and direction < 0:
             self.game.settings.sound_volume = 1.0
         self._change_sound_text()
 
@@ -94,7 +96,7 @@ class OptionsMenu(Menu):
             self.game.settings.music_volume += 0.1
         elif self.game.settings.music_volume > 0.1 and direction < 0:
             self.game.settings.music_volume -= 0.1
-        elif self.game.settings.music_volume < 0.1 and direction < 0:
+        elif self.game.settings.music_volume <= 0.1 and direction < 0:
             self.game.settings.music_volume = 1.0
         self._change_music_text()
 
