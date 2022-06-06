@@ -6,7 +6,14 @@ class Menu:
     def __init__(self, ai_game):
         self.game = ai_game
         self.screen = ai_game.screen
+        self.screen_rect = ai_game.screen.get_rect()
         self.sound = ai_game.sound
+        self.cursor_image = pygame.image.load('assets/images/menu_arrow.png').convert_alpha()
+        self.cursor_rect = self.cursor_image.get_rect()
+        self.cursor_rect.midright = (70,170) 
+        self.x = float(self.cursor_rect.x)
+        self.y = float(self.cursor_rect.y)
+
         self.index = 0
         self.buttons = []
 
@@ -33,3 +40,4 @@ class Menu:
         self._highlight_colors()
         for button in self.buttons:
             button.draw_button()
+        self.screen.blit(self.cursor_image, self.cursor_rect)

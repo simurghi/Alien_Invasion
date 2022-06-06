@@ -48,4 +48,4 @@ class MainMenu(Menu):
         self._highlight_colors()
         for button in self.buttons:
             button.draw_button()
-
+        self.screen.blit(self.cursor_image, self.cursor_rect)
