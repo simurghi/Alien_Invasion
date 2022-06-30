@@ -573,7 +573,7 @@ class AlienInvasion:
             self._play_explosion_on_death()
             self.ship.position_ship()
             self.settings.respawn_timer = -0.5
-            #time.sleep(0.10)
+            time.sleep(0.10)
         else: 
             self.enter_game_over()
             self.scoreboard.prep_score_game_over()
