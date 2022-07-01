@@ -1,4 +1,4 @@
-import pygame, sys, time
+import pygame, sys, time, logging
 
 from alien import Alien, ChonkyAlien
 from aspect_ratio import AspectRatio
@@ -633,5 +633,9 @@ class AlienInvasion:
             self.last_count = count_timer
 
 if __name__ == '__main__':
+    logging.basicConfig(filename="ERROR.log", filemode='w', level=logging.ERROR)
     ai = AlienInvasion()
-    ai.run_game()
+    try: 
+        ai.run_game()
+    except:
+        logging.exception('')
