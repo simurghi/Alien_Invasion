@@ -1,1 +1,4 @@
+# ignore all json config files
 *.json
+# ignore all log files
+*.log
