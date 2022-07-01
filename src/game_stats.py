@@ -93,13 +93,19 @@ class GameStats:
             if controls_option is not None: 
                 return controls_option
             else:
-                return {"MOVELEFT": pygame.K_a, "MOVERIGHT": pygame.K_d,
-                "MOVEUP": pygame.K_w, "MOVEDOWN": pygame.K_s, "MISSILEATTACK": pygame.K_j, 
-                "BEAMATTACK": pygame.K_l, "FLIPSHIP": pygame.K_k}
+                return {self.keybinds.MOVELEFT: pygame.K_a,
+                    self.keybinds.MOVERIGHT: pygame.K_d, self.keybinds.MOVEUP:
+                    pygame.K_w, self.keybinds.MOVEDOWN: pygame.K_s,
+                    self.keybinds.MISSILEATTACK: pygame.K_j,
+                    self.keybinds.BEAMATTACK: pygame.K_l,
+                    self.keybinds.FLIPSHIP: pygame.K_k}
         else:
-            return {"MOVELEFT": pygame.K_a, "MOVERIGHT": pygame.K_d,
-                "MOVEUP": pygame.K_w, "MOVEDOWN": pygame.K_s, "MISSILEATTACK": pygame.K_j, 
-                "BEAMATTACK": pygame.K_l, "FLIPSHIP": pygame.K_k}
+            return {self.keybinds.MOVELEFT: pygame.K_a,
+                    self.keybinds.MOVERIGHT: pygame.K_d, self.keybinds.MOVEUP:
+                    pygame.K_w, self.keybinds.MOVEDOWN: pygame.K_s,
+                    self.keybinds.MISSILEATTACK: pygame.K_j,
+                    self.keybinds.BEAMATTACK: pygame.K_l,
+                    self.keybinds.FLIPSHIP: pygame.K_k}
 
     def _read_sfx_json(self):
         """Searches the dictionary created from the settings.json file

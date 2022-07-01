@@ -20,9 +20,12 @@ class ControlsMenu(Menu):
         self.missile_button = Button(self, self.keybinds.shoot_text, 250, -140) 
         self.reset_button = Button(self, "Reset Keys", 250, -210)
         self.back_button = Button(self, "Back", 250, -280)
-        self.key_buttons = {self.left_button: "MOVELEFT", self.right_button: "MOVERIGHT",
-                self.up_button: "MOVEUP", self.down_button: "MOVEDOWN", self.beam_button: "BEAMATTACK", 
-                self.flip_button: "FLIPSHIP", self.missile_button: "MISSILEATTACK"}
+        self.key_buttons = {self.left_button: self.keybinds.MOVELEFT,
+                self.right_button: self.keybinds.MOVERIGHT, self.up_button:
+                self.keybinds.MOVEUP, self.down_button: self.keybinds.MOVEDOWN,
+                self.beam_button: self.keybinds.BEAMATTACK, self.flip_button:
+                self.keybinds.FLIPSHIP, self.missile_button:
+                self.keybinds.MISSILEATTACK}
         self.buttons = [self.reset_button, self.back_button]
         self._append_keybinds_to_buttons()
 
@@ -121,8 +124,11 @@ class ControlsMenu(Menu):
         """Clears the custom keybinds and resets to initial options."""
         button_clicked = self.reset_button.check_mouse_click()
         if (button_clicked and self.game.state.state is self.game.state.CONTROLSMENU):
-            self.keybinds.controls = {"MOVELEFT": pygame.K_a, "MOVERIGHT": pygame.K_d,
-                    "MOVEUP": pygame.K_w, "MOVEDOWN": pygame.K_s, "MISSILEATTACK": pygame.K_j, 
-                    "BEAMATTACK": pygame.K_l, "FLIPSHIP": pygame.K_k}
+            self.keybinds.controls = {self.keybinds.MOVELEFT: pygame.K_a,
+                    self.keybinds.MOVERIGHT: pygame.K_d, self.keybinds.MOVEUP:
+                    pygame.K_w, self.keybinds.MOVEDOWN: pygame.K_s,
+                    self.keybinds.MISSILEATTACK: pygame.K_j,
+                    self.keybinds.BEAMATTACK: pygame.K_l,
+                    self.keybinds.FLIPSHIP: pygame.K_k}
             self.sound.play_sfx("options_menu")
 

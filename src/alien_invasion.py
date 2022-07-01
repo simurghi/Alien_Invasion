@@ -382,13 +382,13 @@ class AlienInvasion:
     
     def _check_keydown_events(self, event):
         """respond to keypresses.""" 
-        if event.key == self.keybinds.controls.get("MOVEUP"):
+        if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
             self.ship.moving_up = True 
-        elif event.key == self.keybinds.controls.get("MOVEDOWN"):
+        elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
             self.ship.moving_down = True
-        if event.key == self.keybinds.controls.get("MOVELEFT"):
+        if event.key == self.keybinds.controls.get(self.keybinds.MOVELEFT):
             self.ship.moving_left = True 
-        elif event.key == self.keybinds.controls.get("MOVERIGHT"):
+        elif event.key == self.keybinds.controls.get(self.keybinds.MOVERIGHT):
             self.ship.moving_right = True
         if event.key == pygame.K_ESCAPE:
             self.pause.check_pause()
@@ -397,11 +397,11 @@ class AlienInvasion:
             self.stats.dump_stats_json()
             pygame.quit()
             sys.exit()
-        if event.key == self.keybinds.controls.get("MISSILEATTACK"):
+        if event.key == self.keybinds.controls.get(self.keybinds.MISSILEATTACK):
             self.ship.is_firing = True
-        if event.key == self.keybinds.controls.get("BEAMATTACK"):
+        if event.key == self.keybinds.controls.get(self.keybinds.BEAMATTACK):
             self.ship.fire_beam()
-        if event.key == self.keybinds.controls.get("FLIPSHIP"):
+        if event.key == self.keybinds.controls.get(self.keybinds.FLIPSHIP):
             self.ship.flip_ship()
 
     def _check_mousedown_events(self):
@@ -443,15 +443,15 @@ class AlienInvasion:
 
     def _check_keyup_events(self, event):
         """respond to key releases."""
-        if event.key == self.keybinds.controls.get("MOVEUP"):
+        if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
             self.ship.moving_up = False
-        elif event.key == self.keybinds.controls.get("MOVEDOWN"):
+        elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
             self.ship.moving_down = False
-        if event.key == self.keybinds.controls.get("MOVELEFT"):
+        if event.key == self.keybinds.controls.get(self.keybinds.MOVELEFT):
             self.ship.moving_left = False
-        elif event.key == self.keybinds.controls.get("MOVERIGHT"):
+        elif event.key == self.keybinds.controls.get(self.keybinds.MOVERIGHT):
             self.ship.moving_right = False
-        if event.key == self.keybinds.controls.get("MISSILEATTACK"):
+        if event.key == self.keybinds.controls.get(self.keybinds.MISSILEATTACK):
             self.ship.is_firing = False
 
 
