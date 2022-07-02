@@ -1,8 +1,9 @@
-import pygame 
+import pygame
 from pygame.sprite import Sprite
 from arrow import Arrow
 from beam import Beam
 from bullet import Bullet
+
 
 class Ship(Sprite):
     """A class to manage the ship."""
@@ -19,8 +20,8 @@ class Ship(Sprite):
         self.last_shot = pygame.time.get_ticks()
         self.is_firing = False
         self.is_flipped = False
-        self.y = float(self.rect.y) 
-        self.x = float(self.rect.x) 
+        self.y = float(self.rect.y)
+        self.x = float(self.rect.x)
         self._create_movement_flags()
 
     def _create_objects(self, ai_game):
@@ -34,21 +35,20 @@ class Ship(Sprite):
         self.sound = ai_game.sound
         self.image = pygame.image.load('assets/images/ship.bmp')
 
-
     def _create_movement_flags(self):
         """Creates the movement flags for the ship for smooth movement."""
         self.moving_up = False
-        self.moving_down = False 
+        self.moving_down = False
         self.moving_left = False
-        self.moving_right = False 
+        self.moving_right = False
 
     def blitme(self):
         """Draw the ship at its current location."""
-        self.screen.blit(self.image, self.rect) 
+        self.screen.blit(self.image, self.rect)
 
     def update(self, dt):
         """Update the ship's position based on the movement flag."""
-        if self.moving_up and self.rect.top > 60: 
+        if self.moving_up and self.rect.top > 60:
             self.y -= self.settings.ship_speed * dt
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom - 60:
             self.y += self.settings.ship_speed * dt
@@ -58,8 +58,8 @@ class Ship(Sprite):
             self.x += self.settings.ship_speed * dt
         if self.is_firing:
             self._fire_bullet()
-        self.rect.y = self.y 
-        self.rect.x = self.x 
+        self.rect.y = self.y
+        self.rect.x = self.x
         self.game.scoreboard.prep_missiles()
 
     def position_ship(self):
@@ -86,7 +86,7 @@ class Ship(Sprite):
         if self.is_flipped:
             self.settings.bullet_speed *= 2.50
             self.settings.ship_speed *= 1.25
-        else: 
+        else:
             self.settings.bullet_speed *= 0.40
             self.settings.ship_speed *= 0.80
 
@@ -100,8 +100,7 @@ class Ship(Sprite):
         """Create a new bullet and add it to the bullets group."""
         if self.state.state == self.state.GAMEPLAY:
             now = pygame.time.get_ticks()
-            if (len(self.game.bullets) < self.settings.bullets_allowed and
-                    now - self.last_shot > self.fire_delay): 
+            if len(self.game.bullets) < self.settings.bullets_allowed and now - self.last_shot > self.fire_delay:
                 self.last_shot = now
                 new_bullet = Bullet(self.game, self)
                 if self.is_flipped:
@@ -112,7 +111,7 @@ class Ship(Sprite):
     def fire_beam(self):
         """Create a new beam and add it to the bullets group."""
         if self.state.state == self.state.GAMEPLAY:
-            if len(self.game.beams) < self.stats.charges_remaining: 
+            if len(self.game.beams) < self.stats.charges_remaining:
                 new_beam = Beam(self.game, self)
                 if self.is_flipped:
                     new_beam.rotate_beam()
@@ -120,5 +119,3 @@ class Ship(Sprite):
                 self.stats.charges_remaining -= 1
                 self.game.scoreboard.prep_beams()
                 self.sound.play_sfx("beam")
-
-

@@ -1,5 +1,6 @@
 import pygame
 
+
 class GameState:
     """Class to manage the state of the game."""
 
@@ -22,6 +23,4 @@ class GameState:
         """Creates the game states that game be changed throughout the game."""
         self.state = self.MAINMENU
         self.pause_state = 0
-        self.music_state = {"COUNTDOWN": False, "GAMEPLAY": False, 
-                "MENU": False, "GAMEOVER": False, "PAUSE": False}
-
+        self.music_state = {"COUNTDOWN": False, "GAMEPLAY": False, "MENU": False, "GAMEOVER": False, "PAUSE": False}

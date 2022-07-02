@@ -4,6 +4,7 @@ from math import sqrt
 from random import randint
 from gunner_bullet import GunnerBullet
 
+
 class Gunner(Sprite):
     """A class to represent an elite gunner enemy."""
 
@@ -40,7 +41,7 @@ class Gunner(Sprite):
 
     def _set_initial_coordinates(self):
         """Sets the initial coordinates for gunners and their rects."""
-        self.rect.x = self.screen_rect.right 
+        self.rect.x = self.screen_rect.right
         self.rect.y = self.screen_rect.centery
         self.y = float(self.rect.y)
         self.x = float(self.rect.x)
@@ -56,7 +57,7 @@ class Gunner(Sprite):
     def _fire_bullets(self):
         """Creates new bullets based on a cooldown"""
         now = pygame.time.get_ticks()
-        if now - self.last_shot > self.fire_delay: 
+        if now - self.last_shot > self.fire_delay:
             self.last_shot = now
             new_gbullet = GunnerBullet(self.game, self)
             self.gunner_bullets.add(new_gbullet)
@@ -72,12 +73,11 @@ class Gunner(Sprite):
             self.y += self.settings.gunner_speed * dt * speed_bonus
         if self.rect.centery > self.ship.rect.centery:
             self.y -= self.settings.gunner_speed * dt * speed_bonus
-        self.rect.y = self.y 
+        self.rect.y = self.y
         self.rect.x = self.x
 
     def _show_damage(self):
         """Updates the image of the gunner if it's low on HP."""
         if self.hitpoints < 5:
-            self.image.fill((218,44,67), special_flags=pygame.BLEND_MIN)
+            self.image.fill((218, 44, 67), special_flags=pygame.BLEND_MIN)
             self.berserk = True
-

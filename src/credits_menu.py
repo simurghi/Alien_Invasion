@@ -1,7 +1,9 @@
 from menu import *
 
+
 class CreditsMenu(Menu):
     """Class to credit contributors information."""
+
     def __init__(self, ai_game):
         super().__init__(ai_game)
         self._credit_contributors()
@@ -28,8 +30,16 @@ class CreditsMenu(Menu):
         self.code_button3 = Button(ai_game, self.code_credit_text3, -25, -200, 800, 50, 16)
         self.code_button_credits = (self.code_button1, self.code_button2, self.code_button3)
         self.back_button = Button(ai_game, "Back", 250, -275)
-        self.buttons = (self.art_button0, self.art_button1, self.art_button2, self.code_button0,
-                self.code_button1, self.code_button2,  self.code_button3, self.back_button)
+        self.buttons = (
+            self.art_button0,
+            self.art_button1,
+            self.art_button2,
+            self.code_button0,
+            self.code_button1,
+            self.code_button2,
+            self.code_button3,
+            self.back_button,
+        )
 
     def _check_button(self, button):
         button_clicked = button.check_mouse_click()
@@ -52,10 +62,9 @@ class CreditsMenu(Menu):
                     pass
 
     def draw_buttons(self):
-        """ Draws buttons to the screen."""
-        self.screen.blit(self.game.menu_image, (0, 0)) 
+        """Draws buttons to the screen."""
+        self.screen.blit(self.game.menu_image, (0, 0))
         self._highlight_colors()
         for button in self.buttons:
             if button.display_main:
                 button.draw_button()
-

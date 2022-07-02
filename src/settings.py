@@ -1,5 +1,6 @@
 import pygame, os
 
+
 class Settings:
     """A class to store all settings for Alien Invasion."""
 
@@ -13,8 +14,7 @@ class Settings:
 
     def _init_option_states(self):
         """For options in the menu with multiple states."""
-        self.GAME_SPEEDS = ("SPD: Slow", "SPD: Normal", "SPD: Fast",
-                "SPD: Very Fast", "SPD: Ludicrous")
+        self.GAME_SPEEDS = ("SPD: Slow", "SPD: Normal", "SPD: Fast", "SPD: Very Fast", "SPD: Ludicrous")
         self.GFX_SETTINGS = ("REZ: Native", "REZ: Scaled", "REZ: Full Scaled")
         self.HUD_SETTINGS = ("HUD: Classic", "HUD: Alt", "HUD: OFF")
         self.ARROW_SETTINGS = ("Arrows: ALL", "Arrows: Mine", "Arrows: Ship", "Arrows: OFF")
@@ -25,7 +25,7 @@ class Settings:
         self.screen_width = 960
         self.screen_height = 640
         self.FPS = 120.0
-        self.bg_color = (0,0,0)
+        self.bg_color = (0, 0, 0)
 
     def _initialize_user_preferences(self):
         """Sets default preferences for user options."""
@@ -41,7 +41,6 @@ class Settings:
         self.arrow_counter = 0
         self.score_mode = self.SCORE_SETTINGS[0]
         self.score_counter = 0
-
 
     def _initialize_static_settings(self):
         """Initialize settings that do not change throughout the game."""
@@ -102,5 +101,5 @@ class Settings:
         self.gunner_bullet_speed += self.speedup_scale * self.speed_add / 3
         self.alien_speed += self.speedup_scale * self.speed_add
         self.mine_speed += self.speedup_scale * self.speed_add / 3
-        self.alien_points += self.score_scale 
+        self.alien_points += self.score_scale
         self.scroll_speed += -20

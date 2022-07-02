@@ -1,13 +1,15 @@
 import pygame
 
+
 class Sound:
     """Class to track and manage sound in Alien Invasion."""
+
     def __init__(self, ai_game):
         self.settings = ai_game.settings
         self.state = ai_game.state
         self._load_sfx()
         self._set_volume()
- 
+
     def _load_sfx(self):
         """Loads sound assets."""
         self.bullet_sfx = pygame.mixer.Sound("assets/audio/MissileFire.wav")
@@ -38,32 +40,23 @@ class Sound:
         """Checks to see if the game should play explosion SFX."""
         if self.settings.sound_volume:
             self._set_volume()
-            if (sound_event == "explosion" and 
-                    self.state.state is self.state.GAMEPLAY):
+            if sound_event == "explosion" and self.state.state is self.state.GAMEPLAY:
                 self.explosion_sfx.play()
-            elif (sound_event == "bullet" and 
-                self.state.state is self.state.GAMEPLAY):
+            elif sound_event == "bullet" and self.state.state is self.state.GAMEPLAY:
                 self.bullet_sfx.play()
-            elif (sound_event == "beam" and 
-                self.state.state is self.state.GAMEPLAY):
+            elif sound_event == "beam" and self.state.state is self.state.GAMEPLAY:
                 self.beam_sfx.play()
-            elif (sound_event == "flip" and 
-                    self.state.state is self.state.GAMEPLAY):
+            elif sound_event == "flip" and self.state.state is self.state.GAMEPLAY:
                 self.flip_sfx.play()
-            elif (sound_event == "gunner" and 
-                    self.state.state is self.state.GAMEPLAY):
+            elif sound_event == "gunner" and self.state.state is self.state.GAMEPLAY:
                 self.gunner_sfx.play()
-            elif (sound_event == "mine" and
-                    self.state.state is self.state.GAMEPLAY):
+            elif sound_event == "mine" and self.state.state is self.state.GAMEPLAY:
                 self.detect_sfx.play()
-            elif (sound_event == "options_menu" and 
-                    self.state.state is not self.state.GAMEOVER):
+            elif sound_event == "options_menu" and self.state.state is not self.state.GAMEOVER:
                 self.menu_sfx.play()
-            elif (sound_event == "options_menu_unselect" and 
-                    self.state.state is not self.state.GAMEOVER):
+            elif sound_event == "options_menu_unselect" and self.state.state is not self.state.GAMEOVER:
                 self.menu_unselect_sfx.play()
-            elif (sound_event == "game_over" and 
-                    self.state.state is self.state.GAMEOVER):
+            elif sound_event == "game_over" and self.state.state is self.state.GAMEOVER:
                 self.menu_sfx.play()
             else:
                 pass
@@ -71,9 +64,7 @@ class Sound:
     def play_impact_sfx(self, beam_impact):
         """Checks to see if the game should play damage SFX
         and play beam or bullet sounds."""
-        if (self.settings.sound_volume and 
-                self.state.state is self.state.GAMEPLAY and not beam_impact):
+        if self.settings.sound_volume and self.state.state is self.state.GAMEPLAY and not beam_impact:
             self.damage_sfx.play()
-        elif (self.settings.sound_volume and 
-                self.state.state is self.state.GAMEPLAY and beam_impact):
+        elif self.settings.sound_volume and self.state.state is self.state.GAMEPLAY and beam_impact:
             self.beam_damage_sfx.play()

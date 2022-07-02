@@ -4,6 +4,7 @@ from math import sqrt
 from random import randint
 from arrow import WarningArrow
 
+
 class Mine(Sprite):
     """A class to represent an elite mine enemy."""
 
@@ -22,7 +23,7 @@ class Mine(Sprite):
         self.x = float(self.rect.x)
         self.warning_arrow = WarningArrow(ai_game, self)
         self.radius = int(self.rect.width / 2) - 2
-        pygame.draw.circle(self.image, (255,0,0), self.rect.center, self.radius)
+        pygame.draw.circle(self.image, (255, 0, 0), self.rect.center, self.radius)
 
     def _load_assets(self):
         """Loads the images for the mines and stores them in a list. Also loads warning sound."""
@@ -53,7 +54,7 @@ class Mine(Sprite):
         self.counter += 1 * dt
         if self.counter >= animation_speed and self.index < len(self.mine_images) - 1:
             self.counter = 0
-            self.index+= 1
+            self.index += 1
             self.image = self.mine_images[self.index]
         # Reset animation index if it completes to repeat animation
         if self.index >= len(self.mine_images) - 1 and self.counter >= animation_speed:
@@ -77,8 +78,8 @@ class Mine(Sprite):
             self.y += self.settings.mine_speed * dt * speed_mult
         if self.y > self.ship.y:
             self.y -= self.settings.mine_speed * dt * speed_mult
-        self.rect.y = self.y 
-        self.rect.x = self.x 
+        self.rect.y = self.y
+        self.rect.x = self.x
 
     def set_random_position(self):
         """Sets a random position on spawn."""
@@ -103,26 +104,27 @@ class Mine(Sprite):
             self.rect.centerx = self.screen_rect.centerx * 2 / 3
             self.rect.y = self.screen_rect.top
         elif self.random_pos == 9:
-            self.rect.centerx = self.screen_rect.centerx 
+            self.rect.centerx = self.screen_rect.centerx
             self.rect.y = self.screen_rect.top
         elif self.random_pos == 10:
-            self.rect.centerx = self.screen_rect.centerx 
+            self.rect.centerx = self.screen_rect.centerx
             self.rect.y = self.screen_rect.bottom
 
     def _cqc_warning(self):
         """If a mine is close to the player ship, they will receive a warning.
         Additionally, the mine's blinking animation will be faster"""
-        formula_x = sqrt((self.ship.rect.centerx - self.rect.centerx)**2 + 
-                (self.ship.rect.centerx - self.rect.centerx)**2)
-        formula_y = sqrt((self.ship.rect.centery - self.rect.centery)**2 + 
-                (self.ship.rect.centery - self.rect.centery)**2)
+        formula_x = sqrt(
+            (self.ship.rect.centerx - self.rect.centerx) ** 2 + (self.ship.rect.centerx - self.rect.centerx) ** 2
+        )
+        formula_y = sqrt(
+            (self.ship.rect.centery - self.rect.centery) ** 2 + (self.ship.rect.centery - self.rect.centery) ** 2
+        )
         now = pygame.time.get_ticks()
-        if (formula_x < 201 and formula_y < 201 and 
-                now - self.last_warning > self.audio_delay): 
-                self.last_warning = now
-                self.sound.play_sfx("mine")
-                self.play_warning = True
-                return 0.05
-        else: 
+        if formula_x < 201 and formula_y < 201 and now - self.last_warning > self.audio_delay:
+            self.last_warning = now
+            self.sound.play_sfx("mine")
+            self.play_warning = True
+            return 0.05
+        else:
             self.play_warning = False
             return 0.10

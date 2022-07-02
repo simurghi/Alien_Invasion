@@ -1,5 +1,6 @@
 from menu import *
 
+
 class MainMenu(Menu):
     """Class that holds the state and behavior for the main menu screen."""
 
@@ -16,9 +17,14 @@ class MainMenu(Menu):
         self.help_button = Button(ai_game, "Help", 250, -75)
         self.credits_button = Button(ai_game, "Credits", 250, -150)
         self.exit_button = Button(ai_game, "Quit", 250, -225)
-        self.buttons = (self.play_button, self.options_button, 
-                self.controls_button, self.help_button, self.credits_button,
-                self.exit_button)
+        self.buttons = (
+            self.play_button,
+            self.options_button,
+            self.controls_button,
+            self.help_button,
+            self.credits_button,
+            self.exit_button,
+        )
 
     def _check_button(self, button):
         button_clicked = button.check_mouse_click()
@@ -42,8 +48,8 @@ class MainMenu(Menu):
                     sys.exit()
 
     def draw_buttons(self):
-        """ Draws buttons to the screen."""
-        self.screen.blit(self.game.menu_image, (0, 0)) 
+        """Draws buttons to the screen."""
+        self.screen.blit(self.game.menu_image, (0, 0))
         self.game.scoreboard.prep_high_score_main_menu()
         self._highlight_colors()
         for button in self.buttons:

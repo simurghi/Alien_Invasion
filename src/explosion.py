@@ -1,8 +1,8 @@
-import pygame 
+import pygame
 from pygame.sprite import Sprite
 
-class Explosion(Sprite):
 
+class Explosion(Sprite):
     def __init__(self, center, size=1):
         """Initialize explosion coordinates."""
         super().__init__()
@@ -32,7 +32,7 @@ class Explosion(Sprite):
         self.counter += 1 * dt
         if self.counter >= animation_speed and self.index < len(self.explosion_images) - 1:
             self.counter = 0
-            self.index+= 1
+            self.index += 1
             self.image = self.explosion_images[self.index]
         # Reset animation index if it completes
         if self.index >= len(self.explosion_images) - 1 and self.counter >= animation_speed:

@@ -1,6 +1,7 @@
 import pygame
 
-class Controller: 
+
+class Controller:
     """Class to track and manage the gamepad."""
 
     def __init__(self, ai_game):
@@ -8,7 +9,7 @@ class Controller:
         self._check_gamepad()
         self._set_button_names()
         self._create_objects(ai_game)
-        self.analog_motion = [0,0]
+        self.analog_motion = [0, 0]
 
     def _check_gamepad(self):
         """Checks if a gamepad is connected and assigns it to the first one if it is."""
@@ -35,15 +36,15 @@ class Controller:
         self.ship = ai_game.ship
 
     def check_joybuttondown_events(self, event):
-        """respond to gamepad face button presses.""" 
+        """respond to gamepad face button presses."""
         self._check_combat_controls(event)
         self._check_menu_controls(event)
         self._check_game_over_controls(event)
 
     def check_joybuttonup_events(self, event):
-        """respond to gamepad face button releases.""" 
+        """respond to gamepad face button releases."""
         self._check_combat_controls(event)
-        
+
     def _check_combat_controls(self, event):
         """Handles input while in combat."""
         if self.state.state is self.state.GAMEPLAY:
@@ -55,9 +56,11 @@ class Controller:
                 self.ship.flip_ship()
             if event.button == self.BTN_X and event.type == pygame.JOYBUTTONDOWN:
                 self.ship.fire_beam()
-        if (event.button == self.BTN_START and event.type == pygame.JOYBUTTONDOWN and 
-                (self.state.state is self.state.GAMEPLAY 
-                    or self.state.state is self.state.PAUSE)): 
+        if (
+            event.button == self.BTN_START
+            and event.type == pygame.JOYBUTTONDOWN
+            and (self.state.state is self.state.GAMEPLAY or self.state.state is self.state.PAUSE)
+        ):
             self.sound.play_sfx("options_menu")
             self.game.pause.check_pause()
 
@@ -89,7 +92,7 @@ class Controller:
 
     def check_joyaxismotion_events(self, event):
         """respond to analogue stick input"""
-        if event.axis < 2: 
+        if event.axis < 2:
             self.analog_motion[event.axis] = event.value
             if abs(self.analog_motion[0]) < 0.1:
                 self.analog_motion[0] = 0
@@ -115,7 +118,7 @@ class Controller:
                     self.ship.moving_down = False
 
     def check_joyhatmotion_events(self, event):
-        """respond to dpad presses on the gamepad.""" 
+        """respond to dpad presses on the gamepad."""
         if event.value[0] == 1:
             self.ship.moving_right = True
         elif event.value[0] == -1:

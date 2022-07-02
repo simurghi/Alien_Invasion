@@ -1,5 +1,6 @@
-import pygame 
-from pygame.sprite import Sprite 
+import pygame
+from pygame.sprite import Sprite
+
 
 class Beam(Sprite):
     """A class to manage bullets fired from the ship."""
@@ -10,7 +11,7 @@ class Beam(Sprite):
         self._load_assets()
         self.ai_game = ai_game
         self.screen = ai_game.screen
-        self.settings = ai_game.settings 
+        self.settings = ai_game.settings
         self._initialize_dynamic_settings()
         self.image = self.beam_images[self.index]
         self.rect = self.image.get_rect()
@@ -42,14 +43,14 @@ class Beam(Sprite):
 
     def update(self, dt):
         """Update method for explosions"""
-        self.x += self.settings.bullet_speed  * self.direction * 1.50 * dt
+        self.x += self.settings.bullet_speed * self.direction * 1.50 * dt
         self.rect.x = self.x
         # Playback speed at which our explosions cycle through, lower is faster
         animation_speed = 0.0375
         self.counter += 1 * dt
         if self.counter >= animation_speed and self.index < len(self.beam_images) - 1:
             self.counter = 0
-            self.index+= 1
+            self.index += 1
             if self.direction > 0:
                 self.image = self.beam_images[self.index]
             else:

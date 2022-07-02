@@ -3,7 +3,7 @@ import pygame, sys, time, logging
 from alien import Alien, ChonkyAlien
 from aspect_ratio import AspectRatio
 from beam import Beam
-from bullet import Bullet 
+from bullet import Bullet
 from controller import Controller
 from controls_menu import ControlsMenu
 from credits_menu import CreditsMenu
@@ -20,16 +20,17 @@ from music import Music
 from options_menu import OptionsMenu
 from pause_menu import PauseMenu
 from random import randint
-from scoreboard import Scoreboard 
-from ship import Ship 
+from scoreboard import Scoreboard
+from ship import Ship
 from settings import Settings
 from sound import Sound
 from states import GameState
 
+
 class AlienInvasion:
     """Overall class to manage game assets and behavior."""
 
-    def __init__(self): 
+    def __init__(self):
         """Initialize the game and create game resources."""
         pygame.init()
         pygame.display.set_caption("Alien Invasion")
@@ -49,8 +50,7 @@ class AlienInvasion:
         self.previous_time = time.time()
         self.time_game = time.time()
         self.settings = Settings()
-        self.screen = pygame.display.set_mode(
-                (self.settings.screen_width, self.settings.screen_height), pygame.SCALED)
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height), pygame.SCALED)
         self.screen_rect = self.screen.get_rect()
         self.keybinds = Keybinds()
         self.state = GameState()
@@ -81,12 +81,12 @@ class AlienInvasion:
 
     def run_game(self):
         """Start the main loop for the game."""
-        while True: 
+        while True:
             dt = self.calculate_delta_time()
             self._check_events()
             self.music.play_music()
-            self.start_counddown()
-            if self.state.state is self.state.GAMEPLAY and self.countdown <= 0: 
+            self.start_countdown()
+            if self.state.state is self.state.GAMEPLAY and self.countdown <= 0:
                 self.ship.update(dt)
                 self.ship.arrow.update()
                 self._update_bullets(dt)
@@ -108,15 +108,15 @@ class AlienInvasion:
         return dt
 
     def set_fps_cap(self):
-         """Sets the internal FPS cap for the game.
-         Current time is calculated after all other events in the game loop have elapsed
-         The time different is how long our frame took to process
-         The game will be delayed based on the game's FPS if we finish the loop early"""
-         current_time = time.time()
-         time_diff = current_time - self.time_game
-         delay = max(1.0/self.settings.FPS - time_diff, 0)
-         time.sleep(delay)
-         self.time_game = current_time
+        """Sets the internal FPS cap for the game.
+        Current time is calculated after all other events in the game loop have elapsed
+        The time different is how long our frame took to process
+        The game will be delayed based on the game's FPS if we finish the loop early"""
+        current_time = time.time()
+        time_diff = current_time - self.time_game
+        delay = max(1.0 / self.settings.FPS - time_diff, 0)
+        time.sleep(delay)
+        self.time_game = current_time
 
     def _check_events(self):
         """Respond to keypresses, gamepad actions, and mouse events."""
@@ -128,7 +128,7 @@ class AlienInvasion:
             elif event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
-                self._check_keyup_events(event) 
+                self._check_keyup_events(event)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self._check_mousedown_events()
             elif event.type == pygame.MOUSEBUTTONUP:
@@ -160,10 +160,9 @@ class AlienInvasion:
             self.explosions.draw(self.screen)
             self._make_game_cinematic()
             self.scoreboard.show_score()
-            if self.countdown > 0: 
-                self.scoreboard.create_countdown("GET READY", x_offset = -100, y_offset=0)
-                self.scoreboard.create_countdown(str(self.countdown),
-                        x_offset=100, y_offset=0)
+            if self.countdown > 0:
+                self.scoreboard.create_countdown("GET READY", x_offset=-100, y_offset=0)
+                self.scoreboard.create_countdown(str(self.countdown), x_offset=100, y_offset=0)
         elif self.state.state is self.state.PAUSE:
             self.pause.render_pause()
         elif self.state.state is self.state.GAMEOVER:
@@ -183,7 +182,7 @@ class AlienInvasion:
         pygame.display.flip()
 
     def _clear_state(self):
-        """ Resets the stats for the game on play/restart."""
+        """Resets the stats for the game on play/restart."""
         self.settings._initialize_dynamic_settings()
         self.stats.reset_stats()
         self.scoreboard.prep_score()
@@ -208,17 +207,17 @@ class AlienInvasion:
         """Update position of the bullets and get rid of the old bullets."""
         self.bullets.update(dt)
         for bullet in self.bullets.copy():
-            if bullet.rect.right > self.settings.screen_width or bullet.rect.right < 0: 
+            if bullet.rect.right > self.settings.screen_width or bullet.rect.right < 0:
                 self.bullets.remove(bullet)
         self._check_bullet_alien_collision(self.aliens, 0.5)
         self._check_bullet_alien_collision(self.mines, 1)
         self._check_bullet_alien_collision(self.gunners, 3.0)
-        
+
     def _update_beams(self, dt):
         """Update position of the beams and get rid of the old beams."""
         self.beams.update(dt)
         for beam in self.beams.copy():
-            if beam.rect.right > self.settings.screen_width or beam.rect.right < 0: 
+            if beam.rect.right > self.settings.screen_width or beam.rect.right < 0:
                 self.beams.remove(beam)
         self._check_bullet_alien_collision(self.aliens, 0.5)
         self._check_bullet_alien_collision(self.mines, 0.75)
@@ -226,13 +225,11 @@ class AlienInvasion:
 
     def _check_bullet_alien_collision(self, enemy_list, score_multiplier):
         """Respond to bullet-alien collisions."""
-        collisions = pygame.sprite.groupcollide(enemy_list,
-                self.bullets, False, False)
-        collisions_beam = pygame.sprite.groupcollide(enemy_list,
-                self.beams, False, False)
+        collisions = pygame.sprite.groupcollide(enemy_list, self.bullets, False, False)
+        collisions_beam = pygame.sprite.groupcollide(enemy_list, self.beams, False, False)
         self._process_collision(collisions, enemy_list, score_multiplier, False)
         self._process_collision(collisions_beam, enemy_list, score_multiplier, True)
-    
+
     def _process_collision(self, collisions, enemy_list, score_multiplier, is_beam):
         """Processes the game logic based on the type of collision"""
         if collisions:
@@ -242,7 +239,7 @@ class AlienInvasion:
                 elif enemy_list is self.gunners:
                     if self.gunners and self.gunners.sprite.hitpoints > 0:
                         self._damage_gunner(alien_index, bullet_indexes, is_beam)
-                    else: 
+                    else:
                         self._kill_gunner(alien_index, bullet_indexes, score_multiplier)
 
     def _process_trash_and_mines(self, alien_index, bullet_indexes, score_multiplier, is_beam):
@@ -254,11 +251,11 @@ class AlienInvasion:
         self._collision_cleanup_and_score(alien_index)
 
     def _damage_gunner(self, alien_index, bullet_indexes, is_beam):
-        """If the enemy is a gunner and isn't killed by an impact, 
+        """If the enemy is a gunner and isn't killed by an impact,
         calculate damage dealt and effects."""
         if is_beam:
             self.gunners.sprite.hitpoints -= 5
-            self._play_impact(alien_index, beam_impact = True)
+            self._play_impact(alien_index, beam_impact=True)
             if self.gunners.sprite.hitpoints > 0:
                 self.beams.remove(bullet_indexes)
         elif not is_beam:
@@ -269,10 +266,10 @@ class AlienInvasion:
     def _kill_gunner(self, alien_index, bullet_indexes, score_multiplier):
         """If the enemy is a gunner and we kill it, calculate score, effects, and cleanup."""
         self._calculate_score(alien_index, bullet_indexes, score_multiplier)
-        self._play_explosion(alien_index, is_gunner = True)
+        self._play_explosion(alien_index, is_gunner=True)
         self._collision_cleanup_and_score_gunner(alien_index)
 
-    def _collision_cleanup_and_score_gunner(self,alien_index):
+    def _collision_cleanup_and_score_gunner(self, alien_index):
         """Removes collided gunners and bullets and adjusts score."""
         if self.gunners and self.gunners.sprite.gunner_bullets:
             self._explode_missiles()
@@ -280,7 +277,7 @@ class AlienInvasion:
         self.scoreboard.prep_score()
         self.scoreboard.check_high_score()
 
-    def _collision_cleanup_and_score(self,alien_index):
+    def _collision_cleanup_and_score(self, alien_index):
         """Removes collided aliens and adjusts score."""
         alien_index.kill()
         self.scoreboard.prep_score()
@@ -291,16 +288,16 @@ class AlienInvasion:
         for chonkymissile in self.gunners.sprite.gunner_bullets:
             explosion = Explosion(chonkymissile.rect.center, 2)
             self.explosions.add(explosion)
-        
-    def _calculate_score(self, alien_index, projectile_index, enemy_mult = 1):
+
+    def _calculate_score(self, alien_index, projectile_index, enemy_mult=1):
         """Calculates score multipliers for killed enemies."""
         cqc_mult = self._check_cqc_distance(alien_index)
         backstab_mult = self._check_backstab(projectile_index)
         bonus_mult = 1.25 if (cqc_mult > 1 and backstab_mult > 1) else 1
-        self.stats.score += round(self.settings.alien_points * 
-                (cqc_mult + backstab_mult) * bonus_mult * enemy_mult)
-        self.stats.hidden_score += round(self.settings.alien_points * 
-                (cqc_mult + backstab_mult) * bonus_mult * enemy_mult)
+        self.stats.score += round(self.settings.alien_points * (cqc_mult + backstab_mult) * bonus_mult * enemy_mult)
+        self.stats.hidden_score += round(
+            self.settings.alien_points * (cqc_mult + backstab_mult) * bonus_mult * enemy_mult
+        )
         self._calculate_beam_addition()
 
     def _calculate_beam_addition(self):
@@ -317,7 +314,7 @@ class AlienInvasion:
         else:
             self.settings.adjust_beams = False
 
-    def _play_explosion(self, alien_index, is_gunner = False):
+    def _play_explosion(self, alien_index, is_gunner=False):
         """Plays explosions and sounds if enabled."""
         if not is_gunner:
             explosion = Explosion(alien_index.rect.center)
@@ -326,7 +323,7 @@ class AlienInvasion:
         self.explosions.add(explosion)
         self.sound.play_sfx("explosion")
 
-    def _play_impact(self, alien_index, beam_impact= False):
+    def _play_impact(self, alien_index, beam_impact=False):
         """Plays impact and sounds if enabled."""
         explosion = Explosion(alien_index.rect.center, 2)
         self.explosions.add(explosion)
@@ -334,8 +331,9 @@ class AlienInvasion:
 
     def _check_cqc_distance(self, alien):
         """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
-        formula = sqrt((self.ship.rect.centerx - alien.rect.centerx)**2 + 
-                (self.ship.rect.centerx - alien.rect.centerx)**2)
+        formula = sqrt(
+            (self.ship.rect.centerx - alien.rect.centerx) ** 2 + (self.ship.rect.centerx - alien.rect.centerx) ** 2
+        )
         if formula < 201:
             return 4
         else:
@@ -345,15 +343,15 @@ class AlienInvasion:
         """Checks to see if the bullet hit the alien from behind for a score bonus."""
         multiplier = 0
         for bullet_index in bullet_indexes:
-            if bullet_index.direction < 0: 
+            if bullet_index.direction < 0:
                 multiplier += 4
             else:
                 multiplier += 1 if not multiplier else 0
         return multiplier
 
     def _update_aliens(self, dt):
-        """Checks if the player ship collides with aliens, 
-        then deletes chaff aliens if they go offscreen.""" 
+        """Checks if the player ship collides with aliens,
+        then deletes chaff aliens if they go offscreen."""
         self.aliens.update(dt)
         self.mines.update(dt)
         self.gunners.update(dt)
@@ -363,31 +361,34 @@ class AlienInvasion:
             self._ship_hit()
         if pygame.sprite.spritecollide(self.ship, self.gunners, False, pygame.sprite.collide_mask):
             self._ship_hit()
-        if (self.gunners and self.gunners.sprite.gunner_bullets and 
-                pygame.sprite.spritecollide(self.ship, self.gunners.sprite.gunner_bullets, 
-                    False, pygame.sprite.collide_mask)):
-                    self._ship_hit()
+        if (
+            self.gunners
+            and self.gunners.sprite.gunner_bullets
+            and pygame.sprite.spritecollide(
+                self.ship, self.gunners.sprite.gunner_bullets, False, pygame.sprite.collide_mask
+            )
+        ):
+            self._ship_hit()
         for alien in self.aliens.copy():
-            if alien.rect.left < -100: 
+            if alien.rect.left < -100:
                 self.aliens.remove(alien)
 
     def _scroll_background(self, dt):
         """Smoothly scrolls the background image on the screen to give illusion of movement."""
         self.rel_background_x = self.settings.background_x % self.background_image.get_rect().width
-        self.screen.blit(self.background_image, (
-            self.rel_background_x - self.background_image.get_rect().width, 0))
+        self.screen.blit(self.background_image, (self.rel_background_x - self.background_image.get_rect().width, 0))
         if self.rel_background_x < self.settings.screen_width:
             self.screen.blit(self.background_image, (self.rel_background_x, 0))
-        self.settings.background_x += floor((self.settings.scroll_speed * dt * 10)/10)
-    
+        self.settings.background_x += floor((self.settings.scroll_speed * dt * 10) / 10)
+
     def _check_keydown_events(self, event):
-        """respond to keypresses.""" 
+        """respond to keypresses."""
         if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
-            self.ship.moving_up = True 
+            self.ship.moving_up = True
         elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
             self.ship.moving_down = True
         if event.key == self.keybinds.controls.get(self.keybinds.MOVELEFT):
-            self.ship.moving_left = True 
+            self.ship.moving_left = True
         elif event.key == self.keybinds.controls.get(self.keybinds.MOVERIGHT):
             self.ship.moving_right = True
         if event.key == pygame.K_ESCAPE:
@@ -405,15 +406,18 @@ class AlienInvasion:
             self.ship.flip_ship()
 
     def _check_mousedown_events(self):
-        """respond to mouse clicks.""" 
+        """respond to mouse clicks."""
         mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
         mouse_pos = pygame.mouse.get_pos()
         if mouse_buttons[0] and self.state.state == self.state.CONTROLSMENU:
             self.controls_menu.check_controls_menu_buttons(mouse_pos)
         if mouse_buttons[2] and self.state.state == self.state.CONTROLSMENU:
             self.controls_menu.clear_keybind_button(mouse_pos)
-        elif ((mouse_buttons[0] or mouse_buttons[2]) and (self.state.state != self.state.GAMEPLAY 
-                or self.state.state != self.state.PAUSE or self.state.state != self.state.CONTROLSMENU)):
+        elif (mouse_buttons[0] or mouse_buttons[2]) and (
+            self.state.state != self.state.GAMEPLAY
+            or self.state.state != self.state.PAUSE
+            or self.state.state != self.state.CONTROLSMENU
+        ):
             if self.state.state == self.state.MAINMENU:
                 self.main_menu.check_menu_buttons()
             elif self.state.state == self.state.OPTIONSMENU:
@@ -433,11 +437,10 @@ class AlienInvasion:
                 self.ship.flip_ship()
 
     def _check_mouseup_events(self):
-        """respond to mouse releases.""" 
+        """respond to mouse releases."""
         mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
 
-        if (self.state.state == self.state.GAMEPLAY 
-                or self.state.state == self.state.PAUSE):
+        if self.state.state == self.state.GAMEPLAY or self.state.state == self.state.PAUSE:
             if not mouse_buttons[0]:
                 self.ship.is_firing = False
 
@@ -454,13 +457,11 @@ class AlienInvasion:
         if event.key == self.keybinds.controls.get(self.keybinds.MISSILEATTACK):
             self.ship.is_firing = False
 
-
     def _check_exit(self):
         """Checks to see if hitting ESC should exit the game."""
         if self.state.state == self.state.OPTIONSMENU:
             self.state.state = self.state.MAINMENU
-        elif (self.state.state == self.state.CONTROLSMENU and 
-                pygame.K_UNDERSCORE not in self.keybinds.controls.values()):
+        elif self.state.state == self.state.CONTROLSMENU and pygame.K_UNDERSCORE not in self.keybinds.controls.values():
             self.state.state = self.state.MAINMENU
         elif self.state.state == self.state.MAINMENU or self.state.state == self.state.GAMEOVER:
             self.stats.dump_stats_json()
@@ -468,24 +469,23 @@ class AlienInvasion:
             sys.exit()
 
     def _create_fleet(self):
-        """Create the fleet of aliens and find out 
+        """Create the fleet of aliens and find out
         how many can be populated in each fleet."""
         alien = Alien(self)
-        wave_spawn = randint(1,8)
+        wave_spawn = randint(1, 8)
         alien_width, alien_height = alien.rect.size
         available_space_y = self.settings.screen_height - (1.50 * alien_height)
-        number_aliens_y = int(available_space_y // (1.50 * alien_height)) 
+        number_aliens_y = int(available_space_y // (1.50 * alien_height))
         ship_width = self.ship.rect.width
-        available_space_x = (self.settings.screen_height - 
-                (3 * alien_width) - ship_width)
-        number_cols = (available_space_x // (2 * alien_width)) 
+        available_space_x = self.settings.screen_height - (3 * alien_width) - ship_width
+        number_cols = available_space_x // (2 * alien_width)
         self._select_spawn_pattern(wave_spawn, number_cols, number_aliens_y)
 
-    def _create_mine(self, spawn_number = 1):
+    def _create_mine(self, spawn_number=1):
         """Create an alien and place it in a column."""
         position_list = []
         if len(self.mines) < 20:
-            for j in range(0,spawn_number):
+            for j in range(0, spawn_number):
                 mine = Mine(self)
                 self._check_unique_spawn(mine, position_list)
                 self.mines.add(mine)
@@ -496,55 +496,55 @@ class AlienInvasion:
         if not position_list:
             position_list.append(mine.random_pos)
         while mine.random_pos in position_list:
-            mine.random_pos = randint(1,10)
+            mine.random_pos = randint(1, 10)
             mine.set_random_position()
 
     def _select_spawn_pattern(self, wave_number, number_cols, number_aliens_y):
         """Selects a wave spawn pattern based on a random number."""
-        if wave_number == 1: 
+        if wave_number == 1:
             self._create_mine(5)
             self._create_trash_mobs(number_cols, number_aliens_y)
         elif wave_number == 2:
             self._create_mine(4)
-            self._create_trash_mobs(number_cols+1, number_aliens_y)
+            self._create_trash_mobs(number_cols + 1, number_aliens_y)
         elif wave_number == 3:
             self._create_mine(3)
-            self._create_trash_mobs(number_cols+2, number_aliens_y)
+            self._create_trash_mobs(number_cols + 2, number_aliens_y)
         elif wave_number == 4:
             self._create_mine(9)
-            self._create_trash_mobs(1,3)
+            self._create_trash_mobs(1, 3)
         elif wave_number == 5:
             if not self.gunners:
                 gunner = Gunner(self)
                 self.gunners.add(gunner)
                 self._create_mine(4)
-                self._create_trash_mobs(1,3)
-            else: 
+                self._create_trash_mobs(1, 3)
+            else:
                 self._create_mine(9)
-                self._create_trash_mobs(1,4)
+                self._create_trash_mobs(1, 4)
         elif wave_number == 6:
             if not self.gunners:
                 self._create_mine(2)
                 self._create_trash_mobs(number_cols, number_aliens_y)
                 gunner = Gunner(self)
                 self.gunners.add(gunner)
-            else: 
+            else:
                 self._create_mine(3)
-                self._create_trash_mobs(number_cols+2, number_aliens_y)
+                self._create_trash_mobs(number_cols + 2, number_aliens_y)
         elif wave_number == 7:
             if not self.gunners:
                 gunner = Gunner(self)
                 self.gunners.add(gunner)
                 self._create_mine(2)
-                self._create_trash_mobs(number_cols+1, number_aliens_y)
+                self._create_trash_mobs(number_cols + 1, number_aliens_y)
             else:
                 self._create_mine(1)
-                self._create_trash_mobs(number_cols+3, number_aliens_y)
+                self._create_trash_mobs(number_cols + 3, number_aliens_y)
         elif wave_number == 8:
-            self._create_trash_mobs(number_cols+3, number_aliens_y)
+            self._create_trash_mobs(number_cols + 3, number_aliens_y)
             self._create_mine(2)
-        else: 
-            self._create_trash_mobs(number_cols+3, number_aliens_y)
+        else:
+            self._create_trash_mobs(number_cols + 3, number_aliens_y)
 
     def _create_trash_mobs(self, number_cols, number_aliens_y):
         """Spawns waves of trash mobs based on wave pattern."""
@@ -556,9 +556,9 @@ class AlienInvasion:
         """Create an alien and place it in a column."""
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
-        alien.rect.y = alien_height + (1.65 * alien_height * alien_number) +  alien.random_y
+        alien.rect.y = alien_height + (1.65 * alien_height * alien_number) + alien.random_y
         alien.rect.x = (self.settings.screen_width + 100) + alien_width + int((2.25 * alien_width * col_number))
-        alien.x = float(alien.rect.x) 
+        alien.x = float(alien.rect.x)
         alien.y = float(alien.rect.y)
         self.aliens.add(alien)
 
@@ -574,7 +574,7 @@ class AlienInvasion:
             self.ship.position_ship()
             self.settings.respawn_timer = -0.5
             time.sleep(0.10)
-        else: 
+        else:
             self.enter_game_over()
             self.scoreboard.prep_score_game_over()
             self.scoreboard.prep_high_score_game_over()
@@ -587,7 +587,7 @@ class AlienInvasion:
         self.bullets.empty()
         self.gunners.empty()
         if self.gunners and self.gunners.sprite.gunner_bullets:
-                self.gunners.sprite.gunner_bullets.empty()
+            self.gunners.sprite.gunner_bullets.empty()
 
     def _play_explosion_on_death(self):
         """Plays an explosion at the position where the player died."""
@@ -598,14 +598,14 @@ class AlienInvasion:
     def _adjust_difficulty(self, dt):
         """Gradually increases the game speed as time elapses."""
         self.settings.difficulty_counter += 1 * dt
-        if self.settings.difficulty_counter - 20 > 0: 
+        if self.settings.difficulty_counter - 20 > 0:
             self.settings.difficulty_counter -= 20
             self.settings.increase_speed()
 
     def _respawn_enemies(self, dt):
         """Gradually increases the game speed as time elapses."""
         self.settings.respawn_timer += 1 * dt
-        if self.settings.respawn_timer - 0.10 > 0 and not self.aliens: 
+        if self.settings.respawn_timer - 0.10 > 0 and not self.aliens:
             self.settings.respawn_timer -= 0.10
             self._create_fleet()
 
@@ -626,16 +626,18 @@ class AlienInvasion:
         else:
             pygame.mouse.set_visible(True)
 
-    def start_counddown(self):
+    def start_countdown(self):
+        """creates the game countdown timer and decrements it over time"""
         count_timer = pygame.time.get_ticks()
         if count_timer - self.last_count > 1000:
             self.countdown -= 1
             self.last_count = count_timer
 
+
 if __name__ == '__main__':
     logging.basicConfig(filename="ERROR.log", filemode='w', level=logging.ERROR)
     ai = AlienInvasion()
-    try: 
+    try:
         ai.run_game()
     except:
         logging.exception('')

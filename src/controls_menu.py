@@ -1,7 +1,9 @@
-from menu import * 
+from menu import *
+
 
 class ControlsMenu(Menu):
     """Class the holds the state and behavior for the controls menu."""
+
     def __init__(self, ai_game):
         """Initialize button attributes."""
         super().__init__(ai_game)
@@ -17,15 +19,18 @@ class ControlsMenu(Menu):
         self.down_button = Button(self, self.keybinds.move_down_text, 250, 70)
         self.beam_button = Button(self, self.keybinds.beam_text, 250, 0)
         self.flip_button = Button(self, self.keybinds.flip_text, 250, -70)
-        self.missile_button = Button(self, self.keybinds.shoot_text, 250, -140) 
+        self.missile_button = Button(self, self.keybinds.shoot_text, 250, -140)
         self.reset_button = Button(self, "Reset Keys", 250, -210)
         self.back_button = Button(self, "Back", 250, -280)
-        self.key_buttons = {self.left_button: self.keybinds.MOVELEFT,
-                self.right_button: self.keybinds.MOVERIGHT, self.up_button:
-                self.keybinds.MOVEUP, self.down_button: self.keybinds.MOVEDOWN,
-                self.beam_button: self.keybinds.BEAMATTACK, self.flip_button:
-                self.keybinds.FLIPSHIP, self.missile_button:
-                self.keybinds.MISSILEATTACK}
+        self.key_buttons = {
+            self.left_button: self.keybinds.MOVELEFT,
+            self.right_button: self.keybinds.MOVERIGHT,
+            self.up_button: self.keybinds.MOVEUP,
+            self.down_button: self.keybinds.MOVEDOWN,
+            self.beam_button: self.keybinds.BEAMATTACK,
+            self.flip_button: self.keybinds.FLIPSHIP,
+            self.missile_button: self.keybinds.MISSILEATTACK,
+        }
         self.buttons = [self.reset_button, self.back_button]
         self._append_keybinds_to_buttons()
 
@@ -35,8 +40,8 @@ class ControlsMenu(Menu):
             self.buttons.append(key)
 
     def draw_buttons(self):
-        """ Draws buttons to the screen."""
-        self.screen.blit(self.game.menu_image, (0, 0)) 
+        """Draws buttons to the screen."""
+        self.screen.blit(self.game.menu_image, (0, 0))
         self._highlight_colors()
         self._toggle_colors()
         self._update_button_text()
@@ -46,12 +51,12 @@ class ControlsMenu(Menu):
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         for keybind_button, mapping in self.key_buttons.items():
-            self._check_keybind_button(mouse_pos, keybind_button, mapping) 
+            self._check_keybind_button(mouse_pos, keybind_button, mapping)
         self._check_reset_button()
         self._check_back_button()
 
     def _highlight_keybind_colors(self):
-        """ Toggles colors for buttons that are being selected."""
+        """Toggles colors for buttons that are being selected."""
         for button in self.key_buttons:
             button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
 
@@ -60,7 +65,7 @@ class ControlsMenu(Menu):
         done = False
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.sound.play_sfx("options_menu")
-            button.set_color((192,81,0), "Press a key or hit ESC", 32)
+            button.set_color((192, 81, 0), "Press a key or hit ESC", 32)
             button.draw_button()
             pygame.display.update(button.top_rect)
             while not done:
@@ -76,8 +81,10 @@ class ControlsMenu(Menu):
                             done = True
                             pygame.quit()
                             sys.exit()
-                        elif (event.key not in self.keybinds.controls.values()
-                                and event.key not in self.keybinds.reserved_keys):
+                        elif (
+                            event.key not in self.keybinds.controls.values()
+                            and event.key not in self.keybinds.reserved_keys
+                        ):
                             self.keybinds.controls[mapping] = event.key
                             done = True
 
@@ -100,35 +107,39 @@ class ControlsMenu(Menu):
             button[1]._prep_msg(self.keybinds.menu_text[button[0]])
 
     def _toggle_colors(self):
-        """ Toggles colors for buttons that have on/off states."""
+        """Toggles colors for buttons that have on/off states."""
         for button, mapping in self.key_buttons.items():
-            button.toggle_color(button.top_rect.collidepoint(pygame.mouse.get_pos()), 
-                self._check_empty_key(mapping))
+            button.toggle_color(button.top_rect.collidepoint(pygame.mouse.get_pos()), self._check_empty_key(mapping))
 
     def _check_empty_key(self, mapping):
-        """ Checks if a key is empty or not."""
+        """Checks if a key is empty or not."""
         if self.keybinds.controls.get(mapping) == pygame.K_UNDERSCORE:
             return False
-        else: 
+        else:
             return True
 
     def _check_back_button(self):
         """Enters the main menu from the options menu screen once clicked."""
         button_clicked = self.back_button.check_mouse_click()
-        if (button_clicked and pygame.K_UNDERSCORE not in self.keybinds.controls.values() and
-                self.game.state.state is self.game.state.CONTROLSMENU):
+        if (
+            button_clicked
+            and pygame.K_UNDERSCORE not in self.keybinds.controls.values()
+            and self.game.state.state is self.game.state.CONTROLSMENU
+        ):
             self.game.state.state = self.game.state.MAINMENU
             self.sound.play_sfx("options_menu")
 
     def _check_reset_button(self):
         """Clears the custom keybinds and resets to initial options."""
         button_clicked = self.reset_button.check_mouse_click()
-        if (button_clicked and self.game.state.state is self.game.state.CONTROLSMENU):
-            self.keybinds.controls = {self.keybinds.MOVELEFT: pygame.K_a,
-                    self.keybinds.MOVERIGHT: pygame.K_d, self.keybinds.MOVEUP:
-                    pygame.K_w, self.keybinds.MOVEDOWN: pygame.K_s,
-                    self.keybinds.MISSILEATTACK: pygame.K_j,
-                    self.keybinds.BEAMATTACK: pygame.K_l,
-                    self.keybinds.FLIPSHIP: pygame.K_k}
+        if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
+            self.keybinds.controls = {
+                self.keybinds.MOVELEFT: pygame.K_a,
+                self.keybinds.MOVERIGHT: pygame.K_d,
+                self.keybinds.MOVEUP: pygame.K_w,
+                self.keybinds.MOVEDOWN: pygame.K_s,
+                self.keybinds.MISSILEATTACK: pygame.K_j,
+                self.keybinds.BEAMATTACK: pygame.K_l,
+                self.keybinds.FLIPSHIP: pygame.K_k,
+            }
             self.sound.play_sfx("options_menu")
-

@@ -1,5 +1,6 @@
 import json, pygame
 
+
 class GameStats:
     """Class to track statistics for Alien Invasion."""
 
@@ -49,20 +50,20 @@ class GameStats:
 
     def _read_stats_json(self):
         """Reads the score.json file and sees if we already have a high score."""
-        try: 
+        try:
             with open('stats/score.json') as f:
                 data = json.load(f)
                 return data["high_score"]
         except FileNotFoundError:
             return 0
         except json.decoder.JSONDecodeError:
-            return 0    
-        except KeyError: 
+            return 0
+        except KeyError:
             return 0
 
     def _read_options_json(self):
         """Reads the settings.json file and loads data if found."""
-        try: 
+        try:
             with open('stats/settings.json') as f:
                 data = json.load(f)
                 return data
@@ -70,7 +71,7 @@ class GameStats:
             return None
         except json.decoder.JSONDecodeError:
             return None
-        except KeyError: 
+        except KeyError:
             return None
 
     def _read_music_json(self):
@@ -86,26 +87,32 @@ class GameStats:
             return 1.0
 
     def _read_keybinds_json(self):
-        """Searches the dictionary creates from the settings.json file 
+        """Searches the dictionary creates from the settings.json file
         and sees if we already have a control mapping enabled."""
         if self.options_data:
             controls_option = self.options_data.get("controls")
-            if controls_option is not None: 
+            if controls_option is not None:
                 return controls_option
             else:
-                return {self.keybinds.MOVELEFT: pygame.K_a,
-                    self.keybinds.MOVERIGHT: pygame.K_d, self.keybinds.MOVEUP:
-                    pygame.K_w, self.keybinds.MOVEDOWN: pygame.K_s,
+                return {
+                    self.keybinds.MOVELEFT: pygame.K_a,
+                    self.keybinds.MOVERIGHT: pygame.K_d,
+                    self.keybinds.MOVEUP: pygame.K_w,
+                    self.keybinds.MOVEDOWN: pygame.K_s,
                     self.keybinds.MISSILEATTACK: pygame.K_j,
                     self.keybinds.BEAMATTACK: pygame.K_l,
-                    self.keybinds.FLIPSHIP: pygame.K_k}
+                    self.keybinds.FLIPSHIP: pygame.K_k,
+                }
         else:
-            return {self.keybinds.MOVELEFT: pygame.K_a,
-                    self.keybinds.MOVERIGHT: pygame.K_d, self.keybinds.MOVEUP:
-                    pygame.K_w, self.keybinds.MOVEDOWN: pygame.K_s,
-                    self.keybinds.MISSILEATTACK: pygame.K_j,
-                    self.keybinds.BEAMATTACK: pygame.K_l,
-                    self.keybinds.FLIPSHIP: pygame.K_k}
+            return {
+                self.keybinds.MOVELEFT: pygame.K_a,
+                self.keybinds.MOVERIGHT: pygame.K_d,
+                self.keybinds.MOVEUP: pygame.K_w,
+                self.keybinds.MOVEDOWN: pygame.K_s,
+                self.keybinds.MISSILEATTACK: pygame.K_j,
+                self.keybinds.BEAMATTACK: pygame.K_l,
+                self.keybinds.FLIPSHIP: pygame.K_k,
+            }
 
     def _read_sfx_json(self):
         """Searches the dictionary created from the settings.json file
@@ -144,7 +151,7 @@ class GameStats:
             return 1
 
     def _read_gfx_json(self):
-        """Searches the dictionary created from the settings.json file 
+        """Searches the dictionary created from the settings.json file
         and sees if we already have an option for window size."""
         if self.options_data:
             gfx_option = self.options_data.get("window_mode")
@@ -156,7 +163,7 @@ class GameStats:
             return self.game.settings.GFX_SETTINGS[0]
 
     def _read_gfx_counter_json(self):
-        """Searches the dictionary created from the settings.json file 
+        """Searches the dictionary created from the settings.json file
         and sees if we already have an option for window size."""
         if self.options_data:
             gfx_count_option = self.options_data.get("gfx_counter")
@@ -168,7 +175,7 @@ class GameStats:
             return 0
 
     def _read_HUD_json(self):
-        """Searches the dictionary created from the settings.json file 
+        """Searches the dictionary created from the settings.json file
         and sees if we already have an option for HUD preset."""
         if self.options_data:
             HUD_option = self.options_data.get("HUD_preset")
@@ -180,7 +187,7 @@ class GameStats:
             return self.game.settings.HUD_SETTINGS[0]
 
     def _read_HUD_counter_json(self):
-        """Searches the dictionary created from the settings.json file 
+        """Searches the dictionary created from the settings.json file
         and sees if we already have an option for HUD preset."""
         if self.options_data:
             HUD_count_option = self.options_data.get("HUD_counter")
@@ -192,7 +199,7 @@ class GameStats:
             return 0
 
     def _read_score_json(self):
-        """Searches the dictionary created from the settings.json file 
+        """Searches the dictionary created from the settings.json file
         and sees if we already have an option for displaying score."""
         if self.options_data:
             score_option = self.options_data.get("display_score")
@@ -204,7 +211,7 @@ class GameStats:
             return self.game.settings.SCORE_SETTINGS[0]
 
     def _read_score_counter_json(self):
-        """Searches the dictionary created from the settings.json file 
+        """Searches the dictionary created from the settings.json file
         and sees if we already have an option for displaying score."""
         if self.options_data:
             score_counter_option = self.options_data.get("score_counter")
@@ -216,7 +223,7 @@ class GameStats:
             return 0
 
     def _read_dirarrow_json(self):
-        """Searches the dictionary created from the settings.json file 
+        """Searches the dictionary created from the settings.json file
         and sees if we already have an option for displaying the direction arrow."""
         if self.options_data:
             dirarrow_option = self.options_data.get("arrow_setting")
@@ -228,7 +235,7 @@ class GameStats:
             return self.game.settings.ARROW_SETTINGS[0]
 
     def _read_dirarrow_counter_json(self):
-        """Searches the dictionary created from the settings.json file 
+        """Searches the dictionary created from the settings.json file
         and sees if we already have an option for displaying the direction arrow."""
         if self.options_data:
             dirarrow_counter_option = self.options_data.get("arrow_counter")
@@ -242,12 +249,23 @@ class GameStats:
     def dump_stats_json(self):
         """Dumps score and key game settings to a JSON file."""
         with open("stats/score.json", 'w') as f:
-            json.dump({"high_score" : self.game.stats.high_score}, f)
+            json.dump({"high_score": self.game.stats.high_score}, f)
         with open("stats/settings.json", 'w') as f:
-            json.dump({"game_speed" : self.settings.speed,"music_volume": self.settings.music_volume,
-                "sound_volume": self.settings.sound_volume, "window_mode": self.settings.gfx_mode,
-                "display_score": self.settings.score_mode, "score_counter": self.settings.score_counter, 
-                "HUD_preset": self.settings.HUD, "arrow_setting": self.settings.arrow_mode, 
-                "arrow_counter": self.settings.arrow_counter, "controls": self.game.keybinds.controls, 
-                "HUD_counter": self.settings.HUD_counter, "gfx_counter": self.settings.gfx_counter, 
-                "speed_counter": self.settings.speed_counter}, f)
+            json.dump(
+                {
+                    "game_speed": self.settings.speed,
+                    "music_volume": self.settings.music_volume,
+                    "sound_volume": self.settings.sound_volume,
+                    "window_mode": self.settings.gfx_mode,
+                    "display_score": self.settings.score_mode,
+                    "score_counter": self.settings.score_counter,
+                    "HUD_preset": self.settings.HUD,
+                    "arrow_setting": self.settings.arrow_mode,
+                    "arrow_counter": self.settings.arrow_counter,
+                    "controls": self.game.keybinds.controls,
+                    "HUD_counter": self.settings.HUD_counter,
+                    "gfx_counter": self.settings.gfx_counter,
+                    "speed_counter": self.settings.speed_counter,
+                },
+                f,
+            )

@@ -1,5 +1,6 @@
 from menu import *
 
+
 class GameOverMenu(Menu):
     """Class that holds the state and behavior for the game over screen."""
 
@@ -8,15 +9,14 @@ class GameOverMenu(Menu):
         super().__init__(ai_game)
         self.screen_rect = self.screen.get_rect()
         self.menu_button = Button(self, "Menu", 150, -50)
-        self.restart_button = Button(self, "Restart", -150,-50)
+        self.restart_button = Button(self, "Restart", -150, -50)
         self.buttons = [self.menu_button, self.restart_button]
         self._create_go_menu_properties()
-        
+
     def _create_go_menu_properties(self):
         '''Crates the font and images necessary for the game over screen.'''
         self.game_over_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
-        self.game_over_image = self.game_over_font.render("GAME OVER", True,
-                (255,255,255))
+        self.game_over_image = self.game_over_font.render("GAME OVER", True, (255, 255, 255))
         self.game_over_rect = self.game_over_image.get_rect()
         self.game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
 
@@ -38,9 +38,8 @@ class GameOverMenu(Menu):
         self.screen.blit(self.game_over_image, self.game_over_rect)
 
     def draw_buttons(self):
-        """ Draws buttons to the screen."""
+        """Draws buttons to the screen."""
         self.render_game_over()
         self._highlight_colors()
         for button in self.buttons:
             button.draw_button()
-
