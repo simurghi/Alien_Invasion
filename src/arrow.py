@@ -6,6 +6,7 @@ class Arrow(Sprite):
     """A class to manage the direction arrow."""
 
     def __init__(self, ai_game, ship):
+        """Create the direction arrow and places it in front of the player ship."""
         super().__init__()
         self.ship = ship
         self.screen = ai_game.screen
@@ -30,12 +31,12 @@ class Arrow(Sprite):
             self.rect.centery = self.ship.rect.centery
 
     def flip_arrow(self):
-        """Flips the arrow across the y-axis."""
+        """Flip the arrow across the y-axis."""
         self.image = pygame.transform.flip(self.image, True, False)
         self.rect = self.image.get_rect()
 
     def reset_arrow(self):
-        """Resets the position of the arrow on game reset."""
+        """Reset the position of the arrow on game reset."""
         self.image = pygame.image.load('assets/images/dir_arrow_black_smol_2.bmp')
         self.rect.midleft = self.ship.rect.midright
         self.x = float(self.rect.x)
@@ -54,6 +55,7 @@ class WarningArrow(Sprite):
     """A class to manage the warning arrows."""
 
     def __init__(self, ai_game, mine):
+        """Create the warning arrow and places it near where a mine spawns."""
         super().__init__()
         self.mine = mine
         self.screen = ai_game.screen
@@ -69,13 +71,14 @@ class WarningArrow(Sprite):
         self.y = float(self.rect.y)
 
     def update(self):
+        """Update the warning arrows to appear based on the position of the mine."""
         if self.mine.y < 50:
             self.rect.y = self.screen_rect.top + 100
         elif self.mine.y > 590:
             self.rect.y = self.screen_rect.bottom - 100
 
     def blitme(self):
-        """Draws the warning arrows at their current position."""
+        """Draw the warning arrows at their current position."""
         if (
             self.settings.arrow_mode == self.settings.ARROW_SETTINGS[0]
             or self.settings.arrow_mode == self.settings.ARROW_SETTINGS[1]

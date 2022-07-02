@@ -1,7 +1,6 @@
 import pygame.font, sys, pygame
 from button import Button
 
-
 class Menu:
     """Parent class to hold generic menu functionality and state."""
 

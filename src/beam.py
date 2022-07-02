@@ -20,7 +20,7 @@ class Beam(Sprite):
         self.direction = 1
 
     def _load_assets(self):
-        """Loads the necessary assets for beams to play."""
+        """Load the necessary assets for beams to play."""
         self.beam_images = []
         self.rev_beam_images = []
         for num in range(1, 5):
@@ -32,20 +32,19 @@ class Beam(Sprite):
             self.rev_beam_images.append(bolt)
 
     def _initialize_dynamic_settings(self):
-        """Initializes dynamic settings for the beam like its animations and direction."""
+        """Initialize dynamic settings for the beam like its animations and direction."""
         self.index = 0
         self.counter = 0
         self.direction = 1
 
     def rotate_beam(self):
-        """Flips the beam across the y-axis."""
+        """Flip the beam across the y-axis."""
         self.direction *= -1
 
     def update(self, dt):
-        """Update method for explosions"""
+        """Update method for beam's position and animation loop"""
         self.x += self.settings.bullet_speed * self.direction * 1.50 * dt
         self.rect.x = self.x
-        # Playback speed at which our explosions cycle through, lower is faster
         animation_speed = 0.0375
         self.counter += 1 * dt
         if self.counter >= animation_speed and self.index < len(self.beam_images) - 1:
@@ -55,6 +54,5 @@ class Beam(Sprite):
                 self.image = self.beam_images[self.index]
             else:
                 self.image = self.rev_beam_images[self.index]
-        # Reset animation index if it completes
         if self.index >= len(self.beam_images) - 1 and self.counter >= animation_speed:
             self.index = 0

@@ -5,6 +5,7 @@ class Controller:
     """Class to track and manage the gamepad."""
 
     def __init__(self, ai_game):
+        """Initialize basic controller buttons and properties."""
         pygame.joystick.init()
         self._check_gamepad()
         self._set_button_names()
@@ -12,11 +13,12 @@ class Controller:
         self.analog_motion = [0, 0]
 
     def _check_gamepad(self):
-        """Checks if a gamepad is connected and assigns it to the first one if it is."""
+        """Check if a gamepad is connected and assigns it to the first one if it is."""
         if pygame.joystick.get_count() > 0:
             self.gamepad = pygame.joystick.Joystick(0)
 
     def _set_button_names(self):
+        """Create constants to assign to button numbers to correspond to Xbox controller."""
         self.BTN_A = 0
         self.BTN_B = 1
         self.BTN_X = 2
@@ -27,7 +29,7 @@ class Controller:
         self.BTN_START = 7
 
     def _create_objects(self, ai_game):
-        """Creates objects necessary for the gamepad to work."""
+        """Create objects necessary for the gamepad to work."""
         self.state = ai_game.state
         self.sound = ai_game.sound
         self.game = ai_game
@@ -36,17 +38,17 @@ class Controller:
         self.ship = ai_game.ship
 
     def check_joybuttondown_events(self, event):
-        """respond to gamepad face button presses."""
+        """Respond to gamepad face button presses."""
         self._check_combat_controls(event)
         self._check_menu_controls(event)
         self._check_game_over_controls(event)
 
     def check_joybuttonup_events(self, event):
-        """respond to gamepad face button releases."""
+        """Respond to gamepad face button releases."""
         self._check_combat_controls(event)
 
     def _check_combat_controls(self, event):
-        """Handles input while in combat."""
+        """Handle input while in combat."""
         if self.state.state is self.state.GAMEPLAY:
             if event.button == self.BTN_A and event.type == pygame.JOYBUTTONDOWN:
                 self.ship.is_firing = True
@@ -65,7 +67,7 @@ class Controller:
             self.game.pause.check_pause()
 
     def _check_menu_controls(self, event):
-        """Handles input while in the main menu."""
+        """Handle input while in the main menu."""
         if self.state.state is self.state.MAINMENU:
             if event.button == self.BTN_A:
                 self.game._clear_state()
@@ -79,7 +81,7 @@ class Controller:
                 self.state.state = self.state.OPTIONSMENU
 
     def _check_game_over_controls(self, event):
-        """Handles input while in the game over screen."""
+        """Handle input while in the game over screen."""
         if self.state.state is self.state.GAMEOVER:
             if event.button == self.BTN_B:
                 self.game._clear_state()
@@ -91,7 +93,7 @@ class Controller:
                 self.state.state = self.state.GAMEPLAY
 
     def check_joyaxismotion_events(self, event):
-        """respond to analogue stick input"""
+        """Respond to analogue stick input."""
         if event.axis < 2:
             self.analog_motion[event.axis] = event.value
             if abs(self.analog_motion[0]) < 0.1:
@@ -118,7 +120,7 @@ class Controller:
                     self.ship.moving_down = False
 
     def check_joyhatmotion_events(self, event):
-        """respond to dpad presses on the gamepad."""
+        """Respond to dpad presses on the gamepad."""
         if event.value[0] == 1:
             self.ship.moving_right = True
         elif event.value[0] == -1:

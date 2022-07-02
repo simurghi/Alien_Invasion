@@ -1,4 +1,8 @@
-from menu import *
+import pygame.font
+import sys
+import pygame
+from button import Button
+from menu import Menu
 
 
 class ControlsMenu(Menu):
@@ -12,7 +16,7 @@ class ControlsMenu(Menu):
         self._create_controls_buttons()
 
     def _create_controls_buttons(self):
-        """Creates buttons for the options menu."""
+        """Create buttons for the options menu."""
         self.left_button = Button(self, self.keybinds.move_left_text, 250, 280)
         self.right_button = Button(self, self.keybinds.move_right_text, 250, 210)
         self.up_button = Button(self, self.keybinds.move_up_text, 250, 140)
@@ -35,12 +39,12 @@ class ControlsMenu(Menu):
         self._append_keybinds_to_buttons()
 
     def _append_keybinds_to_buttons(self):
-        """Appends the keybinds (buttons only) to the buttons list."""
+        """Append the keybinds (buttons only) to the buttons list."""
         for key in tuple(self.key_buttons):
             self.buttons.append(key)
 
     def draw_buttons(self):
-        """Draws buttons to the screen."""
+        """Draw buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0))
         self._highlight_colors()
         self._toggle_colors()
@@ -56,11 +60,12 @@ class ControlsMenu(Menu):
         self._check_back_button()
 
     def _highlight_keybind_colors(self):
-        """Toggles colors for buttons that are being selected."""
+        """Toggle colors for buttons that are being selected."""
         for button in self.key_buttons:
             button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
 
     def _check_keybind_button(self, mouse_pos, button, mapping):
+        """Check button for user input and dynamically reassign the value."""
         button_clicked = button.top_rect.collidepoint(mouse_pos)
         done = False
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
@@ -101,25 +106,25 @@ class ControlsMenu(Menu):
             self.keybinds.controls[key_val] = pygame.K_UNDERSCORE
 
     def _update_button_text(self):
-        """Updates the keybinding based on the current value."""
+        """Update the keybinding based on the current value."""
         self.keybinds.init_menu_text()
         for button in enumerate(self.key_buttons):
             button[1]._prep_msg(self.keybinds.menu_text[button[0]])
 
     def _toggle_colors(self):
-        """Toggles colors for buttons that have on/off states."""
+        """Toggle colors for buttons that have on/off states."""
         for button, mapping in self.key_buttons.items():
             button.toggle_color(button.top_rect.collidepoint(pygame.mouse.get_pos()), self._check_empty_key(mapping))
 
     def _check_empty_key(self, mapping):
-        """Checks if a key is empty or not."""
+        """Check if a key is empty or not."""
         if self.keybinds.controls.get(mapping) == pygame.K_UNDERSCORE:
             return False
         else:
             return True
 
     def _check_back_button(self):
-        """Enters the main menu from the options menu screen once clicked."""
+        """Enter the main menu from the options menu screen once clicked."""
         button_clicked = self.back_button.check_mouse_click()
         if (
             button_clicked
@@ -130,7 +135,7 @@ class ControlsMenu(Menu):
             self.sound.play_sfx("options_menu")
 
     def _check_reset_button(self):
-        """Clears the custom keybinds and resets to initial options."""
+        """Clear the custom keybinds and resets to initial options."""
         button_clicked = self.reset_button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             self.keybinds.controls = {

@@ -1,4 +1,5 @@
-import pygame, random
+import pygame
+import random
 from pygame.sprite import Sprite
 
 
@@ -28,6 +29,7 @@ class ChonkyAlien(Alien):
     """A class to represent the champion alien."""
 
     def __init__(self, ai_game):
+        """Initialize the champion trash mob and set its starting position."""
         super().__init__(ai_game)
         self.image = pygame.image.load('assets/images/bigboi.bmp')
         self.rect = self.image.get_rect()
