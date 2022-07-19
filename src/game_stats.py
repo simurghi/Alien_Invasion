@@ -1,4 +1,5 @@
-import json, pygame
+import json
+import pygame
 
 
 class GameStats:
@@ -22,7 +23,7 @@ class GameStats:
         self.hidden_score = 0
 
     def _set_json_options_settings(self):
-        """Sets current options preferences based on JSON file."""
+        """Set current options preferences based on JSON file."""
         self.game.settings.music_volume = self._read_music_json()
         self.game.settings.sound_volume = self._read_sfx_json()
         self.game.settings.speed = self._read_turbo_json()
@@ -38,7 +39,7 @@ class GameStats:
         self.game.settings.arrow_counter = self._read_dirarrow_counter_json()
 
     def _update_menu_text_json(self):
-        """Updates menu text based on JSON file preferences."""
+        """Update menu text based on JSON file preferences."""
         self.game.options_menu._change_turbo_text()
         self.game.options_menu._change_music_text()
         self.game.options_menu._change_sound_text()
@@ -49,7 +50,7 @@ class GameStats:
         self.game.options_menu._change_dirarrow_text()
 
     def _read_stats_json(self):
-        """Reads the score.json file and sees if we already have a high score."""
+        """Read the score.json file and sees if we already have a high score."""
         try:
             with open('stats/score.json') as f:
                 data = json.load(f)
@@ -62,7 +63,7 @@ class GameStats:
             return 0
 
     def _read_options_json(self):
-        """Reads the settings.json file and loads data if found."""
+        """Read the settings.json file and loads data if found."""
         try:
             with open('stats/settings.json') as f:
                 data = json.load(f)
@@ -75,7 +76,7 @@ class GameStats:
             return None
 
     def _read_music_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for playing music."""
         if self.options_data:
             music_option = self.options_data.get("music_volume")
@@ -87,7 +88,7 @@ class GameStats:
             return 1.0
 
     def _read_keybinds_json(self):
-        """Searches the dictionary creates from the settings.json file
+        """Search the dictionary creates from the settings.json file
         and sees if we already have a control mapping enabled."""
         if self.options_data:
             controls_option = self.options_data.get("controls")
@@ -115,7 +116,7 @@ class GameStats:
             }
 
     def _read_sfx_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for playing SFX."""
         if self.options_data:
             sfx_option = self.options_data.get("sound_volume")
@@ -127,7 +128,7 @@ class GameStats:
             return 1.0
 
     def _read_turbo_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for turbo mode."""
         if self.options_data:
             turbo_option = self.options_data.get("game_speed")
@@ -139,7 +140,7 @@ class GameStats:
             return self.game.settings.GAME_SPEEDS[1]
 
     def _read_turbo_counter_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for turbo mode."""
         if self.options_data:
             turbo_count_option = self.options_data.get("speed_counter")
@@ -151,7 +152,7 @@ class GameStats:
             return 1
 
     def _read_gfx_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for window size."""
         if self.options_data:
             gfx_option = self.options_data.get("window_mode")
@@ -163,7 +164,7 @@ class GameStats:
             return self.game.settings.GFX_SETTINGS[0]
 
     def _read_gfx_counter_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for window size."""
         if self.options_data:
             gfx_count_option = self.options_data.get("gfx_counter")
@@ -175,7 +176,7 @@ class GameStats:
             return 0
 
     def _read_HUD_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for HUD preset."""
         if self.options_data:
             HUD_option = self.options_data.get("HUD_preset")
@@ -187,7 +188,7 @@ class GameStats:
             return self.game.settings.HUD_SETTINGS[0]
 
     def _read_HUD_counter_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for HUD preset."""
         if self.options_data:
             HUD_count_option = self.options_data.get("HUD_counter")
@@ -199,7 +200,7 @@ class GameStats:
             return 0
 
     def _read_score_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for displaying score."""
         if self.options_data:
             score_option = self.options_data.get("display_score")
@@ -211,7 +212,7 @@ class GameStats:
             return self.game.settings.SCORE_SETTINGS[0]
 
     def _read_score_counter_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for displaying score."""
         if self.options_data:
             score_counter_option = self.options_data.get("score_counter")
@@ -223,7 +224,7 @@ class GameStats:
             return 0
 
     def _read_dirarrow_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for displaying the direction arrow."""
         if self.options_data:
             dirarrow_option = self.options_data.get("arrow_setting")
@@ -235,7 +236,7 @@ class GameStats:
             return self.game.settings.ARROW_SETTINGS[0]
 
     def _read_dirarrow_counter_json(self):
-        """Searches the dictionary created from the settings.json file
+        """Search the dictionary created from the settings.json file
         and sees if we already have an option for displaying the direction arrow."""
         if self.options_data:
             dirarrow_counter_option = self.options_data.get("arrow_counter")
@@ -247,7 +248,7 @@ class GameStats:
             return 0
 
     def dump_stats_json(self):
-        """Dumps score and key game settings to a JSON file."""
+        """Dump score and key game settings to a JSON file."""
         with open("stats/score.json", 'w') as f:
             json.dump({"high_score": self.game.stats.high_score}, f)
         with open("stats/settings.json", 'w') as f:
