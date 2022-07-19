@@ -3,6 +3,8 @@ from pygame.sprite import Sprite
 
 
 class Explosion(Sprite):
+    """Class that manages the state and behavior of player and enemy explosions."""
+
     def __init__(self, center, size=1):
         """Initialize explosion coordinates."""
         super().__init__()
@@ -14,7 +16,7 @@ class Explosion(Sprite):
         self.rect.center = center
 
     def _load_assets(self, size):
-        """Loads the necessary assets for explosions to play."""
+        """Load the necessary assets for explosions to play."""
         self.explosion_images = []
         for num in range(1, 9):
             if size == 1:
@@ -26,7 +28,7 @@ class Explosion(Sprite):
             self.explosion_images.append(explosion)
 
     def update(self, dt):
-        """Update method for explosions"""
+        """Update method for explosions."""
         # Playback speed at which our explosions cycle through, lower is faster
         animation_speed = 0.075
         self.counter += 1 * dt
