@@ -635,9 +635,12 @@ class AlienInvasion:
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename="ERROR.log", filemode='w', level=logging.ERROR)
+    """Logs traceback in case of crash/unexcepted application exit."""
     ai = AlienInvasion()
     try:
         ai.run_game()
+    except SystemExit: 
+        pass
     except:
+        logging.basicConfig(filename="ERROR.log", filemode='w', level=logging.ERROR)
         logging.exception('')
