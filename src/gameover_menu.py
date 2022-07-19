@@ -1,4 +1,6 @@
-from menu import *
+import pygame
+from button import Button
+from menu import Menu
 
 
 class GameOverMenu(Menu):
@@ -14,7 +16,7 @@ class GameOverMenu(Menu):
         self._create_go_menu_properties()
 
     def _create_go_menu_properties(self):
-        '''Crates the font and images necessary for the game over screen.'''
+        """Crates the font and images necessary for the game over screen."""
         self.game_over_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
         self.game_over_image = self.game_over_font.render("GAME OVER", True, (255, 255, 255))
         self.game_over_rect = self.game_over_image.get_rect()
@@ -33,7 +35,7 @@ class GameOverMenu(Menu):
                     self.game.state.state = self.game.state.GAMEPLAY
 
     def render_game_over(self):
-        """Renders and displays the game over message."""
+        """Render and displays the game over message."""
         self.screen.fill(self.game.settings.bg_color)
         self.screen.blit(self.game_over_image, self.game_over_rect)
 
