@@ -1,15 +1,18 @@
-from menu import *
+from button import Button
+from menu import Menu
 
 
 class CreditsMenu(Menu):
     """Class to credit contributors information."""
 
     def __init__(self, ai_game):
+        """Initialize the credits menu."""
         super().__init__(ai_game)
         self._credit_contributors()
         self._create_credits_buttons(ai_game)
 
     def _credit_contributors(self):
+        """Strings to display credits."""
         self.art_credit_text0 = "ART"
         self.art_credit_text1 = "Ansimuz | Matt Walkden | Daniel Linssen"
         self.art_credit_text2 = "GameSupplyGuy | GooseNinja | StudioMeowMeow"
@@ -19,7 +22,7 @@ class CreditsMenu(Menu):
         self.code_credit_text3 = "CDCodes | u/metulburr | ClearCode | code.Pylet"
 
     def _create_credits_buttons(self, ai_game):
-        """Creates the buttons for the main menu."""
+        """Create the buttons for the main menu."""
         self.art_button0 = Button(ai_game, self.art_credit_text0, 275, 250, 200, 50, 16)
         self.art_button1 = Button(ai_game, self.art_credit_text1, -25, 175, 800, 50, 16)
         self.art_button2 = Button(ai_game, self.art_credit_text2, -25, 100, 800, 50, 16)
