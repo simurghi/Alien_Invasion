@@ -1,10 +1,13 @@
-from menu import *
+import pygame
+from button import Button
+from menu import Menu
 
 
 class HelpMenu(Menu):
     """Class to hold helpful tutorial information."""
 
     def __init__(self, ai_game):
+        """Initialize the help sub-menu."""
         super().__init__(ai_game)
         self.game = ai_game
         self._create_help_buttons(ai_game)
@@ -47,7 +50,7 @@ class HelpMenu(Menu):
         self.adv_enemy_desc8 = "Beams will only pierce Gunners on killing blows"
 
     def _create_help_windows(self, ai_game):
-        """Creates the buttons for the main menu."""
+        """Create the buttons for the main menu."""
         self._create_control_windows(ai_game)
         self._create_misc_windows(ai_game)
         self._create_score_windows(ai_game)
@@ -62,7 +65,7 @@ class HelpMenu(Menu):
         )
 
     def _create_help_buttons(self, ai_game):
-        """Creates the buttons for the main menu."""
+        """Create the buttons for the main menu."""
         self.basic_controls_button = Button(ai_game, "Basic Controls", 250, 150)
         self.basic_misc_button = Button(ai_game, "Basic Gameplay", 250, 75)
         self.basic_score_button = Button(ai_game, "Basic Scoring", 250, 0)
@@ -79,7 +82,7 @@ class HelpMenu(Menu):
         )
 
     def _create_control_windows(self, ai_game):
-        """Creates the tutorial buttons for the game's basic controls. TODO: add fstrings for
+        """Create the tutorial buttons for the game's basic controls. TODO: add fstrings for
         current key mappings, not just defaults."""
         self.basic_control_window0 = Button(
             ai_game, self.basic_control_desc0, -175, 240, 580, 35, font_size=32, small_font=True
@@ -105,7 +108,7 @@ class HelpMenu(Menu):
         )
 
     def _create_score_windows(self, ai_game):
-        """Creates tutorial buttons for the game's basic score tutorial."""
+        """Create tutorial buttons for the game's basic score tutorial."""
         self.basic_score_window0 = Button(
             ai_game, self.basic_score_desc0, -175, 200, 580, 35, font_size=32, small_font=True
         )
@@ -138,7 +141,7 @@ class HelpMenu(Menu):
         )
 
     def _create_misc_windows(self, ai_game):
-        """Creates tutorial buttons for the game's basic mechanics tutorials."""
+        """Create tutorial buttons for the game's basic mechanics tutorials."""
         self.basic_misc_window0 = Button(
             ai_game, self.basic_misc_desc0, -175, 220, 580, 35, font_size=32, small_font=True
         )
@@ -167,7 +170,7 @@ class HelpMenu(Menu):
         )
 
     def _create_enemy_windows(self, ai_game):
-        """Creates basic tutorial buttons for the game's basic enemies tutorial."""
+        """Create basic tutorial buttons for the game's basic enemies tutorial."""
         self.basic_enemy_window0 = Button(
             ai_game, self.basic_enemy_desc0, -175, 180, 580, 35, font_size=32, small_font=True
         )
@@ -196,7 +199,7 @@ class HelpMenu(Menu):
         )
 
     def _create_adv_enemy_windows(self, ai_game):
-        """Creates advanced tutorial buttons for the game's advanced enemies tutorial."""
+        """Create advanced tutorial buttons for the game's advanced enemies tutorial."""
         self.adv_enemy_window0 = Button(
             ai_game, self.adv_enemy_desc0, -175, 160, 580, 35, font_size=32, small_font=True
         )
@@ -231,7 +234,7 @@ class HelpMenu(Menu):
         )
 
     def _check_button(self, button):
-        """Processes user clicks and displays the appropriate tutorials for the appropriate button"""
+        """Handle user clicks and displays the appropriate tutorials for the appropriate button"""
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.HELPMENU:
             if button.lmb_pressed:
@@ -250,7 +253,7 @@ class HelpMenu(Menu):
                     self._check_back_button()
 
     def _check_controls_button(self):
-        """displays only the controls tutorial when clicked."""
+        """Display only the controls tutorial when clicked."""
         for button in self.basic_control_windows:
             button.display = not button.display
         for button_list in self.display_buttons:
@@ -261,7 +264,7 @@ class HelpMenu(Menu):
                     button.display = False
 
     def _check_misc_button(self):
-        """Displays only the basic gameplay tutorial when clicked."""
+        """Display only the basic gameplay tutorial when clicked."""
         for button in self.basic_misc_windows:
             button.display = not button.display
         for button_list in self.display_buttons:
@@ -272,7 +275,7 @@ class HelpMenu(Menu):
                     button.display = False
 
     def _check_score_button(self):
-        """Displays only the basic score tutorial when clicked."""
+        """Display only the basic score tutorial when clicked."""
         for button in self.basic_score_windows:
             button.display = not button.display
         for button_list in self.display_buttons:
@@ -283,7 +286,7 @@ class HelpMenu(Menu):
                     button.display = False
 
     def _check_basic_enemies_button(self):
-        """Displays only the basic enemies tutorial when clicked."""
+        """Display only the basic enemies tutorial when clicked."""
         for button in self.basic_enemy_windows:
             button.display = not button.display
         for button_list in self.display_buttons:
@@ -294,7 +297,7 @@ class HelpMenu(Menu):
                     button.display = False
 
     def _check_adv_enemies_button(self):
-        """Displays only the advanced enemies tutorial when clicked."""
+        """Display only the advanced enemies tutorial when clicked."""
         for button in self.adv_enemy_windows:
             button.display = not button.display
         for button_list in self.display_buttons:
@@ -305,14 +308,14 @@ class HelpMenu(Menu):
                     button.display = False
 
     def _check_back_button(self):
-        """Hides all tutorial prompts and returns to the main menu when clicked."""
+        """Hide all tutorial prompts and returns to the main menu when clicked."""
         for button_list in self.display_buttons:
             for button in button_list:
                 button.display = False
         self.game.state.state = self.game.state.MAINMENU
 
     def _highlight_colors(self):
-        """Toggles colors for buttons that are being selected."""
+        """Toggle colors for buttons that are being selected."""
         for button_list in self.display_buttons:
             for button in button_list:
                 if button.display:
@@ -323,7 +326,7 @@ class HelpMenu(Menu):
             button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
 
     def draw_buttons(self):
-        """Draws buttons to the screen."""
+        """Draw buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0))
         self.game.keybinds.init_menu_text()
         self._highlight_colors()
