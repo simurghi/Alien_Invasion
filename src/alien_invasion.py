@@ -38,6 +38,7 @@ class AlienInvasion:
         self.last_count = pygame.time.get_ticks()
         self._create_sprite_groups()
         self._make_game_objects()
+        self._make_logic_dictionaries()
         self._load_images()
 
     def _load_images(self):
@@ -69,6 +70,9 @@ class AlienInvasion:
         self.scoreboard = Scoreboard(self)
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
+
+    def _make_logic_dictionaries(self):
+        """Create the dictionaries to process logic to replace if/elif statements."""
 
     def _create_sprite_groups(self):
         """Creates sprite group containers for objects."""
@@ -383,14 +387,40 @@ class AlienInvasion:
 
     def _check_keydown_events(self, event):
         """respond to keypresses."""
-        if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
-            self.ship.moving_up = True
-        elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
-            self.ship.moving_down = True
-        if event.key == self.keybinds.controls.get(self.keybinds.MOVELEFT):
-            self.ship.moving_left = True
-        elif event.key == self.keybinds.controls.get(self.keybinds.MOVERIGHT):
-            self.ship.moving_right = True
+        '''self.main_menu = MainMenu(self)
+        self.credits_menu = CreditsMenu(self)
+        self.options_menu = OptionsMenu(self)
+        self.controls_menu = ControlsMenu(self)
+        self.help_menu = HelpMenu(self)
+        self.go_menu = GameOverMenu(self)'''
+
+        if self.state.state == self.state.MAINMENU:
+            if event.key == pygame.K_UP and self.main_menu.index > 0:
+                self.main_menu.index -= 1
+                self.main_menu.update_cursor(direction = 1)
+            elif event.key == pygame.K_DOWN and self.main_menu.index < len(self.main_menu.buttons)-1:
+                self.main_menu.index += 1
+                self.main_menu.update_cursor(direction = -1)
+            elif event.key == pygame.K_RETURN: 
+                self.main_menu.enter_pressed = True
+                self.main_menu.menu_event_dict.get(self.main_menu.buttons[self.main_menu.index])()
+
+            print(f"MENU INDEX: {self.main_menu.index}")
+        elif self.state.state == self.state.GAMEPLAY:
+            if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
+                self.ship.moving_up = True
+            elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
+                self.ship.moving_down = True
+            if event.key == self.keybinds.controls.get(self.keybinds.MOVELEFT):
+                self.ship.moving_left = True
+            elif event.key == self.keybinds.controls.get(self.keybinds.MOVERIGHT):
+                self.ship.moving_right = True
+            if event.key == self.keybinds.controls.get(self.keybinds.MISSILEATTACK):
+                self.ship.is_firing = True
+            if event.key == self.keybinds.controls.get(self.keybinds.BEAMATTACK):
+                self.ship.fire_beam()
+            if event.key == self.keybinds.controls.get(self.keybinds.FLIPSHIP):
+                self.ship.flip_ship()
         if event.key == pygame.K_ESCAPE:
             self.pause.check_pause()
             self._check_exit()
@@ -398,12 +428,6 @@ class AlienInvasion:
             self.stats.dump_stats_json()
             pygame.quit()
             sys.exit()
-        if event.key == self.keybinds.controls.get(self.keybinds.MISSILEATTACK):
-            self.ship.is_firing = True
-        if event.key == self.keybinds.controls.get(self.keybinds.BEAMATTACK):
-            self.ship.fire_beam()
-        if event.key == self.keybinds.controls.get(self.keybinds.FLIPSHIP):
-            self.ship.flip_ship()
 
     def _check_mousedown_events(self):
         """respond to mouse clicks."""
@@ -446,20 +470,26 @@ class AlienInvasion:
 
     def _check_keyup_events(self, event):
         """respond to key releases."""
-        if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
-            self.ship.moving_up = False
-        elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
-            self.ship.moving_down = False
-        if event.key == self.keybinds.controls.get(self.keybinds.MOVELEFT):
-            self.ship.moving_left = False
-        elif event.key == self.keybinds.controls.get(self.keybinds.MOVERIGHT):
-            self.ship.moving_right = False
-        if event.key == self.keybinds.controls.get(self.keybinds.MISSILEATTACK):
-            self.ship.is_firing = False
+        if self.state.state == self.state.MAINMENU:
+            if event.key == pygame.K_RETURN: 
+                self.main_menu.enter_pressed = False
+
+        if self.state.state == self.state.GAMEPLAY:
+            if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
+                self.ship.moving_up = False
+            elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
+                self.ship.moving_down = False
+            if event.key == self.keybinds.controls.get(self.keybinds.MOVELEFT):
+                self.ship.moving_left = False
+            elif event.key == self.keybinds.controls.get(self.keybinds.MOVERIGHT):
+                self.ship.moving_right = False
+            if event.key == self.keybinds.controls.get(self.keybinds.MISSILEATTACK):
+                self.ship.is_firing = False
 
     def _check_exit(self):
         """Checks to see if hitting ESC should exit the game."""
-        if self.state.state == self.state.OPTIONSMENU:
+        if (self.state.state == self.state.OPTIONSMENU or self.state.state == self.state.HELPMENU 
+                or self.state.state == self.state.CREDITSMENU):
             self.state.state = self.state.MAINMENU
         elif self.state.state == self.state.CONTROLSMENU and pygame.K_UNDERSCORE not in self.keybinds.controls.values():
             self.state.state = self.state.MAINMENU

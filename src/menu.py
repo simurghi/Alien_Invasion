@@ -42,3 +42,10 @@ class Menu:
         for button in self.buttons:
             button.draw_button()
         self.screen.blit(self.cursor_image, self.cursor_rect)
+
+    def update_cursor(self, direction=1):
+        """To be overriden by child"""
+        if direction >= 0:
+            pass
+        elif direction < 0:
+            pass
