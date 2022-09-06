@@ -8,6 +8,7 @@ class MainMenu(Menu):
         """Initialize button attributes."""
         super().__init__(ai_game)
         self.enter_pressed = False
+        self.index = 0
         self._create_main_buttons(ai_game)
 
     def _create_main_buttons(self, ai_game):
@@ -77,8 +78,10 @@ class MainMenu(Menu):
 
     def update_cursor(self, direction):
         """Moves the cursor up or down based on input"""
-        if direction >= 0:
+        if direction >= 0 and self.index > 0:
+            self.index -= 1
             self.y -= 75
-        elif direction < 0:
+        elif direction < 0 and self.index < len(self.buttons)-1:
+            self.index += 1
             self.y += 75
         self.cursor_rect.y = self.y

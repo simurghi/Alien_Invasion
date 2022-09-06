@@ -10,13 +10,15 @@ class Menu:
         self.screen_rect = ai_game.screen.get_rect()
         self.sound = ai_game.sound
         self.cursor_image = pygame.image.load('assets/images/menu_arrow.png').convert_alpha()
+        self._set_cursor()
+        self.index = 0
+        self.buttons = []
+
+    def _set_cursor(self):
         self.cursor_rect = self.cursor_image.get_rect()
         self.cursor_rect.midright = (70, 170)
         self.x = float(self.cursor_rect.x)
         self.y = float(self.cursor_rect.y)
-
-        self.index = 0
-        self.buttons = []
 
     def _highlight_colors(self):
         """Toggles colors for buttons that are being selected."""

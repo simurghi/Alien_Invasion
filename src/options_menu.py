@@ -7,8 +7,17 @@ class OptionsMenu(Menu):
     def __init__(self, ai_game):
         """Initialize button attributes."""
         super().__init__(ai_game)
+        self.enter_pressed = False
+        self.index = 0
+        self._set_cursor()
         self._set_initial_text()
         self._create_options_buttons()
+
+    def _set_cursor(self):
+        self.cursor_rect = self.cursor_image.get_rect()
+        self.cursor_rect.midright = (70, 70)
+        self.x = float(self.cursor_rect.x)
+        self.y = float(self.cursor_rect.y)
 
     def _set_initial_text(self):
         self.speed_state = self.game.settings.GAME_SPEEDS[self.game.settings.speed_counter]
@@ -39,6 +48,17 @@ class OptionsMenu(Menu):
             self.dirarrow_button,
             self.back_button,
         )
+        self.menu_event_dict = {
+                self.turbo_button: self._change_difficulty,
+                self.mute_button: self._change_music_volume,
+                self.sfx_button: self._change_sound_volume,
+                self.gfx_button: self._change_game_resolution,
+                self.score_button: self._update_score_setting,
+                self.HUD_button: self._change_game_HUD,
+                self.dirarrow_button: self._change_game_arrow,
+                self.back_button: self._change_back_state,
+            }
+
 
     def _check_button(self, button):
         '''Responds to button press and performs an action based on collision type.'''
@@ -46,30 +66,24 @@ class OptionsMenu(Menu):
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             if button is not self.back_button:
                 self.sound.play_sfx("options_menu")
-            if button.lmb_pressed and not button.rmb_pressed:
+            if (button.lmb_pressed and not button.rmb_pressed):
                 direction = 1
             elif button.rmb_pressed and not button.lmb_pressed:
                 direction = -1
-            if button is self.turbo_button:
-                self._change_difficulty(direction)
-            elif button is self.sfx_button:
-                self._change_sound_volume(direction)
-                print(f"SOUND VOLUME: {self.game.settings.sound_volume}")
-            elif button is self.mute_button:
-                self._change_music_volume(direction)
-                print(f"MUSIC VOLUME: {self.game.settings.music_volume}")
-            elif button is self.gfx_button:
-                self._change_game_resolution(direction)
-            elif button is self.dirarrow_button:
-                self._change_game_arrow(direction)
-            elif button is self.HUD_button:
-                self._change_game_HUD(direction)
-            elif button is self.back_button and direction > 0:
-                self.game.state.state = self.game.state.MAINMENU
-                self.sound.play_sfx("options_menu")
-            elif button is self.score_button:
-                self._change_game_score(direction)
-                self._change_score_text()
+            if direction:
+                self.menu_event_dict.get(button)(direction)
+            self.enter_pressed = False
+
+
+    def _update_score_setting(self, direction):
+        """Update score and its display text."""
+        self._change_game_score(direction)
+        self._change_score_text()
+
+    def _change_back_state(self, direction): 
+        self.game.state.state = self.game.state.MAINMENU
+        self.sound.play_sfx("options_menu")
+
 
     def _change_difficulty(self, direction):
         """Helper method that changes the difficulty of the game when a button is clicked."""
@@ -223,3 +237,17 @@ class OptionsMenu(Menu):
         self.dirarrow_button._prep_msg(self.dirarrow_state)
         for button in self.buttons:
             button.draw_button()
+        self.screen.blit(self.cursor_image, self.cursor_rect)
+
+
+    def update_cursor(self, direction):
+        """Moves the cursor up or down based on input"""
+        if direction >= 0 and self.index > 0:
+            self.index -= 1
+            self.y -= 75
+        elif direction < 0 and self.index < len(self.buttons)-1:
+            self.index += 1
+            self.y += 75
+        self.cursor_rect.y = self.y
+        print(f"CURSOR RECT: {self.cursor_rect.y}")
+        print(f"INDEX: {self.index}")
