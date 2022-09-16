@@ -95,6 +95,7 @@ class Ship(Sprite):
         self.image = pygame.image.load('assets/images/ship.bmp')
         self.arrow.reset_arrow()
         self.is_flipped = False
+        self._create_movement_flags()
 
     def _fire_bullet(self):
         """Create a new bullet and add it to the bullets group."""

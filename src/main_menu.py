@@ -78,10 +78,17 @@ class MainMenu(Menu):
 
     def update_cursor(self, direction):
         """Moves the cursor up or down based on input"""
+        print(self.y)
         if direction >= 0 and self.index > 0:
             self.index -= 1
             self.y -= 75
         elif direction < 0 and self.index < len(self.buttons)-1:
             self.index += 1
             self.y += 75
+        elif direction >= 0 and self.index == 0: 
+            self.index = len(self.buttons)-1
+            self.y = 530
+        elif direction < 0 and self.index == len(self.buttons)-1:
+            self.index = 0
+            self.y = 155
         self.cursor_rect.y = self.y

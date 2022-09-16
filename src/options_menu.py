@@ -249,5 +249,3 @@ class OptionsMenu(Menu):
             self.index += 1
             self.y += 75
         self.cursor_rect.y = self.y
-        print(f"CURSOR RECT: {self.cursor_rect.y}")
-        print(f"INDEX: {self.index}")
