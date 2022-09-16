@@ -248,4 +248,10 @@ class OptionsMenu(Menu):
         elif direction < 0 and self.index < len(self.buttons)-1:
             self.index += 1
             self.y += 75
+        elif direction >= 0 and self.index == 0: 
+            self.index = len(self.buttons)-1
+            self.y = 580
+        elif direction < 0 and self.index == len(self.buttons)-1:
+            self.index = 0
+            self.y = 55
         self.cursor_rect.y = self.y

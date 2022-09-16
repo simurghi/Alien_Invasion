@@ -402,6 +402,7 @@ class AlienInvasion:
             elif event.key == pygame.K_RETURN: 
                 self.main_menu.enter_pressed = True
                 self.main_menu.menu_event_dict.get(self.main_menu.buttons[self.main_menu.index])()
+                self.sound.play_sfx("options_menu")
         elif self.state.state == self.state.OPTIONSMENU: 
             if event.key == pygame.K_UP:
                 self.options_menu.update_cursor(direction = 1)
@@ -409,7 +410,10 @@ class AlienInvasion:
                 self.options_menu.update_cursor(direction = -1)
             elif event.key == pygame.K_RETURN: 
                 self.options_menu.enter_pressed = True
-                self.options_menu.menu_event_dict.get(self.options_menu.buttons[self.options_menu.index])(direction=1)
+                (self.options_menu.menu_event_dict.get(self.options_menu.buttons[self.options_menu.index])
+                (direction=1))
+                self.sound.play_sfx("options_menu")
+
         elif self.state.state == self.state.CONTROLSMENU:
             pass
         elif self.state.state == self.state.HELPMENU:
