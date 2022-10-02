@@ -8,6 +8,7 @@ class GameStats:
     def __init__(self, ai_game):
         """Initialize stats."""
         self.game = ai_game
+        self.keybinds = self.game.keybinds
         self.settings = ai_game.settings
         self.reset_stats()
         self.options_data = self._read_options_json()
