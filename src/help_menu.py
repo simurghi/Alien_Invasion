@@ -64,6 +64,7 @@ class HelpMenu(Menu):
             self.adv_enemy_windows,
         )
 
+
     def _create_help_buttons(self, ai_game):
         """Create the buttons for the main menu."""
         self.basic_controls_button = Button(ai_game, "Basic Controls", 250, 150)
@@ -80,6 +81,15 @@ class HelpMenu(Menu):
             self.adv_enemies_button,
             self.back_button,
         )
+        self.menu_event_dict = {
+            self.basic_controls_button: self._check_controls_button,
+            self.basic_misc_button: self._check_misc_button,
+            self.basic_score_button: self._check_score_button, 
+            self.basic_enemies_button: self._check_basic_enemies_button, 
+            self.adv_enemies_button: self._check_adv_enemies_button,
+            self.back_button: self._check_back_button,
+            }
+                
 
     def _create_control_windows(self, ai_game):
         """Create the tutorial buttons for the game's basic controls. TODO: add fstrings for
@@ -237,20 +247,10 @@ class HelpMenu(Menu):
         """Handle user clicks and displays the appropriate tutorials for the appropriate button"""
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.HELPMENU:
-            if button.lmb_pressed:
+            if button.lmb_pressed or button.enter_pressed:
                 self.sound.play_sfx("options_menu")
-                if button is self.basic_controls_button:
-                    self._check_controls_button()
-                elif button is self.basic_misc_button:
-                    self._check_misc_button()
-                elif button is self.basic_score_button:
-                    self._check_score_button()
-                elif button is self.basic_enemies_button:
-                    self._check_basic_enemies_button()
-                elif button is self.adv_enemies_button:
-                    self._check_adv_enemies_button()
-                elif button is self.back_button:
-                    self._check_back_button()
+                self.menu_event_dict.get(button)()
+                self.enter_pressed = False
 
     def _check_controls_button(self):
         """Display only the controls tutorial when clicked."""
@@ -336,3 +336,21 @@ class HelpMenu(Menu):
             for button in button_list:
                 if button.display:
                     button.draw_button()
+        self.screen.blit(self.cursor_image, self.cursor_rect)
+
+
+    def update_cursor(self, direction):
+        """Moves the cursor up or down based on input"""
+        if direction >= 0 and self.index > 0:
+            self.index -= 1
+            self.y -= 75
+        elif direction < 0 and self.index < len(self.buttons)-1:
+            self.index += 1
+            self.y += 75
+        elif direction >= 0 and self.index == 0: 
+            self.index = len(self.buttons)-1
+            self.y = 530
+        elif direction < 0 and self.index == len(self.buttons)-1:
+            self.index = 0
+            self.y = 155
+        self.cursor_rect.y = self.y

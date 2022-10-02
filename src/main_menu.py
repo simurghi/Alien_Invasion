@@ -78,7 +78,6 @@ class MainMenu(Menu):
 
     def update_cursor(self, direction):
         """Moves the cursor up or down based on input"""
-        print(self.y)
         if direction >= 0 and self.index > 0:
             self.index -= 1
             self.y -= 75

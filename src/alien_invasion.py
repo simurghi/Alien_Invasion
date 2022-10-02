@@ -393,34 +393,39 @@ class AlienInvasion:
         self.controls_menu = ControlsMenu(self)
         self.help_menu = HelpMenu(self)
         self.go_menu = GameOverMenu(self)'''
-
         if self.state.state == self.state.MAINMENU:
             if event.key == pygame.K_UP:
                 self.main_menu.update_cursor(direction = 1)
             elif event.key == pygame.K_DOWN: 
                 self.main_menu.update_cursor(direction = -1)
             elif event.key == pygame.K_RETURN: 
+                self.sound.play_sfx("options_menu")
                 self.main_menu.enter_pressed = True
                 self.main_menu.menu_event_dict.get(self.main_menu.buttons[self.main_menu.index])()
-                self.sound.play_sfx("options_menu")
         elif self.state.state == self.state.OPTIONSMENU: 
             if event.key == pygame.K_UP:
                 self.options_menu.update_cursor(direction = 1)
             elif event.key == pygame.K_DOWN: 
                 self.options_menu.update_cursor(direction = -1)
             elif event.key == pygame.K_RETURN: 
+                self.sound.play_sfx("options_menu")
                 self.options_menu.enter_pressed = True
                 (self.options_menu.menu_event_dict.get(self.options_menu.buttons[self.options_menu.index])
-                (direction=1))
-                self.sound.play_sfx("options_menu")
-
-        elif self.state.state == self.state.CONTROLSMENU:
-            pass
+                 (direction=1))
         elif self.state.state == self.state.HELPMENU:
+            if event.key == pygame.K_UP:
+                self.help_menu.update_cursor(direction = 1)
+            elif event.key == pygame.K_DOWN: 
+                self.help_menu.update_cursor(direction = -1)
+            elif event.key == pygame.K_RETURN: 
+                self.sound.play_sfx("options_menu")
+                self.help_menu.enter_pressed = True
+                self.help_menu.menu_event_dict.get(self.help_menu.buttons[self.help_menu.index])()
+        elif self.state.state == self.state.CONTROLSMENU:
             pass
         elif self.state.state == self.state.CREDITSMENU:
             pass
-        elif self.state.state == self.state.GAMEPLAY:
+        else: 
             if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
                 self.ship.moving_up = True
             elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
