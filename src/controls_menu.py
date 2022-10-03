@@ -14,6 +14,14 @@ class ControlsMenu(Menu):
         self.screen_rect = self.screen.get_rect()
         self.keybinds = ai_game.keybinds
         self._create_controls_buttons()
+        self.index = 0
+        self._set_cursor()
+
+    def _set_cursor(self):
+        self.cursor_rect = self.cursor_image.get_rect()
+        self.cursor_rect.midright = (70, 40)
+        self.x = float(self.cursor_rect.x)
+        self.y = float(self.cursor_rect.y)
 
     def _create_controls_buttons(self):
         """Create buttons for the options menu."""
@@ -36,6 +44,8 @@ class ControlsMenu(Menu):
             self.missile_button: self.keybinds.MISSILEATTACK,
         }
         self.buttons = [self.reset_button, self.back_button]
+        '''self.func_buttons = [
+                self.left'''
         self._append_keybinds_to_buttons()
 
     def _append_keybinds_to_buttons(self):
@@ -51,6 +61,7 @@ class ControlsMenu(Menu):
         self._update_button_text()
         for button in self.buttons:
             button.draw_button()
+        self.screen.blit(self.cursor_image, self.cursor_rect)
 
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
@@ -148,3 +159,19 @@ class ControlsMenu(Menu):
                 self.keybinds.FLIPSHIP: pygame.K_k,
             }
             self.sound.play_sfx("options_menu")
+
+    def update_cursor(self, direction):
+        """Moves the cursor up or down based on input"""
+        if direction >= 0 and self.index > 0:
+            self.index -= 1
+            self.y -= 70
+        elif direction < 0 and self.index < len(self.buttons)-1:
+            self.index += 1
+            self.y += 70
+        elif direction >= 0 and self.index == 0: 
+            self.index = len(self.buttons)-1
+            self.y = 590
+        elif direction < 0 and self.index == len(self.buttons)-1:
+            self.index = 0
+            self.y = 25
+        self.cursor_rect.y = self.y

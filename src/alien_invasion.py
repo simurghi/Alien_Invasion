@@ -422,7 +422,12 @@ class AlienInvasion:
                 self.help_menu.enter_pressed = True
                 self.help_menu.menu_event_dict.get(self.help_menu.buttons[self.help_menu.index])()
         elif self.state.state == self.state.CONTROLSMENU:
-            pass
+            if event.key == pygame.K_UP:
+                self.controls_menu.update_cursor(direction = 1)
+            elif event.key == pygame.K_DOWN: 
+                self.controls_menu.update_cursor(direction = -1)
+            elif event.key == pygame.K_RETURN: 
+                pass
         elif self.state.state == self.state.CREDITSMENU:
             if event.key == pygame.K_UP:
                 self.credits_menu.update_cursor(direction = 1)
