@@ -11,7 +11,7 @@ class Music:
         self.settings = ai_game.settings
 
     def play_music(self):
-        """Selects which music to play based on the state of the game."""
+        """Select which music to play based on the state of the game."""
         self._scale_music_volume()
         if (
             self.state.state is self.state.MAINMENU or self.state.state is self.state.OPTIONSMENU
@@ -21,19 +21,19 @@ class Music:
             self._clear_music_state()
             self.state.music_state["MENU"] = True
         elif (
-            self.state.state is self.state.GAMEPLAY
-            and self.game.countdown > 0
-            and not self.state.music_state["COUNTDOWN"]
-        ):
+                self.state.state is self.state.GAMEPLAY and
+                self.game.countdown > 0 and
+                not self.state.music_state["COUNTDOWN"]
+            ):
             pygame.mixer.music.load("assets/audio/start-level.wav")
             pygame.mixer.music.play(1, start=0, fade_ms=100)
             self._clear_music_state()
             self.state.music_state["COUNTDOWN"] = True
         elif (
-            self.state.state is self.state.GAMEPLAY
-            and self.game.countdown <= 0
-            and not self.state.music_state["GAMEPLAY"]
-        ):
+                self.state.state is self.state.GAMEPLAY and
+                self.game.countdown <= 0 and
+                not self.state.music_state["GAMEPLAY"]
+            ):
             pygame.mixer.music.load("assets/audio/battle.wav")
             pygame.mixer.music.play(-1)
             self._clear_music_state()
@@ -50,13 +50,13 @@ class Music:
             self.state.music_state["GAMEOVER"] = True
 
     def _scale_music_volume(self):
-        """Helper methods that sets volume of a track based on state and if option enabled."""
+        """Set the volume of a track based on state and if option enabled."""
         if self.state.music_state["GAMEOVER"]:
             pygame.mixer.music.set_volume(0.5 * self.settings.music_volume)
         else:
             pygame.mixer.music.set_volume(1.0 * self.settings.music_volume)
 
     def _clear_music_state(self):
-        """Helper method that clears the music state dictionary to False values."""
+        """Clear the music state dictionary to False values."""
         for music in self.state.music_state:
             self.state.music_state[music] = False

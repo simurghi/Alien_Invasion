@@ -19,7 +19,7 @@ class Scoreboard:
         self._initialize_prep()
 
     def _initialize_prep(self):
-        """Prepares the initial score images."""
+        """Prepare the initial score images."""
         self.prep_high_score()
         self.prep_score()
         self.prep_ships()
@@ -27,14 +27,14 @@ class Scoreboard:
         self.prep_missiles()
 
     def create_countdown(self, text, x_offset=0, y_offset=0):
-        """Creates countdown text for the game."""
+        """Create countdown text for the game."""
         self.countdown_image = self.font.render(text, True, self.text_color)
         self.screen.blit(
             self.countdown_image, (self.screen_rect.centerx + x_offset, self.screen_rect.centery + y_offset)
         )
 
     def update_prep(self):
-        """Updates the HUD element positions."""
+        """Update the HUD element positions."""
         self._prep_high_score_position()
         self._prep_score_position()
         self.prep_ships()
@@ -48,7 +48,7 @@ class Scoreboard:
         self._prep_score_position()
 
     def _prep_score_position(self):
-        """Helper method that gets the rect and positions the score."""
+        """Get the rect and positions of the score."""
         self.score_rect = self.score_image.get_rect()
         if self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[0]:
             self.score_rect.x, y = self.high_score_rect.left - self.high_score_rect.left / 6, self.screen_rect.top

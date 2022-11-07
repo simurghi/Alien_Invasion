@@ -5,13 +5,14 @@ class Sound:
     """Class to track and manage sound in Alien Invasion."""
 
     def __init__(self, ai_game):
+        """Initialize attributes of sound class."""
         self.settings = ai_game.settings
         self.state = ai_game.state
         self._load_sfx()
         self._set_volume()
 
     def _load_sfx(self):
-        """Loads sound assets."""
+        """Load sound assets."""
         self.bullet_sfx = pygame.mixer.Sound("assets/audio/MissileFire.wav")
         self.beam_sfx = pygame.mixer.Sound("assets/audio/LaserShot.wav")
         self.explosion_sfx = pygame.mixer.Sound("assets/audio/DestroyMonster2.wav")
@@ -24,7 +25,7 @@ class Sound:
         self.detect_sfx = pygame.mixer.Sound('assets/audio/MineDetected.wav')
 
     def _set_volume(self):
-        """Sets the volumes for the game sounds."""
+        """Set the volumes for the game sounds."""
         self.bullet_sfx.set_volume(0.40 * self.settings.sound_volume)
         self.beam_sfx.set_volume(0.80 * self.settings.sound_volume)
         self.explosion_sfx.set_volume(0.40 * self.settings.sound_volume)
@@ -37,7 +38,7 @@ class Sound:
         self.detect_sfx.set_volume(0.75 * self.settings.sound_volume)
 
     def play_sfx(self, sound_event):
-        """Checks to see if the game should play explosion SFX."""
+        """Check to see if the game should play explosion SFX."""
         if self.settings.sound_volume:
             self._set_volume()
             if sound_event == "explosion" and self.state.state is self.state.GAMEPLAY:
@@ -62,8 +63,7 @@ class Sound:
                 pass
 
     def play_impact_sfx(self, beam_impact):
-        """Checks to see if the game should play damage SFX
-        and play beam or bullet sounds."""
+        """Check to see if the game should play damage SFX and play beam or bullet sounds."""
         if self.settings.sound_volume and self.state.state is self.state.GAMEPLAY and not beam_impact:
             self.damage_sfx.play()
         elif self.settings.sound_volume and self.state.state is self.state.GAMEPLAY and beam_impact:

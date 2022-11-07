@@ -98,9 +98,9 @@ class ControlsMenu(Menu):
                             pygame.quit()
                             sys.exit()
                         elif (
-                            event.key not in self.keybinds.controls.values()
-                            and event.key not in self.keybinds.reserved_keys
-                        ):
+                                event.key not in self.keybinds.controls.values() and
+                                event.key not in self.keybinds.reserved_keys
+                             ):
                             self.keybinds.controls[mapping] = event.key
                             done = True
 
@@ -138,10 +138,10 @@ class ControlsMenu(Menu):
         """Enter the main menu from the options menu screen once clicked."""
         button_clicked = self.back_button.check_mouse_click()
         if (
-            button_clicked
-            and pygame.K_UNDERSCORE not in self.keybinds.controls.values()
-            and self.game.state.state is self.game.state.CONTROLSMENU
-        ):
+            button_clicked and
+            pygame.K_UNDERSCORE not in self.keybinds.controls.values() and
+            self.game.state.state is self.game.state.CONTROLSMENU
+            ):
             self.game.state.state = self.game.state.MAINMENU
             self.sound.play_sfx("options_menu")
 
@@ -161,17 +161,17 @@ class ControlsMenu(Menu):
             self.sound.play_sfx("options_menu")
 
     def update_cursor(self, direction):
-        """Moves the cursor up or down based on input"""
+        """Move the cursor up or down based on input."""
         if direction >= 0 and self.index > 0:
             self.index -= 1
             self.y -= 70
-        elif direction < 0 and self.index < len(self.buttons)-1:
+        elif direction < 0 and self.index < len(self.buttons) - 1:
             self.index += 1
             self.y += 70
-        elif direction >= 0 and self.index == 0: 
-            self.index = len(self.buttons)-1
+        elif direction >= 0 and self.index == 0:
+            self.index = len(self.buttons) - 1
             self.y = 590
-        elif direction < 0 and self.index == len(self.buttons)-1:
+        elif direction < 0 and self.index == len(self.buttons) - 1:
             self.index = 0
             self.y = 25
         self.cursor_rect.y = self.y

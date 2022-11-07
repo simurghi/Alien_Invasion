@@ -77,8 +77,7 @@ class GameStats:
             return None
 
     def _read_music_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for playing music."""
+        """Search the dict created from settings.json and see if we already enabled music."""
         if self.options_data:
             music_option = self.options_data.get("music_volume")
             if music_option is not None:
@@ -89,8 +88,7 @@ class GameStats:
             return 1.0
 
     def _read_keybinds_json(self):
-        """Search the dictionary creates from the settings.json file
-        and sees if we already have a control mapping enabled."""
+        """Search the dict created from settings.json and see if we already mapped controls."""
         if self.options_data:
             controls_option = self.options_data.get("controls")
             if controls_option is not None:
@@ -117,8 +115,7 @@ class GameStats:
             }
 
     def _read_sfx_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for playing SFX."""
+        """Search the dict created from settings.json and see if we already enabled sound."""
         if self.options_data:
             sfx_option = self.options_data.get("sound_volume")
             if sfx_option is not None:
@@ -129,8 +126,7 @@ class GameStats:
             return 1.0
 
     def _read_turbo_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for turbo mode."""
+        """Search the dict created from settings.json and see if we already adjusted game speed."""
         if self.options_data:
             turbo_option = self.options_data.get("game_speed")
             if turbo_option is not None:
@@ -141,8 +137,7 @@ class GameStats:
             return self.game.settings.GAME_SPEEDS[1]
 
     def _read_turbo_counter_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for turbo mode."""
+        """Update the label for game speed."""
         if self.options_data:
             turbo_count_option = self.options_data.get("speed_counter")
             if turbo_count_option is not None:
@@ -153,8 +148,7 @@ class GameStats:
             return 1
 
     def _read_gfx_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for window size."""
+        """Search the dict created from settings.json and see if we already adjusted window size."""
         if self.options_data:
             gfx_option = self.options_data.get("window_mode")
             if gfx_option is not None:
@@ -165,8 +159,7 @@ class GameStats:
             return self.game.settings.GFX_SETTINGS[0]
 
     def _read_gfx_counter_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for window size."""
+        """Update the label for window size."""
         if self.options_data:
             gfx_count_option = self.options_data.get("gfx_counter")
             if gfx_count_option is not None:
@@ -177,8 +170,7 @@ class GameStats:
             return 0
 
     def _read_HUD_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for HUD preset."""
+        """Search the dict created from settings.json and see if we already set the HUD preference."""
         if self.options_data:
             HUD_option = self.options_data.get("HUD_preset")
             if HUD_option is not None:
@@ -189,8 +181,7 @@ class GameStats:
             return self.game.settings.HUD_SETTINGS[0]
 
     def _read_HUD_counter_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for HUD preset."""
+        """Update the label for HUD preference."""
         if self.options_data:
             HUD_count_option = self.options_data.get("HUD_counter")
             if HUD_count_option is not None:
@@ -201,8 +192,7 @@ class GameStats:
             return 0
 
     def _read_score_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for displaying score."""
+        """Search the dict created from settings.json and see if we already set a score preference."""
         if self.options_data:
             score_option = self.options_data.get("display_score")
             if score_option is not None:
@@ -213,8 +203,7 @@ class GameStats:
             return self.game.settings.SCORE_SETTINGS[0]
 
     def _read_score_counter_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for displaying score."""
+        """Update the label for score preference."""
         if self.options_data:
             score_counter_option = self.options_data.get("score_counter")
             if score_counter_option is not None:
@@ -225,8 +214,7 @@ class GameStats:
             return 0
 
     def _read_dirarrow_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for displaying the direction arrow."""
+        """Search the dict created from settings.json and see if we already set game arrow preferences."""
         if self.options_data:
             dirarrow_option = self.options_data.get("arrow_setting")
             if dirarrow_option is not None:
@@ -237,8 +225,7 @@ class GameStats:
             return self.game.settings.ARROW_SETTINGS[0]
 
     def _read_dirarrow_counter_json(self):
-        """Search the dictionary created from the settings.json file
-        and sees if we already have an option for displaying the direction arrow."""
+        """Update the label for game arrows."""
         if self.options_data:
             dirarrow_counter_option = self.options_data.get("arrow_counter")
             if dirarrow_counter_option is not None:

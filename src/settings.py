@@ -1,4 +1,3 @@
-import pygame, os
 
 
 class Settings:
@@ -21,14 +20,14 @@ class Settings:
         self.SCORE_SETTINGS = ("Score: ALL", "Score: Game", "Score: Menu", "Score: OFF")
 
     def _set_window_properties(self):
-        """Sets the properties for the game window and background."""
+        """Set the properties for the game window and background."""
         self.screen_width = 960
         self.screen_height = 640
         self.FPS = 120.0
         self.bg_color = (0, 0, 0)
 
     def _initialize_user_preferences(self):
-        """Sets default preferences for user options."""
+        """Set default preferences for user options."""
         self.music_volume = 1.0
         self.sound_volume = 1.0
         self.speed = self.GAME_SPEEDS[1]

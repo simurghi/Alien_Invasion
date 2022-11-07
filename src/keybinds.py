@@ -2,9 +2,10 @@ import pygame
 
 
 class Keybinds:
-    """A class to manage keybindings"""
+    """A class to manage keybindings."""
 
     def __init__(self):
+        """Initialize attributes for keybindings class."""
         self._make_control_constants()
         self.controls = {
             self.MOVELEFT: pygame.K_a,
@@ -26,7 +27,7 @@ class Keybinds:
         self.init_menu_text()
 
     def init_menu_text(self):
-        """Sets the menu text to display in the keybindings menu."""
+        """Set the menu text to display in the keybindings menu."""
         self.move_left_text = "LEFT - " + pygame.key.name(self.controls.get(self.MOVELEFT))
         self.move_right_text = "RIGHT - " + pygame.key.name(self.controls.get(self.MOVERIGHT))
         self.move_up_text = "UP - " + pygame.key.name(self.controls.get(self.MOVEUP))
@@ -49,7 +50,7 @@ class Keybinds:
         ]
 
     def _make_control_constants(self):
-        """Makes constants for key binding assignments"""
+        """Make constants for key binding assignments."""
         self.MOVELEFT = "MOVELEFT"
         self.MOVERIGHT = "MOVERIGHT"
         self.MOVEUP = "MOVEUP"

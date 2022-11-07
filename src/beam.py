@@ -42,7 +42,7 @@ class Beam(Sprite):
         self.direction *= -1
 
     def update(self, dt):
-        """Update method for beam's position and animation loop"""
+        """Update method for beam's position and animation loop."""
         self.x += self.settings.bullet_speed * self.direction * 1.50 * dt
         self.rect.x = self.x
         animation_speed = 0.0375

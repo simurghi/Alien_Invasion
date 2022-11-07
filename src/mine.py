@@ -112,7 +112,9 @@ class Mine(Sprite):
 
     def _cqc_warning(self):
         """If a mine is close to the player ship, they will receive a warning.
-        Additionally, the mine's blinking animation will be faster"""
+
+        Additionally, the mine's blinking animation will be faster.
+        """
         formula_x = sqrt(
             (self.ship.rect.centerx - self.rect.centerx) ** 2 + (self.ship.rect.centerx - self.rect.centerx) ** 2
         )

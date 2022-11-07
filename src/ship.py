@@ -25,7 +25,7 @@ class Ship(Sprite):
         self._create_movement_flags()
 
     def _create_objects(self, ai_game):
-        """Creates the objects necessary for the ship class to work."""
+        """Create the objects necessary for the ship class to work."""
         self.screen = ai_game.screen
         self.settings = ai_game.settings
         self.screen_rect = ai_game.screen.get_rect()
@@ -36,7 +36,7 @@ class Ship(Sprite):
         self.image = pygame.image.load('assets/images/ship.bmp')
 
     def _create_movement_flags(self):
-        """Creates the movement flags for the ship for smooth movement."""
+        """Create the movement flags for the ship for smooth movement."""
         self.moving_up = False
         self.moving_down = False
         self.moving_left = False
@@ -69,7 +69,7 @@ class Ship(Sprite):
         self.x = float(self.rect.x)
 
     def flip_ship(self):
-        """Flips the ship and firing pattens of the bullet."""
+        """Flip the ship and firing pattens of the bullet."""
         if self.state.state == self.state.GAMEPLAY:
             self._rotate_ship()
             self._adjust_bullet_flipped()
@@ -77,12 +77,12 @@ class Ship(Sprite):
             self.sound.play_sfx("flip")
 
     def _rotate_ship(self):
-        """Flips the ship across the y-axis."""
+        """Flip the ship across the y-axis."""
         self.image = pygame.transform.flip(self.image, True, False)
         self.is_flipped = not self.is_flipped
 
     def _adjust_bullet_flipped(self):
-        """Adjusts the speed and direction of flipped bullets."""
+        """Adjust the speed and direction of flipped bullets."""
         if self.is_flipped:
             self.settings.bullet_speed *= 2.50
             self.settings.ship_speed *= 1.25
@@ -91,7 +91,7 @@ class Ship(Sprite):
             self.settings.ship_speed *= 0.80
 
     def reset_ship_flip(self):
-        """Resets the orientation of the ship on each new game."""
+        """Reset the orientation of the ship on each new game."""
         self.image = pygame.image.load('assets/images/ship.bmp')
         self.arrow.reset_arrow()
         self.is_flipped = False

@@ -1,8 +1,10 @@
 import pygame
 import pygame.font
 
+
 class Button:
     """Class to create a generic menu button."""
+
     def __init__(self, ai_game, msg, x_offset=0, y_offset=0, width=250, height=50, font_size=48, small_font=False):
         """Initialize button attributes."""
         self.screen = ai_game.screen
@@ -62,7 +64,7 @@ class Button:
 
     def toggle_color(self, cursor_button_collide, is_key_empty, msg='', msg_size=48):
         """Receive a boolean and adjusts the color of the button based on the values."""
-        if cursor_button_collide:  
+        if cursor_button_collide:
             self.top_button_color = (46, 139, 87)
         elif not cursor_button_collide and is_key_empty:
             self.top_button_color = (34, 139, 34)

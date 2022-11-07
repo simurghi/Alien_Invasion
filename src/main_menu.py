@@ -16,7 +16,7 @@ class MainMenu(Menu):
         self._create_main_buttons(ai_game)
 
     def _create_main_buttons(self, ai_game):
-        """Creates the buttons for the main menu."""
+        """Create the buttons for the main menu."""
         self.play_button = Button(ai_game, "Start", 250, 150)
         self.options_button = Button(ai_game, "Options", 250, 75)
         self.controls_button = Button(self, "Controls", 250, 0)
@@ -38,8 +38,7 @@ class MainMenu(Menu):
             self.help_button: self._help_action,
             self.credits_button: self._credit_action,
             self.exit_button: self._exit_action,
-            }
-
+        }
 
     def _check_button(self, button):
         """Respond to mouse clicks on buttons."""
@@ -72,7 +71,7 @@ class MainMenu(Menu):
         sys.exit()
 
     def draw_buttons(self):
-        """Draws buttons to the screen."""
+        """Draw buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0))
         self.game.scoreboard.prep_high_score_main_menu()
         self._highlight_colors()
@@ -81,17 +80,17 @@ class MainMenu(Menu):
         self.screen.blit(self.cursor_image, self.cursor_rect)
 
     def update_cursor(self, direction):
-        """Moves the cursor up or down based on input"""
+        """Move the cursor up or down based on input."""
         if direction >= 0 and self.index > 0:
             self.index -= 1
             self.y -= 75
-        elif direction < 0 and self.index < len(self.buttons)-1:
+        elif direction < 0 and self.index < len(self.buttons) - 1:
             self.index += 1
             self.y += 75
-        elif direction >= 0 and self.index == 0: 
-            self.index = len(self.buttons)-1
+        elif direction >= 0 and self.index == 0:
+            self.index = len(self.buttons) - 1
             self.y = 530
-        elif direction < 0 and self.index == len(self.buttons)-1:
+        elif direction < 0 and self.index == len(self.buttons) - 1:
             self.index = 0
             self.y = 155
         self.cursor_rect.y = self.y

@@ -59,9 +59,9 @@ class Controller:
             if event.button == self.BTN_X and event.type == pygame.JOYBUTTONDOWN:
                 self.ship.fire_beam()
         if (
-            event.button == self.BTN_START
-            and event.type == pygame.JOYBUTTONDOWN
-            and (self.state.state is self.state.GAMEPLAY or self.state.state is self.state.PAUSE)
+            event.button == self.BTN_START and
+            event.type == pygame.JOYBUTTONDOWN and
+            (self.state.state is self.state.GAMEPLAY or self.state.state is self.state.PAUSE)
         ):
             self.sound.play_sfx("options_menu")
             self.game.pause.check_pause()

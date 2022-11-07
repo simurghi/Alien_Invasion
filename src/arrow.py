@@ -44,10 +44,8 @@ class Arrow(Sprite):
 
     def blitme(self):
         """Draw the arrow at its current location."""
-        if (
-            self.settings.arrow_mode == self.settings.ARROW_SETTINGS[0]
-            or self.settings.arrow_mode == self.settings.ARROW_SETTINGS[2]
-        ):
+        if (self.settings.arrow_mode == self.settings.ARROW_SETTINGS[0] or
+               self.settings.arrow_mode == self.settings.ARROW_SETTINGS[2]):
             self.screen.blit(self.image, self.rect)
 
 
@@ -79,8 +77,7 @@ class WarningArrow(Sprite):
 
     def blitme(self):
         """Draw the warning arrows at their current position."""
-        if (
-            self.settings.arrow_mode == self.settings.ARROW_SETTINGS[0]
-            or self.settings.arrow_mode == self.settings.ARROW_SETTINGS[1]
-        ) and (self.mine.y < 50 or self.mine.y > 590):
+        if ((self.settings.arrow_mode == self.settings.ARROW_SETTINGS[0] or
+               self.settings.arrow_mode == self.settings.ARROW_SETTINGS[1]) and
+        (self.mine.y < 50 or self.mine.y > 590)):
             self.screen.blit(self.image, self.rect)

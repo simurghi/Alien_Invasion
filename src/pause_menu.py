@@ -1,8 +1,5 @@
 import pygame.font
-import sys
 import pygame
-from button import Button
-from menu import Menu
 
 
 class PauseMenu:
@@ -17,11 +14,11 @@ class PauseMenu:
         self.state = ai_game.state
 
     def render_pause(self):
-        """Renders and displays the pause message."""
+        """Render and displays the pause message."""
         self.screen.blit(self.pause_image, self.pause_rect)
 
     def check_pause(self):
-        """Checks to see if hitting ESC should pause or unpause the game."""
+        """Check to see if hitting ESC should pause or unpause the game."""
         self.state.pause_state += 1
         if self.state.pause_state % 2 == 0 and self.state.state == self.state.PAUSE:
             self.state.state = self.state.GAMEPLAY
