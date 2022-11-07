@@ -11,7 +11,7 @@ class Arrow(Sprite):
         self.ship = ship
         self.screen = ai_game.screen
         self.settings = ai_game.settings
-        self.image = pygame.image.load('assets/images/dir_arrow_black_smol_2.bmp')
+        self.image = pygame.image.load("assets/images/dir_arrow_black_smol_2.bmp")
         self.rect = self.image.get_rect()
         self.rect.midleft = ship.rect.midright
         self.x = float(self.rect.x)
@@ -37,7 +37,7 @@ class Arrow(Sprite):
 
     def reset_arrow(self):
         """Reset the position of the arrow on game reset."""
-        self.image = pygame.image.load('assets/images/dir_arrow_black_smol_2.bmp')
+        self.image = pygame.image.load("assets/images/dir_arrow_black_smol_2.bmp")
         self.rect.midleft = self.ship.rect.midright
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
@@ -62,9 +62,9 @@ class WarningArrow(Sprite):
         self.screen_rect = ai_game.screen.get_rect()
         self.settings = ai_game.settings
         if mine.y < 50:
-            self.image = pygame.image.load('assets/images/warning_arrow_top.bmp')
+            self.image = pygame.image.load("assets/images/warning_arrow_top.bmp")
         elif mine.y > 590:
-            self.image = pygame.image.load('assets/images/warning_arrow_bot.bmp')
+            self.image = pygame.image.load("assets/images/warning_arrow_bot.bmp")
         self.rect = self.image.get_rect()
         self.rect.x = mine.rect.x
         self.x = float(self.rect.x)

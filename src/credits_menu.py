@@ -52,16 +52,15 @@ class CreditsMenu(Menu):
             self.back_button,
         )
         self.func_buttons = (
-                self.art_button0,
-                self.code_button0,
-                self.back_button
-                )
+            self.art_button0,
+            self.code_button0,
+            self.back_button,
+        )
         self.menu_event_dict = {
             self.art_button0: self._check_art_button,
             self.code_button0: self._check_code_button,
             self.back_button: self._check_back_button,
-            }
-
+        }
 
     def _check_button(self, button):
         button_clicked = button.check_mouse_click()
@@ -97,23 +96,23 @@ class CreditsMenu(Menu):
         self.screen.blit(self.cursor_image, self.cursor_rect)
 
     def update_cursor(self, direction):
-        """Moves the cursor up or down based on input"""
+        """Move the cursor up or down based on input."""
         if direction >= 0 and self.index > 0:
             self.index -= 1
             if self.index == 0:
                 self.y -= 225
             if self.index == 1:
                 self.y -= 300
-        elif direction < 0 and self.index < len(self.func_buttons)-1:
+        elif direction < 0 and self.index < len(self.func_buttons) - 1:
             self.index += 1
             if self.index < 2:
                 self.y += 225
-            elif self.index == 2: 
+            elif self.index == 2:
                 self.y += 300
-        elif direction >= 0 and self.index == 0: 
-            self.index = len(self.func_buttons)-1
+        elif direction >= 0 and self.index == 0:
+            self.index = len(self.func_buttons) - 1
             self.y = 580
-        elif direction < 0 and self.index == len(self.func_buttons)-1:
+        elif direction < 0 and self.index == len(self.func_buttons) - 1:
             self.index = 0
             self.y = 55
         self.cursor_rect.y = self.y

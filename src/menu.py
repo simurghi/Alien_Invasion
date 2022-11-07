@@ -1,10 +1,12 @@
-import pygame.font, sys, pygame
-from button import Button
+import pygame.font
+import pygame
+
 
 class Menu:
     """Parent class to hold generic menu functionality and state."""
 
     def __init__(self, ai_game):
+        """Initialize generic menu parent class attributes."""
         self.game = ai_game
         self.screen = ai_game.screen
         self.screen_rect = ai_game.screen.get_rect()
@@ -21,7 +23,7 @@ class Menu:
         self.y = float(self.cursor_rect.y)
 
     def _highlight_colors(self):
-        """Toggles colors for buttons that are being selected."""
+        """Toggle colors for buttons that are being selected."""
         for button in self.buttons:
             button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
 
@@ -29,16 +31,16 @@ class Menu:
         pass
 
     def check_menu_buttons(self):
-        '''Loops through every button in the menu list and checks over it.'''
+        """Loop through every button in the menu list and checks over it."""
         for button in self.buttons:
             self._check_button(button)
 
     def _check_button(self, button):
-        '''To be overriden by child.'''
+        """To be overriden by child."""
         pass
 
     def draw_buttons(self):
-        """Draws buttons to the screen."""
+        """Draw buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0))
         self._highlight_colors()
         for button in self.buttons:
@@ -46,7 +48,7 @@ class Menu:
         self.screen.blit(self.cursor_image, self.cursor_rect)
 
     def update_cursor(self, direction=1):
-        """To be overriden by child"""
+        """To be overriden by child."""
         if direction >= 0:
             pass
         elif direction < 0:

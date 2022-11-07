@@ -91,9 +91,9 @@ class ControlsMenu(Menu):
                         pygame.quit()
                         sys.exit()
                     elif event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
+                        if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                             done = True
-                        elif event.key == pygame.K_BACKSPACE:
+                        elif event.key == pygame.K_DELETE:
                             done = True
                             pygame.quit()
                             sys.exit()

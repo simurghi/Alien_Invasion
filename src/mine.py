@@ -26,14 +26,14 @@ class Mine(Sprite):
         pygame.draw.circle(self.image, (255, 0, 0), self.rect.center, self.radius)
 
     def _load_assets(self):
-        """Loads the images for the mines and stores them in a list. Also loads warning sound."""
+        """Load the images for the mines and stores them in a list. Also loads warning sound."""
         self.mine_images = []
         for num in range(1, 5):
             drone = pygame.image.load(f"assets/images/mine{num}.png").convert_alpha()
             self.mine_images.append(drone)
 
     def _initialize_dynamic_settings(self):
-        """Initializes dynamic settings for the mine like its animations and warning sounds."""
+        """Initialize dynamic settings for the mine like its animations and warning sounds."""
         self.random_pos = randint(1, 10)
         self.play_warning = False
         self.audio_delay = 1000
@@ -42,13 +42,13 @@ class Mine(Sprite):
         self.counter = 0
 
     def _create_objects(self, ai_game):
-        """Creates objects of other classes necessary for the mine to function."""
+        """Create objects of other classes necessary for the mine to function."""
         self.ship = ai_game.ship
         self.settings = ai_game.settings
         self.sound = ai_game.sound
 
     def update(self, dt):
-        """Update method for mines"""
+        """Update method for mines."""
         animation_speed = self._cqc_warning()
         self._move_mine(dt, animation_speed)
         self.counter += 1 * dt
@@ -61,7 +61,7 @@ class Mine(Sprite):
             self.index = 0
 
     def _move_mine(self, dt, animation_speed):
-        """Updates the position of the mines."""
+        """Update the position of the mines."""
         if self.y < 30:
             speed_mult = 0.5
         elif self.y > 600:
@@ -82,7 +82,7 @@ class Mine(Sprite):
         self.rect.x = self.x
 
     def set_random_position(self):
-        """Sets a random position on spawn."""
+        """Set a random position on spawn."""
         if self.random_pos == 1:
             self.rect.topleft = self.screen_rect.topleft
         elif self.random_pos == 2:

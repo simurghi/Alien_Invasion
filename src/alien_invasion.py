@@ -452,10 +452,10 @@ class AlienInvasion:
                 self.ship.fire_beam()
             if event.key == self.keybinds.controls.get(self.keybinds.FLIPSHIP):
                 self.ship.flip_ship()
-        if event.key == pygame.K_ESCAPE:
+        if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
             self.pause.check_pause()
             self._check_exit()
-        if event.key == pygame.K_BACKSPACE:
+        if event.key == pygame.K_DELETE:
             self.stats.dump_stats_json()
             pygame.quit()
             sys.exit()
