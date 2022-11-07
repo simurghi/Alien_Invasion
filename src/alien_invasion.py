@@ -1,9 +1,12 @@
-import pygame, sys, time, logging
+import pygame
+import sys
+import time
+import logging
 
-from alien import Alien, ChonkyAlien
+from alien import Alien
 from aspect_ratio import AspectRatio
-from beam import Beam
-from bullet import Bullet
+# from beam import Beam
+# from bullet import Bullet
 from controller import Controller
 from controls_menu import ControlsMenu
 from credits_menu import CreditsMenu
@@ -42,12 +45,12 @@ class AlienInvasion:
         self._load_images()
 
     def _load_images(self):
-        """Loads menu and game background images."""
+        """Load menu and game background images."""
         self.menu_image = pygame.image.load("assets/images/background.png").convert()
         self.background_image = pygame.image.load("assets/images/parallax_scrolling_background.png").convert()
 
     def _make_game_objects(self):
-        """Creates all of the necessary game objects for the game to run."""
+        """Create all of the necessary game objects for the game to run."""
         self.previous_time = time.time()
         self.time_game = time.time()
         self.settings = Settings()
@@ -75,7 +78,7 @@ class AlienInvasion:
         """Create the dictionaries to process logic to replace if/elif statements."""
 
     def _create_sprite_groups(self):
-        """Creates sprite group containers for objects."""
+        """Create sprite group containers for objects."""
         self.bullets = pygame.sprite.Group()
         self.beams = pygame.sprite.Group()
         self.explosions = pygame.sprite.Group()
@@ -106,16 +109,21 @@ class AlienInvasion:
             self.set_fps_cap()
 
     def calculate_delta_time(self):
-        """Calculates delta time to ensure framerate independence"""
+        """Calculate delta time to ensure framerate independence."""
         dt = time.time() - self.previous_time
         self.previous_time = time.time()
         return dt
 
     def set_fps_cap(self):
-        """Sets the internal FPS cap for the game.
+        """Set the internal FPS cap for the game.
+
         Current time is calculated after all other events in the game loop have elapsed
+
         The time different is how long our frame took to process
-        The game will be delayed based on the game's FPS if we finish the loop early"""
+
+        The game will be delayed based on the game's FPS if we finish the loop early.
+
+        """
         current_time = time.time()
         time_diff = current_time - self.time_game
         delay = max(1.0 / self.settings.FPS - time_diff, 0)
@@ -186,7 +194,7 @@ class AlienInvasion:
         pygame.display.flip()
 
     def _clear_state(self):
-        """Resets the stats for the game on play/restart."""
+        """Reset the stats for the game on play/restart."""
         self.settings._initialize_dynamic_settings()
         self.stats.reset_stats()
         self.scoreboard.prep_score()
@@ -235,7 +243,7 @@ class AlienInvasion:
         self._process_collision(collisions_beam, enemy_list, score_multiplier, True)
 
     def _process_collision(self, collisions, enemy_list, score_multiplier, is_beam):
-        """Processes the game logic based on the type of collision"""
+        """Process the game logic based on the type of collision."""
         if collisions:
             for alien_index, bullet_indexes in collisions.items():
                 if enemy_list is self.aliens or enemy_list is self.mines:
@@ -247,7 +255,7 @@ class AlienInvasion:
                         self._kill_gunner(alien_index, bullet_indexes, score_multiplier)
 
     def _process_trash_and_mines(self, alien_index, bullet_indexes, score_multiplier, is_beam):
-        """If the enemy is a trash mob or a mine, calculate score, effects, and cleanup"""
+        """If the enemy is a trash mob or a mine, calculate score, effects, and cleanup."""
         self._calculate_score(alien_index, bullet_indexes, score_multiplier)
         self._play_explosion(alien_index)
         if not is_beam:
@@ -256,7 +264,9 @@ class AlienInvasion:
 
     def _damage_gunner(self, alien_index, bullet_indexes, is_beam):
         """If the enemy is a gunner and isn't killed by an impact,
-        calculate damage dealt and effects."""
+
+        calculate damage dealt and effects.
+        """
         if is_beam:
             self.gunners.sprite.hitpoints -= 5
             self._play_impact(alien_index, beam_impact=True)
@@ -274,7 +284,7 @@ class AlienInvasion:
         self._collision_cleanup_and_score_gunner(alien_index)
 
     def _collision_cleanup_and_score_gunner(self, alien_index):
-        """Removes collided gunners and bullets and adjusts score."""
+        """Remove collided gunners and bullets and adjusts score."""
         if self.gunners and self.gunners.sprite.gunner_bullets:
             self._explode_missiles()
         alien_index.kill()
@@ -282,19 +292,19 @@ class AlienInvasion:
         self.scoreboard.check_high_score()
 
     def _collision_cleanup_and_score(self, alien_index):
-        """Removes collided aliens and adjusts score."""
+        """Remove collided aliens and adjusts score."""
         alien_index.kill()
         self.scoreboard.prep_score()
         self.scoreboard.check_high_score()
 
     def _explode_missiles(self):
-        """Plays impact and sounds if enabled."""
+        """Play impact and sounds if enabled."""
         for chonkymissile in self.gunners.sprite.gunner_bullets:
             explosion = Explosion(chonkymissile.rect.center, 2)
             self.explosions.add(explosion)
 
     def _calculate_score(self, alien_index, projectile_index, enemy_mult=1):
-        """Calculates score multipliers for killed enemies."""
+        """Calculate score multipliers for killed enemies."""
         cqc_mult = self._check_cqc_distance(alien_index)
         backstab_mult = self._check_backstab(projectile_index)
         bonus_mult = 1.25 if (cqc_mult > 1 and backstab_mult > 1) else 1
@@ -305,8 +315,7 @@ class AlienInvasion:
         self._calculate_beam_addition()
 
     def _calculate_beam_addition(self):
-        """Calculates if the player should received an additional beam charge or 500 points
-        If they hit the score threshold."""
+        """Calculate if the player should get an extra beam charge or points if pass the score threshold."""
         if self.stats.hidden_score / 5000 >= 1 and not self.settings.adjust_beams:
             if self.stats.charges_remaining < self.settings.beam_limit:
                 self.stats.charges_remaining += 1
@@ -334,7 +343,7 @@ class AlienInvasion:
         self.sound.play_impact_sfx(beam_impact)
 
     def _check_cqc_distance(self, alien):
-        """Checks to see if the distance between the ship and alien is eligible for a score bonus."""
+        """Check to see if the distance between the ship and alien is eligible for a score bonus."""
         formula = sqrt(
             (self.ship.rect.centerx - alien.rect.centerx) ** 2 + (self.ship.rect.centerx - alien.rect.centerx) ** 2
         )
@@ -344,7 +353,7 @@ class AlienInvasion:
             return 1
 
     def _check_backstab(self, bullet_indexes):
-        """Checks to see if the bullet hit the alien from behind for a score bonus."""
+        """Check to see if the bullet hit the alien from behind for a score bonus."""
         multiplier = 0
         for bullet_index in bullet_indexes:
             if bullet_index.direction < 0:
@@ -354,8 +363,7 @@ class AlienInvasion:
         return multiplier
 
     def _update_aliens(self, dt):
-        """Checks if the player ship collides with aliens,
-        then deletes chaff aliens if they go offscreen."""
+        """Check if the player collides with aliens, then delete trash aliens if they go offscreen."""
         self.aliens.update(dt)
         self.mines.update(dt)
         self.gunners.update(dt)
@@ -386,7 +394,7 @@ class AlienInvasion:
         self.settings.background_x += floor((self.settings.scroll_speed * dt * 10) / 10)
 
     def _check_keydown_events(self, event):
-        """respond to keypresses."""
+        """Respond to keypresses."""
         '''self.main_menu = MainMenu(self)
         self.credits_menu = CreditsMenu(self)
         self.options_menu = OptionsMenu(self)
@@ -395,49 +403,49 @@ class AlienInvasion:
         self.go_menu = GameOverMenu(self)'''
         if self.state.state == self.state.MAINMENU:
             if event.key == pygame.K_UP:
-                self.main_menu.update_cursor(direction = 1)
-            elif event.key == pygame.K_DOWN: 
-                self.main_menu.update_cursor(direction = -1)
-            elif event.key == pygame.K_RETURN: 
+                self.main_menu.update_cursor(direction=1)
+            elif event.key == pygame.K_DOWN:
+                self.main_menu.update_cursor(direction=-1)
+            elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
                 self.main_menu.enter_pressed = True
                 self.main_menu.menu_event_dict.get(self.main_menu.buttons[self.main_menu.index])()
-        elif self.state.state == self.state.OPTIONSMENU: 
+        elif self.state.state == self.state.OPTIONSMENU:
             if event.key == pygame.K_UP:
-                self.options_menu.update_cursor(direction = 1)
-            elif event.key == pygame.K_DOWN: 
-                self.options_menu.update_cursor(direction = -1)
-            elif event.key == pygame.K_RETURN: 
+                self.options_menu.update_cursor(direction=1)
+            elif event.key == pygame.K_DOWN:
+                self.options_menu.update_cursor(direction=-1)
+            elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
                 self.options_menu.enter_pressed = True
                 (self.options_menu.menu_event_dict.get(self.options_menu.buttons[self.options_menu.index])
                  (direction=1))
         elif self.state.state == self.state.HELPMENU:
             if event.key == pygame.K_UP:
-                self.help_menu.update_cursor(direction = 1)
-            elif event.key == pygame.K_DOWN: 
-                self.help_menu.update_cursor(direction = -1)
-            elif event.key == pygame.K_RETURN: 
+                self.help_menu.update_cursor(direction=1)
+            elif event.key == pygame.K_DOWN:
+                self.help_menu.update_cursor(direction=-1)
+            elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
                 self.help_menu.enter_pressed = True
                 self.help_menu.menu_event_dict.get(self.help_menu.buttons[self.help_menu.index])()
         elif self.state.state == self.state.CONTROLSMENU:
             if event.key == pygame.K_UP:
-                self.controls_menu.update_cursor(direction = 1)
-            elif event.key == pygame.K_DOWN: 
-                self.controls_menu.update_cursor(direction = -1)
-            elif event.key == pygame.K_RETURN: 
+                self.controls_menu.update_cursor(direction=1)
+            elif event.key == pygame.K_DOWN:
+                self.controls_menu.update_cursor(direction=-1)
+            elif event.key == pygame.K_RETURN:
                 pass
         elif self.state.state == self.state.CREDITSMENU:
             if event.key == pygame.K_UP:
-                self.credits_menu.update_cursor(direction = 1)
-            elif event.key == pygame.K_DOWN: 
-                self.credits_menu.update_cursor(direction = -1)
-            elif event.key == pygame.K_RETURN: 
+                self.credits_menu.update_cursor(direction=1)
+            elif event.key == pygame.K_DOWN:
+                self.credits_menu.update_cursor(direction=-1)
+            elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
                 self.credits_menu.enter_pressed = True
                 self.credits_menu.menu_event_dict.get(self.credits_menu.func_buttons[self.credits_menu.index])()
-        elif self.state.state == self.state.GAMEPLAY: 
+        elif self.state.state == self.state.GAMEPLAY:
             if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
                 self.ship.moving_up = True
             elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
@@ -461,7 +469,7 @@ class AlienInvasion:
             sys.exit()
 
     def _check_mousedown_events(self):
-        """respond to mouse clicks."""
+        """Respond to mouse clicks."""
         mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
         mouse_pos = pygame.mouse.get_pos()
         if mouse_buttons[0] and self.state.state == self.state.CONTROLSMENU:
@@ -492,7 +500,7 @@ class AlienInvasion:
                 self.ship.flip_ship()
 
     def _check_mouseup_events(self):
-        """respond to mouse releases."""
+        """Respond to mouse releases."""
         mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
 
         if self.state.state == self.state.GAMEPLAY or self.state.state == self.state.PAUSE:
@@ -500,9 +508,9 @@ class AlienInvasion:
                 self.ship.is_firing = False
 
     def _check_keyup_events(self, event):
-        """respond to key releases."""
+        """Respond to key releases."""
         if self.state.state == self.state.MAINMENU:
-            if event.key == pygame.K_RETURN: 
+            if event.key == pygame.K_RETURN:
                 self.main_menu.enter_pressed = False
         if self.state.state == self.state.OPTIONSMENU:
             if event.key == pygame.K_RETURN:
@@ -520,8 +528,8 @@ class AlienInvasion:
                 self.ship.is_firing = False
 
     def _check_exit(self):
-        """Checks to see if hitting ESC should exit the game."""
-        if (self.state.state == self.state.OPTIONSMENU or self.state.state == self.state.HELPMENU 
+        """Check to see if hitting ESC should exit the game."""
+        if (self.state.state == self.state.OPTIONSMENU or self.state.state == self.state.HELPMENU
                 or self.state.state == self.state.CREDITSMENU):
             self.state.state = self.state.MAINMENU
         elif self.state.state == self.state.CONTROLSMENU and pygame.K_UNDERSCORE not in self.keybinds.controls.values():
@@ -532,8 +540,7 @@ class AlienInvasion:
             sys.exit()
 
     def _create_fleet(self):
-        """Create the fleet of aliens and find out
-        how many can be populated in each fleet."""
+        """Create the fleet of aliens and calculate how many are in each fleet."""
         alien = Alien(self)
         wave_spawn = randint(1, 8)
         alien_width, alien_height = alien.rect.size
@@ -554,8 +561,7 @@ class AlienInvasion:
                 self.mines.add(mine)
 
     def _check_unique_spawn(self, mine, position_list):
-        """Shuffles the mines' starting positions randomly
-        to help prevent them from clumping up on spawn."""
+        """Shuffles the mines' starting positions to reduce spawn clumping."""
         if not position_list:
             position_list.append(mine.random_pos)
         while mine.random_pos in position_list:
@@ -563,7 +569,7 @@ class AlienInvasion:
             mine.set_random_position()
 
     def _select_spawn_pattern(self, wave_number, number_cols, number_aliens_y):
-        """Selects a wave spawn pattern based on a random number."""
+        """Select a wave spawn pattern based on a random number."""
         if wave_number == 1:
             self._create_mine(5)
             self._create_trash_mobs(number_cols, number_aliens_y)
@@ -627,8 +633,11 @@ class AlienInvasion:
 
     def _ship_hit(self):
         """Respond to the ship being hit by an alien. Delete any non-gunner aliens
+
         and all bullets, play explosions at the player's location, create a new fleet,
-        reposition the player ship, and do a brief pause. End the game if no lives left"""
+
+        reposition the player ship, and do a brief pause. End the game if no lives left
+        """
         if self.stats.ships_remaining > 1:
             self.stats.ships_remaining -= 1
             self.scoreboard.prep_ships()
@@ -643,8 +652,7 @@ class AlienInvasion:
             self.scoreboard.prep_high_score_game_over()
 
     def _empty_enemies_on_death(self):
-        """If the player dies, clear all enemies and projectiles
-        on the screen."""
+        """If the player dies, clear all enemies and projectiles on the screen."""
         self.aliens.empty()
         self.mines.empty()
         self.bullets.empty()
@@ -683,14 +691,14 @@ class AlienInvasion:
         pygame.mixer.music.fadeout(500)
 
     def _check_mouse_visible(self):
-        """Checks if the game is in a state where the mouse is visible."""
+        """Check if the game is in a state where the mouse is visible."""
         if self.state.state is self.state.GAMEPLAY:
             pygame.mouse.set_visible(False)
         else:
             pygame.mouse.set_visible(True)
 
     def start_countdown(self):
-        """creates the game countdown timer and decrements it over time"""
+        """Create the game countdown timer and decrements it over time."""
         count_timer = pygame.time.get_ticks()
         if count_timer - self.last_count > 1000:
             self.countdown -= 1
@@ -702,7 +710,7 @@ if __name__ == '__main__':
     ai = AlienInvasion()
     try:
         ai.run_game()
-    except SystemExit: 
+    except SystemExit:
         pass
     except:
         logging.basicConfig(filename="ERROR.log", filemode='w', level=logging.ERROR)
