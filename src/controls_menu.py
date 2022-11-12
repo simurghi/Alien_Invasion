@@ -46,13 +46,13 @@ class ControlsMenu(Menu):
         self.buttons = [self.reset_button, self.back_button]
         self._append_keybinds_to_buttons()
         self.menu_event_dict = {
-                self.left_button: self.pass_function,
-                self.right_button: self.pass_function,
-                self.up_button: self.pass_function,
-                self.down_button: self.pass_function,
-                self.beam_button: self.pass_function,
-                self.flip_button: self.pass_function,
-                self.missile_button: self.pass_function,
+                self.left_button: self._check_keybind_button,
+                self.right_button: self._check_keybind_button,
+                self.up_button: self._check_keybind_button,
+                self.down_button: self._check_keybind_button,
+                self.beam_button: self._check_keybind_button,
+                self.flip_button: self._check_keybind_button,
+                self.missile_button: self._check_keybind_button,
                 self.reset_button: self._check_reset_button,
                 self.back_button: self._check_back_button,
                 }
@@ -72,22 +72,22 @@ class ControlsMenu(Menu):
             button.draw_button()
         self.screen.blit(self.cursor_image, self.cursor_rect)
 
-    def _check_button(self, button):
+    def _check_button(self, mouse_pos, button):
         """Respond to a button press and performans an action based on collision type."""
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             if button.lmb_pressed or button.enter_pressed:
                 self.sound.play_sfx("options_menu")
-                self.menu_event_dict.get(button)()
+                if button in self.key_buttons:
+                    self.menu_event_dict.get(button)(mouse_pos, button, self.key_buttons.get(button))
+                else:
+                    self.menu_event_dict.get(button)()
                 self.enter_pressed = False
 
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         for button in self.buttons: 
-            if button in self.key_buttons:
-                self._check_keybind_button(mouse_pos, button, self.key_buttons.get(button))
-            else: 
-                self._check_button(button)
+            self._check_button(mouse_pos, button)
 
     def _highlight_keybind_colors(self):
         """Toggle colors for buttons that are being selected."""
