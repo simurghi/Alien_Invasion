@@ -14,7 +14,7 @@ class ControlsMenu(Menu):
         self.screen_rect = self.screen.get_rect()
         self.keybinds = ai_game.keybinds
         self._create_controls_buttons()
-        self.index = 0
+        self.enter_pressed = False
         self._set_cursor()
 
     def _set_cursor(self):
@@ -44,9 +44,18 @@ class ControlsMenu(Menu):
             self.missile_button: self.keybinds.MISSILEATTACK,
         }
         self.buttons = [self.reset_button, self.back_button]
-        '''self.func_buttons = [
-                self.left'''
         self._append_keybinds_to_buttons()
+        self.menu_event_dict = {
+                self.left_button: self.pass_function,
+                self.right_button: self.pass_function,
+                self.up_button: self.pass_function,
+                self.down_button: self.pass_function,
+                self.beam_button: self.pass_function,
+                self.flip_button: self.pass_function,
+                self.missile_button: self.pass_function,
+                self.reset_button: self._check_reset_button,
+                self.back_button: self._check_back_button,
+                }
 
     def _append_keybinds_to_buttons(self):
         """Append the keybinds (buttons only) to the buttons list."""
@@ -63,12 +72,22 @@ class ControlsMenu(Menu):
             button.draw_button()
         self.screen.blit(self.cursor_image, self.cursor_rect)
 
+    def _check_button(self, button):
+        """Respond to a button press and performans an action based on collision type."""
+        button_clicked = button.check_mouse_click()
+        if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
+            if button.lmb_pressed or button.enter_pressed:
+                self.sound.play_sfx("options_menu")
+                self.menu_event_dict.get(button)()
+                self.enter_pressed = False
+
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
-        for keybind_button, mapping in self.key_buttons.items():
-            self._check_keybind_button(mouse_pos, keybind_button, mapping)
-        self._check_reset_button()
-        self._check_back_button()
+        for button in self.buttons: 
+            if button in self.key_buttons:
+                self._check_keybind_button(mouse_pos, button, self.key_buttons.get(button))
+            else: 
+                self._check_button(button)
 
     def _highlight_keybind_colors(self):
         """Toggle colors for buttons that are being selected."""
@@ -136,19 +155,13 @@ class ControlsMenu(Menu):
 
     def _check_back_button(self):
         """Enter the main menu from the options menu screen once clicked."""
-        button_clicked = self.back_button.check_mouse_click()
-        if (
-            button_clicked and
-            pygame.K_UNDERSCORE not in self.keybinds.controls.values() and
-            self.game.state.state is self.game.state.CONTROLSMENU
-            ):
-            self.game.state.state = self.game.state.MAINMENU
-            self.sound.play_sfx("options_menu")
+        if ( pygame.K_UNDERSCORE not in self.keybinds.controls.values() and
+            self.game.state.state is self.game.state.CONTROLSMENU):
+                self.game.state.state = self.game.state.MAINMENU
 
     def _check_reset_button(self):
         """Clear the custom keybinds and resets to initial options."""
-        button_clicked = self.reset_button.check_mouse_click()
-        if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
+        if self.game.state.state is self.game.state.CONTROLSMENU:
             self.keybinds.controls = {
                 self.keybinds.MOVELEFT: pygame.K_a,
                 self.keybinds.MOVERIGHT: pygame.K_d,
@@ -158,7 +171,6 @@ class ControlsMenu(Menu):
                 self.keybinds.BEAMATTACK: pygame.K_l,
                 self.keybinds.FLIPSHIP: pygame.K_k,
             }
-            self.sound.play_sfx("options_menu")
 
     def update_cursor(self, direction):
         """Move the cursor up or down based on input."""
@@ -175,3 +187,6 @@ class ControlsMenu(Menu):
             self.index = 0
             self.y = 25
         self.cursor_rect.y = self.y
+
+    def pass_function(self):
+        pass
