@@ -437,7 +437,7 @@ class AlienInvasion:
             elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
                 self.controls_menu.enter_pressed = True
-                self.controls_menu.menu_event_dict.get(self.controls_menu.buttons[self.controls_menu.index])()
+                self.controls_menu.menu_event_dict.get(self.controls_menu.buttons[self.controls_menu.index])(self.controls_menu.buttons[self.controls_menu.index], self.controls_menu.key_buttons.get(self.controls_menu.buttons[self.controls_menu.index]))
         elif self.state.state == self.state.CREDITSMENU:
             if event.key == pygame.K_UP:
                 self.credits_menu.update_cursor(direction=1)

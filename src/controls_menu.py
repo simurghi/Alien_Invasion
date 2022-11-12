@@ -14,7 +14,7 @@ class ControlsMenu(Menu):
         self.screen_rect = self.screen.get_rect()
         self.keybinds = ai_game.keybinds
         self._create_controls_buttons()
-        self.enter_pressed = False
+        #self.enter_pressed = False
         self._set_cursor()
 
     def _set_cursor(self):
@@ -43,8 +43,7 @@ class ControlsMenu(Menu):
             self.flip_button: self.keybinds.FLIPSHIP,
             self.missile_button: self.keybinds.MISSILEATTACK,
         }
-        self.buttons = [self.reset_button, self.back_button]
-        self._append_keybinds_to_buttons()
+        self.buttons = [self.left_button, self.right_button, self.up_button, self.down_button, self.beam_button, self.flip_button, self.missile_button, self.reset_button, self.back_button]
         self.menu_event_dict = {
                 self.left_button: self._check_keybind_button,
                 self.right_button: self._check_keybind_button,
@@ -57,11 +56,6 @@ class ControlsMenu(Menu):
                 self.back_button: self._check_back_button,
                 }
 
-    def _append_keybinds_to_buttons(self):
-        """Append the keybinds (buttons only) to the buttons list."""
-        for key in tuple(self.key_buttons):
-            self.buttons.append(key)
-
     def draw_buttons(self):
         """Draw buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0))
@@ -72,14 +66,14 @@ class ControlsMenu(Menu):
             button.draw_button()
         self.screen.blit(self.cursor_image, self.cursor_rect)
 
-    def _check_button(self, mouse_pos, button):
+    def _check_button(self, button):
         """Respond to a button press and performans an action based on collision type."""
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
             if button.lmb_pressed or button.enter_pressed:
                 self.sound.play_sfx("options_menu")
                 if button in self.key_buttons:
-                    self.menu_event_dict.get(button)(mouse_pos, button, self.key_buttons.get(button))
+                    self.menu_event_dict.get(button)(button, self.key_buttons.get(button))
                 else:
                     self.menu_event_dict.get(button)()
                 self.enter_pressed = False
@@ -87,18 +81,17 @@ class ControlsMenu(Menu):
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
         for button in self.buttons: 
-            self._check_button(mouse_pos, button)
+            self._check_button(button)
 
     def _highlight_keybind_colors(self):
         """Toggle colors for buttons that are being selected."""
         for button in self.key_buttons:
             button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))
 
-    def _check_keybind_button(self, mouse_pos, button, mapping):
+    def _check_keybind_button(self, button, mapping):
         """Check button for user input and dynamically reassign the value."""
-        button_clicked = button.top_rect.collidepoint(mouse_pos)
         done = False
-        if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
+        if self.game.state.state is self.game.state.CONTROLSMENU:
             self.sound.play_sfx("options_menu")
             button.set_color((192, 81, 0), "Press a key or hit ESC", 32)
             button.draw_button()
@@ -153,13 +146,13 @@ class ControlsMenu(Menu):
         else:
             return True
 
-    def _check_back_button(self):
+    def _check_back_button(self, button = None, mapping = None):
         """Enter the main menu from the options menu screen once clicked."""
         if ( pygame.K_UNDERSCORE not in self.keybinds.controls.values() and
             self.game.state.state is self.game.state.CONTROLSMENU):
                 self.game.state.state = self.game.state.MAINMENU
 
-    def _check_reset_button(self):
+    def _check_reset_button(self, button = None, mapping = None):
         """Clear the custom keybinds and resets to initial options."""
         if self.game.state.state is self.game.state.CONTROLSMENU:
             self.keybinds.controls = {
@@ -187,6 +180,3 @@ class ControlsMenu(Menu):
             self.index = 0
             self.y = 25
         self.cursor_rect.y = self.y
-
-    def pass_function(self):
-        pass
