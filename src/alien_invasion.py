@@ -395,12 +395,6 @@ class AlienInvasion:
 
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
-        '''self.main_menu = MainMenu(self)
-        self.credits_menu = CreditsMenu(self)
-        self.options_menu = OptionsMenu(self)
-        self.controls_menu = ControlsMenu(self)
-        self.help_menu = HelpMenu(self)
-        self.go_menu = GameOverMenu(self)'''
         if self.state.state == self.state.MAINMENU:
             if event.key == pygame.K_UP:
                 self.main_menu.update_cursor(direction=1)

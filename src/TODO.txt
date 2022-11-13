@@ -1,0 +1,3 @@
+Add keyboard/controller navigation to game over menu
+Fix visual glitch with help menu displays when using keyboard
+Fix sound glitch when spamming a on controls option menu when using gamepad

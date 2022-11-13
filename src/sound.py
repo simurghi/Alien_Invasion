@@ -17,6 +17,7 @@ class Sound:
         self.beam_sfx = pygame.mixer.Sound("assets/audio/LaserShot.wav")
         self.explosion_sfx = pygame.mixer.Sound("assets/audio/DestroyMonster2.wav")
         self.menu_sfx = pygame.mixer.Sound("assets/audio/OptionSelect.wav")
+        self.menu_denied_sfx = pygame.mixer.Sound("assets/audio/SelectMenuItemOrHover.wav")
         self.menu_unselect_sfx = pygame.mixer.Sound("assets/audio/SelectAnOption.wav")
         self.flip_sfx = pygame.mixer.Sound("assets/audio/UnitFlip.wav")
         self.damage_sfx = pygame.mixer.Sound("assets/audio/MiniHitImpact.wav")
@@ -30,6 +31,7 @@ class Sound:
         self.beam_sfx.set_volume(0.80 * self.settings.sound_volume)
         self.explosion_sfx.set_volume(0.40 * self.settings.sound_volume)
         self.menu_sfx.set_volume(0.40 * self.settings.sound_volume)
+        self.menu_denied_sfx.set_volume(0.40 * self.settings.sound_volume)
         self.menu_unselect_sfx.set_volume(0.40 * self.settings.sound_volume)
         self.flip_sfx.set_volume(0.40 * self.settings.sound_volume)
         self.damage_sfx.set_volume(0.55 * self.settings.sound_volume)
@@ -57,6 +59,8 @@ class Sound:
                 self.menu_sfx.play()
             elif sound_event == "options_menu_unselect" and self.state.state is not self.state.GAMEOVER:
                 self.menu_unselect_sfx.play()
+            elif sound_event == "options_menu_denied" and self.state.state is not self.state.GAMEOVER:
+                self.menu_denied_sfx.play()
             elif sound_event == "game_over" and self.state.state is self.state.GAMEOVER:
                 self.menu_sfx.play()
             else:

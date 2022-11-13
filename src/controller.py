@@ -33,6 +33,10 @@ class Controller:
         self.state = ai_game.state
         self.sound = ai_game.sound
         self.game = ai_game
+        self.main_menu = self.game.main_menu
+        self.options_menu = self.game.options_menu
+        self.help_menu = self.game.help_menu
+        self.credits_menu = self.game.credits_menu
         self.settings = ai_game.settings
         self.options_menu = ai_game.options_menu
         self.ship = ai_game.ship
@@ -40,7 +44,7 @@ class Controller:
     def check_joybuttondown_events(self, event):
         """Respond to gamepad face button presses."""
         self._check_combat_controls(event)
-        self._check_menu_controls(event)
+        self._check_menu_controls_buttons(event)
         self._check_game_over_controls(event)
 
     def check_joybuttonup_events(self, event):
@@ -66,19 +70,58 @@ class Controller:
             self.sound.play_sfx("options_menu")
             self.game.pause.check_pause()
 
-    def _check_menu_controls(self, event):
-        """Handle input while in the main menu."""
+    def _check_menu_controls_buttons(self, event):
+        """Handle button input while in any menu."""
         if self.state.state is self.state.MAINMENU:
             if event.button == self.BTN_A:
-                self.game._clear_state()
+                if self.main_menu.buttons[self.main_menu.index].msg == "Controls":
+                    self.sound.play_sfx("options_menu_denied")
+                else:
+                    self.sound.play_sfx("options_menu")
+                    self.main_menu.enter_pressed = True
+                    self.main_menu.menu_event_dict.get(self.main_menu.buttons[self.main_menu.index])()
+        elif self.state.state == self.state.OPTIONSMENU:
+            if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
-                self.state.state = self.state.GAMEPLAY
-            elif event.button == self.BTN_B:
+                self.options_menu.enter_pressed = True
+                (self.options_menu.menu_event_dict.get(self.options_menu.buttons[self.options_menu.index])
+                 (direction=1))
+        elif self.state.state == self.state.HELPMENU:
+            if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
-                self.game._check_exit()
-            elif event.button == self.BTN_X:
+                self.help_menu.enter_pressed = True
+                self.help_menu.menu_event_dict.get(self.help_menu.buttons[self.help_menu.index])()
+        elif self.state.state == self.state.CREDITSMENU:
+            if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
-                self.state.state = self.state.OPTIONSMENU
+                self.credits_menu.enter_pressed = True
+                self.credits_menu.menu_event_dict.get(self.credits_menu.func_buttons[self.credits_menu.index])()
+        if event.button == self.BTN_B and self.state.state is not (self.state.GAMEPLAY or self.state.PAUSE):
+            self.game._check_exit()
+
+
+    def _check_menu_controls_dpad(self, event):
+        """Handle DPAD input while in any menu."""
+        if self.state.state == self.state.MAINMENU:
+            if event.value[1] == 1:
+                self.main_menu.update_cursor(direction=1)
+            elif event.value[1] == -1:
+                self.main_menu.update_cursor(direction=-1)
+        elif self.state.state == self.state.OPTIONSMENU:
+            if event.value[1] == 1:
+                self.options_menu.update_cursor(direction=1)
+            elif event.value[1] == -1:
+                self.options_menu.update_cursor(direction=-1)
+        elif self.state.state == self.state.HELPMENU:
+            if event.value[1] == 1:
+                self.help_menu.update_cursor(direction=1)
+            elif event.value[1] == -1:
+                self.help_menu.update_cursor(direction=-1)
+        elif self.state.state == self.state.CREDITSMENU:
+            if event.value[1] == 1:
+                self.credits_menu.update_cursor(direction=1)
+            elif event.value[1] == -1:
+                self.credits_menu.update_cursor(direction=-1)
 
     def _check_game_over_controls(self, event):
         """Handle input while in the game over screen."""
@@ -121,17 +164,20 @@ class Controller:
 
     def check_joyhatmotion_events(self, event):
         """Respond to dpad presses on the gamepad."""
-        if event.value[0] == 1:
-            self.ship.moving_right = True
-        elif event.value[0] == -1:
-            self.ship.moving_left = True
-        elif event.value[0] == 0:
-            self.ship.moving_left = False
-            self.ship.moving_right = False
-        if event.value[1] == 1:
-            self.ship.moving_up = True
-        elif event.value[1] == -1:
-            self.ship.moving_down = True
-        elif event.value[1] == 0:
-            self.ship.moving_up = False
-            self.ship.moving_down = False
+        if self.state.state is self.state.GAMEPLAY:
+            if event.value[0] == 1:
+                self.ship.moving_right = True
+            elif event.value[0] == -1:
+                self.ship.moving_left = True
+            elif event.value[0] == 0:
+                self.ship.moving_left = False
+                self.ship.moving_right = False
+            if event.value[1] == 1:
+                self.ship.moving_up = True
+            elif event.value[1] == -1:
+                self.ship.moving_down = True
+            elif event.value[1] == 0:
+                self.ship.moving_up = False
+                self.ship.moving_down = False
+        else:
+            self._check_menu_controls_dpad(event)
