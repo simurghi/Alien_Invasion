@@ -441,6 +441,15 @@ class AlienInvasion:
                 self.sound.play_sfx("options_menu")
                 self.credits_menu.enter_pressed = True
                 self.credits_menu.menu_event_dict.get(self.credits_menu.func_buttons[self.credits_menu.index])()
+        elif self.state.state == self.state.GAMEOVER:
+            if event.key == pygame.K_LEFT:
+                self.go_menu.update_cursor(direction=1)
+            elif event.key == pygame.K_RIGHT:
+                self.go_menu.update_cursor(direction=-1)
+            elif event.key == pygame.K_RETURN:
+                self.sound.play_sfx("options_menu")
+                self.go_menu.enter_pressed = True
+                self.go_menu.menu_event_dict.get(self.go_menu.buttons[self.go_menu.index])()
         elif self.state.state == self.state.GAMEPLAY:
             if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
                 self.ship.moving_up = True
