@@ -37,6 +37,7 @@ class Controller:
         self.options_menu = self.game.options_menu
         self.help_menu = self.game.help_menu
         self.credits_menu = self.game.credits_menu
+        self.go_menu = self.game.go_menu
         self.settings = ai_game.settings
         self.options_menu = ai_game.options_menu
         self.ship = ai_game.ship
@@ -45,7 +46,6 @@ class Controller:
         """Respond to gamepad face button presses."""
         self._check_combat_controls(event)
         self._check_menu_controls_buttons(event)
-        self._check_game_over_controls(event)
 
     def check_joybuttonup_events(self, event):
         """Respond to gamepad face button releases."""
@@ -96,9 +96,13 @@ class Controller:
                 self.sound.play_sfx("options_menu")
                 self.credits_menu.enter_pressed = True
                 self.credits_menu.menu_event_dict.get(self.credits_menu.func_buttons[self.credits_menu.index])()
+        elif self.state.state == self.state.GAMEOVER:
+            if event.button == self.BTN_A:
+                self.sound.play_sfx("options_menu")
+                self.go_menu.enter_pressed = True
+                self.go_menu.menu_event_dict.get(self.go_menu.buttons[self.go_menu.index])()
         if event.button == self.BTN_B and self.state.state is not (self.state.GAMEPLAY or self.state.PAUSE):
             self.game._check_exit()
-
 
     def _check_menu_controls_dpad(self, event):
         """Handle DPAD input while in any menu."""
@@ -122,18 +126,11 @@ class Controller:
                 self.credits_menu.update_cursor(direction=1)
             elif event.value[1] == -1:
                 self.credits_menu.update_cursor(direction=-1)
-
-    def _check_game_over_controls(self, event):
-        """Handle input while in the game over screen."""
-        if self.state.state is self.state.GAMEOVER:
-            if event.button == self.BTN_B:
-                self.game._clear_state()
-                self.sound.play_sfx("game_over")
-                self.state.state = self.state.MAINMENU
-            elif event.button == self.BTN_A:
-                self.game._clear_state()
-                self.sound.play_sfx("game_over")
-                self.state.state = self.state.GAMEPLAY
+        elif self.state.state == self.state.GAMEOVER:
+            if event.value[0] == -1:
+                self.go_menu.update_cursor(direction=1)
+            elif event.value[0] == 1:
+                self.go_menu.update_cursor(direction=-1)
 
     def check_joyaxismotion_events(self, event):
         """Respond to analogue stick input."""
