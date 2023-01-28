@@ -74,8 +74,8 @@ class HelpMenu(Menu):
         self.back_button = Button(ai_game, "Back", 250, -225)
         self.buttons = (
             self.basic_controls_button,
-            self.basic_score_button,
             self.basic_misc_button,
+            self.basic_score_button,
             self.basic_enemies_button,
             self.adv_enemies_button,
             self.back_button,

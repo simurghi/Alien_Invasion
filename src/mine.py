@@ -66,8 +66,6 @@ class Mine(Sprite):
             speed_mult = 0.5
         elif self.y > 600:
             speed_mult = 0.5
-        elif animation_speed == 0.05:
-            speed_mult = 1.25
         else:
             speed_mult = 1.0
         if self.x < self.ship.x:

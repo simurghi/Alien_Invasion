@@ -10,11 +10,11 @@ class GameOverMenu(Menu):
         """Initialize button attributes."""
         super().__init__(ai_game)
         self.screen_rect = self.screen.get_rect()
-        self.menu_button = Button(self, "Menu", 150, -50)
-        self.restart_button = Button(self, "Restart", -150, -50)
-        self.buttons = [self.menu_button, self.restart_button]
-        self.menu_event_dict = {self.menu_button: self._check_main_menu_button,
-                                self.restart_button: self._check_restart_button}
+        self.menu_button = Button(self, "Menu", -150, -50)
+        self.restart_button = Button(self, "Restart", 150, -50)
+        self.buttons = [self.restart_button, self.menu_button]
+        self.menu_event_dict = {self.restart_button: self._check_restart_button,
+                                self.menu_button: self._check_main_menu_button}
         self._create_go_menu_properties()
         self._set_cursor()
 
