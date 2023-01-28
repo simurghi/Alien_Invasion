@@ -36,6 +36,7 @@ class Controller:
         self.main_menu = self.game.main_menu
         self.options_menu = self.game.options_menu
         self.help_menu = self.game.help_menu
+        self.controls_menu = self.game.controls_menu
         self.credits_menu = self.game.credits_menu
         self.go_menu = self.game.go_menu
         self.settings = ai_game.settings
@@ -74,18 +75,20 @@ class Controller:
         """Handle button input while in any menu."""
         if self.state.state is self.state.MAINMENU:
             if event.button == self.BTN_A:
-                if self.main_menu.buttons[self.main_menu.index].msg == "Controls":
-                    self.sound.play_sfx("options_menu_denied")
-                else:
-                    self.sound.play_sfx("options_menu")
-                    self.main_menu.enter_pressed = True
-                    self.main_menu.menu_event_dict.get(self.main_menu.buttons[self.main_menu.index])()
+                self.sound.play_sfx("options_menu")
+                self.main_menu.enter_pressed = True
+                self.main_menu.menu_event_dict.get(self.main_menu.buttons[self.main_menu.index])()
         elif self.state.state == self.state.OPTIONSMENU:
             if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
                 self.options_menu.enter_pressed = True
                 (self.options_menu.menu_event_dict.get(self.options_menu.buttons[self.options_menu.index])
                  (direction=1))
+        elif self.state.state == self.state.CONTROLSMENU:
+            if event.button == self.BTN_A:
+                self.sound.play_sfx("options_menu")
+                self.options_menu.enter_pressed = True
+                self.controls_menu.menu_event_dict.get(self.controls_menu.buttons[self.controls_menu.index])(self.controls_menu.buttons[self.controls_menu.index], self.controls_menu.key_buttons.get(self.controls_menu.buttons[self.controls_menu.index]))
         elif self.state.state == self.state.HELPMENU:
             if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
@@ -121,6 +124,11 @@ class Controller:
                 self.help_menu.update_cursor(direction=1)
             elif event.value[1] == -1:
                 self.help_menu.update_cursor(direction=-1)
+        elif self.state.state == self.state.CONTROLSMENU:
+            if event.value[1] == 1:
+                self.controls_menu.update_cursor(direction=1)
+            elif event.value[1] == -1:
+                self.controls_menu.update_cursor(direction=-1)
         elif self.state.state == self.state.CREDITSMENU:
             if event.value[1] == 1:
                 self.credits_menu.update_cursor(direction=1)

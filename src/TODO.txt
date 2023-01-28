@@ -1,1 +1,0 @@
-Fix sound glitch when spamming a on controls option menu when using gamepad
