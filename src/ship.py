@@ -120,3 +120,7 @@ class Ship(Sprite):
                 self.stats.charges_remaining -= 1
                 self.game.scoreboard.prep_beams()
                 self.sound.play_sfx("beam")
+
+    def draw_hitbox(self):
+        """Draw a blank black bar."""
+        pygame.draw.rect(self.screen, (255,0,0), self.rect)

@@ -5,8 +5,6 @@ import logging
 
 from alien import Alien
 from aspect_ratio import AspectRatio
-# from beam import Beam
-# from bullet import Bullet
 from controller import Controller
 from controls_menu import ControlsMenu
 from credits_menu import CreditsMenu
@@ -371,14 +369,11 @@ class AlienInvasion:
             self._ship_hit()
         if pygame.sprite.spritecollide(self.ship, self.mines, False, pygame.sprite.collide_circle):
             self._ship_hit()
-        if pygame.sprite.spritecollide(self.ship, self.gunners, False, pygame.sprite.collide_mask):
+        if pygame.sprite.spritecollide(self.ship, self.gunners, False, pygame.sprite.collide_circle):
             self._ship_hit()
         if (
-            self.gunners
-            and self.gunners.sprite.gunner_bullets
-            and pygame.sprite.spritecollide(
-                self.ship, self.gunners.sprite.gunner_bullets, False, pygame.sprite.collide_mask
-            )
+            self.gunners and self.gunners.sprite.gunner_bullets and pygame.sprite.spritecollide
+            (self.ship, self.gunners.sprite.gunner_bullets, False, pygame.sprite.collide_rect_ratio(0.8))
         ):
             self._ship_hit()
         for alien in self.aliens.copy():
@@ -617,6 +612,10 @@ class AlienInvasion:
         elif wave_number == 8:
             self._create_trash_mobs(number_cols + 3, number_aliens_y)
             self._create_mine(2)
+        elif wave_number == 9:
+            if not self.gunners:
+                gunner = Gunner(self)
+                self.gunners.add(gunner)
         else:
             self._create_trash_mobs(number_cols + 3, number_aliens_y)
 

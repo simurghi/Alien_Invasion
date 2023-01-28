@@ -25,3 +25,6 @@ class GunnerBullet(Sprite):
     def draw_bullet(self):
         """Draw the bullet at the current position."""
         self.screen.blit(self.image, self.rect)
+        
+    def draw_hitbox(self):
+        pygame.draw.rect(self.screen, (255,0,0), self.rect)

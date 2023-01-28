@@ -9,13 +9,14 @@ class Gunner(Sprite):
     def __init__(self, ai_game):
         """Initialize the gunner and set its starting position."""
         super().__init__()
+        self.radius = 25
         self._set_assets(ai_game)
         self.rect = self.image.get_rect()
         self.screen_rect = ai_game.screen.get_rect()
         self._make_game_objects(ai_game)
         self._set_gunner_stats()
         self._set_initial_coordinates()
-        self.radius = 50
+
 
     def _set_assets(self, ai_game):
         """Load the audio and images for the gunner and sets their properties."""
