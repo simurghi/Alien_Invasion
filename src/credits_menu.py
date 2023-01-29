@@ -65,7 +65,9 @@ class CreditsMenu(Menu):
     def _check_button(self, button):
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.CREDITSMENU:
-            if button.lmb_pressed or button.enter_pressed:
+            if button not in self.func_buttons:
+                pass
+            elif button.lmb_pressed or button.enter_pressed:
                 self.sound.play_sfx("options_menu")
                 self.menu_event_dict.get(button)()
                 self.enter_pressed = False
