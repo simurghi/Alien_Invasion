@@ -25,7 +25,7 @@ class CreditsMenu(Menu):
         self.art_credit_text1 = "Ansimuz | Matt Walkden | Daniel Linssen"
         self.art_credit_text2 = "GameSupplyGuy | GooseNinja | StudioMeowMeow"
         self.code_credit_text0 = "CODE"
-        self.code_credit_text1 = "Eric Matthes | DaFluffyPotato| ScriptLineStudios"
+        self.code_credit_text1 = "Eric Matthes | DaFluffyPotato | ScriptLineStudios"
         self.code_credit_text2 = "u/iminurnamez | KidsCanCode | CodeSurgeon | skrx"
         self.code_credit_text3 = "CDCodes | u/metulburr | ClearCode | code.Pylet"
 

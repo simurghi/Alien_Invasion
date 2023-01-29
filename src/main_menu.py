@@ -13,7 +13,9 @@ class MainMenu(Menu):
         super().__init__(ai_game)
         self.enter_pressed = False
         self.index = 0
+        self.font = pygame.font.Font("assets/fonts/m5x7.ttf", 48)
         self._create_main_buttons(ai_game)
+        self.prep_name()
 
     def _create_main_buttons(self, ai_game):
         """Create the buttons for the main menu."""
@@ -74,10 +76,19 @@ class MainMenu(Menu):
         """Draw buttons to the screen."""
         self.screen.blit(self.game.menu_image, (0, 0))
         self.game.scoreboard.prep_high_score_main_menu()
+        self.screen.blit(self.name_image, self.name_rect)
         self._highlight_colors()
         for button in self.buttons:
             button.draw_button()
         self.screen.blit(self.cursor_image, self.cursor_rect)
+
+    def prep_name(self):
+        """Displays the author's name on the bottom right of the main menu."""
+        name_str = "a game by Mike Mooc"
+        self.name_image = self.font.render(name_str, True, (255,255,255))
+        self.name_rect = self.name_image.get_rect()
+        self.name_rect.x = self.screen_rect.right / 1.75
+        self.name_rect.y = self.screen_rect.bottom - 50
 
     def update_cursor(self, direction):
         """Move the cursor up or down based on input."""
