@@ -3,9 +3,8 @@
 Alien Invasion is a challenging sidescrolling Shoot Em' Up inspired by classic arcade games.The longer you survive, the faster the game becomes, but the greater your score multiplier rises. Being aggressive will further increase your score Programmed in Python using PyGame and built using Nuitka3. Heavily inspired by Eric Matthes' Alien Invasion.
 
 <figure class="video_container">
-  <video controls="true" allowfullscreen="true" poster="src/assets/images/background.png">
-    <source src="docs/alien_invasion.mp4" type="video/mp4">
-  </video>
+<iframe src="docs/alien_invasion.mp4" frameborder="0" allowfullscreen="true">
+</iframe>
 </figure>
 
 
@@ -43,7 +42,7 @@ To create your own release, once you've cloned the repository, inside of your te
 ```
 $ cd alien_invasion/src
 
-$ pyinstaller --standalone --onefile alien_invasion.py
+$ nuitka3 --standalone --onefile alien_invasion.py
 
 ```
 NOTE: The finished binary _must_ be able to find the stats and assets folders or else it won't work. You can move them into the same directory or use symlinks. 
