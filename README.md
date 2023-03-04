@@ -1,13 +1,12 @@
 # Alien Invasion
 
-Alien Invasion is a challenging sidescrolling Shoot Em' Up inspired by classic arcade games.The longer you survive, the faster the game becomes, but the greater your score multiplier rises. Being aggressive will further increase your score Programmed in Python using PyGame and built using PyInstaller. Heavily inspired by Eric Matthes' Alien Invasion.
+Alien Invasion is a challenging sidescrolling Shoot Em' Up inspired by classic arcade games.The longer you survive, the faster the game becomes, but the greater your score multiplier rises. Being aggressive will further increase your score Programmed in Python using PyGame and built using Nuitka3. Heavily inspired by Eric Matthes' Alien Invasion.
 
 
 
 
 
 
-https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-b228-dcea7726d6c1.mp4
 
 
 
@@ -20,9 +19,9 @@ https://user-images.githubusercontent.com/85529046/159284151-e15bb55b-7a75-4570-
 
 ## <b>REQUIREMENTS:</b> 
 
-- Python 3.10 +
-- Pygame 2.1 + 
-- Pyinstaller 4.10 + (for building releases)
+- Python 3.10
+- Pygame 2.1 
+- Nuitka3 1.4.6 (for building releases)
 
 NOTE: I have only tested with these versions installed. You can use older versions, but they might not be compatible! 
 
@@ -33,7 +32,7 @@ NOTE: I have only tested with these versions installed. You can use older versio
 clone this repository using git in your terminal:
 
 ```
-$ git clone https://github.com/kck130030/alien_invasion.git
+$ git clone https://gitlab.com/simurghi/alien-invasion.git
 
 $ cd alien_invasion/src
 
@@ -44,14 +43,14 @@ NOTE: Some systems need to run python 3 using "python3" instead of "python"
 
 ### Releases:
 
-Download the latest release, extract the zip, and run the alien invasion launch script (Linux). There is also an experimental Windows exe built with wine available. 
+Download the latest release, extract the zip, and run the alien invasion .bin launch script (Linux) or .exe (Windows). 
 
-To create your own release, once you've cloned the repository, use :
+To create your own release, once you've cloned the repository, inside of your terminal, type:
 
 ```
 $ cd alien_invasion/src
 
-$ pyinstaller -F -w alien_invasion.py
+$ pyinstaller --standalone --onefile alien_invasion.py
 
 ```
 NOTE: The finished binary _must_ be able to find the stats and assets folders or else it won't work. You can move them into the same directory or use symlinks. 
@@ -65,23 +64,19 @@ NOTE: The finished binary _must_ be able to find the stats and assets folders or
 #### Menus 
 - Left Mouse: Activate menu option 
 - Right Mouse: Clear Keybind (Controls Menu only)
-- ESC: Exit game
+- Up/Down Arrow: Move menu cursor up and down
+- Enter: Confirm action highlighted by menu cursor
+- ESC: Exit game, return down menu one level (if not at main menu)
 
 #### Game
 - ESC: Toggle Pause 
-
-##### ARROWS (DEFAULT):
-- Arrow keys (Left, Right, Up, Down): Move the ship in that respective direction
-- X: Fire a missile
-- Z: Flip Ship across the y-axis
-- C: Fire a beam charge
-- Mousefire: Disabled
+- WASD: Move the ship up, left, down, and right, respectively
+- LMB/J: Fire a missile
+- RMB/K: Flip Ship across the y-axis
+- MMB/L: Fire a beam charge
 
 ##### CUSTOM:
 - The user can define their own preferred keyboard and mouse control scheme by assigning button presses as follows:
-- Keys cannot overlap and the user will need to use an alternative key. 
-- If a Key is unbound, it must be mapped to leave the control screen (the application can still be exited normally.)
-
 - MOVELEFT: (Defaults to Left Arrow)
 - MOVERIGHT: (Defaults to Right Arrow)
 - MOVEUP: (Defaults to Up Arrow)
@@ -90,10 +85,8 @@ NOTE: The finished binary _must_ be able to find the stats and assets folders or
 - FLIPSHIP: (Defaults to the "Z" Key)
 - MISSILEATTACK: (Defaults to the "X" Key)
 
-- Use Mouse: Toggles if combat actions (Flip, Missile, and Beam) should be controlled by the mouse instead of keyboard (not remappable):
-- LMB: Fire a missile
-- RMB: Flip Ship across the y-axis
-- MMB: Fire a beam charge
+- Keys cannot overlap and the user will need to use an alternative key. 
+- If a Key is unbound, it must be mapped to leave the control screen (the application can still be exited normally.)
 
 #### Game Over
 - Left Click: Activate menu option
@@ -101,41 +94,28 @@ NOTE: The finished binary _must_ be able to find the stats and assets folders or
 ### Controller:
 
 #### Menu
-- A: Enter Game
-- B: Exit Game 
-- X: Enter Options Menu
-
-#### Options Menu
-- B: Return to Main Menu 
-- X: Toggle Game Speed
-- Y: Toggle Cinematic VFX
-- A: Toggle Graphics Scaling
-- Left Bumper (LB): Toggle Music
-- Right Bumper (RB): Toggle Sound
-- Select (Back): Toggle FPS mode
+- Up/Down D-pad: Move cursor up/down
+- A: Confirm action highlighted by menu cursor
+- B: Exit Game, return down menu one level (if not at main menu)
 
 #### Game
-- D-pad: Move ship
+- Left Analogue Stick/D-pad: Move ship
 - A: Fire a missile
 - B: Flip ship direction horizontally
 - X: Fire Beam Charge
 - Start: Pauses game
 
-#### Game Over
-- B: Go to Main Menu
-- A: Restart Game
-
 
 ### <b>Menu Options:</b>
-![menu](https://user-images.githubusercontent.com/85529046/159285444-7f883428-0aa9-4e2e-bb21-46dc4c9c01d5.png)
 
-- **Game Speed**: Normal is the default game speed. Turbo plays at 1.5x the speed of normal and scales 2x as fast, but has a 1.5x score multiplier.
-- **Keybindings**: Allows you to set custom key presets. Defaults to "ARROWS". See controls section for exact bindings. Controller not affected.
-- **Music**: Toggles in-game and menu music. Disabled when the button is red, enabled when the button is green.
-- **Sound**: Toggles in-game sound. Disabled when the button is red, enabled when the button is green.
-- **Movie VFX**: Toggles cinematic black bars on the top and bottom of the screen, When enabled, forces a 16:9 aspect ratio, otherwise 3:2 when off.
-- **Scaling**: Toggles between "Native" resolution (960x640) and "Scaled" (upscales base resolution to fit display).
-- **Framerate**: Toggles between a 60 and 120 FPS cap. 
+
+- **Game Speed**: Normal is the default game speed. Can select from "Slow", "Normal", "Fast", "Very Fast", or "Ludicrous"
+- **Music**: Adjusts in-game and menu music by increments of 10%. Disabled when at 0%
+- **Sound**: Adjusts in-game and menu sound by increments of 10%. Disabled when at 0%
+- **Resolution**: Toggles between "Native" resolution (960x640), "Scaled" (upscales base resolution to fit display in integer increments, if possible), and "Full Scaled" (upscales base resolution to fit display in exclusive fullscreen).
+- **Score**: If set to "All" displays high score on the main menu, and current/high score in-game. Each element can be toggled between or disabled entirely.
+- **HUD**: Adjusts position of missile and beam counters, as well as lives. Can be disabled entirely.
+- **Arrows**: If set to "All" displays direction arrow in front of player and warning arrows for mine spawns offscreen. Each element can be toggled between or disabled entirely.
 - **Back**: Returns to the main menu
 
 ### <b>Tips:</b>
