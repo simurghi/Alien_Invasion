@@ -1,5 +1,7 @@
 # Alien Invasion
 
+[![Gameplay](https://raw.githubusercontent.com/simurghi/Alien_Invasion/main/docs/alien_invasion.mp4)]
+
 Alien Invasion is a challenging sidescrolling Shoot Em' Up inspired by classic arcade games.The longer you survive, the faster the game becomes, but the greater your score multiplier rises. Being aggressive will further increase your score Programmed in Python using PyGame and built using Nuitka3. Heavily inspired by Eric Matthes' Alien Invasion.
 
 
