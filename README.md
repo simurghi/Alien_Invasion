@@ -14,7 +14,7 @@ Alien Invasion is a challenging sidescrolling Shoot Em' Up inspired by classic a
 - Pygame 2.1 
 - Nuitka3 1.4.6 (for building releases)
 
-NOTE: I have only tested with these versions installed. You can use older versions, but they might not be compatible! 
+NOTE: I have only tested with these versions installed. You can use older or newer versions, but they might not be compatible! 
 
 ## <b>INSTALLATION:</b>
 
@@ -23,7 +23,7 @@ NOTE: I have only tested with these versions installed. You can use older versio
 clone this repository using git in your terminal:
 
 ```
-$ git clone https://gitlab.com/simurghi/alien-invasion.git
+$ git clone https://github.com/simurghi/Alien_Invasion.git
 
 $ cd alien_invasion/src
 
@@ -100,7 +100,7 @@ NOTE: The finished binary _must_ be able to find the stats and assets folders or
 ### <b>Menu Options:</b>
 
 
-- **Game Speed**: Normal is the default game speed. Can select from "Slow", "Normal", "Fast", "Very Fast", or "Ludicrous"
+- **Game Speed**: Normal is the default game speed. Can select from "Slow", "Normal", "Fast", "Very Fast", or "Ludicrous". Score multiplier is increased on faster speeds.
 - **Music**: Adjusts in-game and menu music by increments of 10%. Disabled when at 0%
 - **Sound**: Adjusts in-game and menu sound by increments of 10%. Disabled when at 0%
 - **Resolution**: Toggles between "Native" resolution (960x640), "Scaled" (upscales base resolution to fit display in integer increments, if possible), and "Full Scaled" (upscales base resolution to fit display in exclusive fullscreen).
