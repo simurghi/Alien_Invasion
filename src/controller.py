@@ -73,51 +73,33 @@ class Controller:
 
     def _check_menu_controls_buttons(self, event):
         """Handle button input while in any menu."""
-        if self.state.state is self.state.MAINMENU:
-            if event.button == self.BTN_A:
-                self.sound.play_sfx("options_menu")
-                self.main_menu.enter_pressed = True
-                self.main_menu.menu_event_dict.get(self.main_menu.buttons[self.main_menu.index])()
-        elif self.state.state == self.state.OPTIONSMENU:
-            if event.button == self.BTN_A:
-                self.sound.play_sfx("options_menu")
-                self.options_menu.enter_pressed = True
-                (
-                    self.options_menu.menu_event_dict.get(
-                        self.options_menu.buttons[self.options_menu.index]
-                    )(direction=1)
+        if event.button == self.BTN_A:
+            self.sound.play_sfx("options_menu")
+
+            menu = self._get_current_menu()
+            if not menu:
+                return
+
+            menu.enter_pressed = True
+
+            if menu is self.options_menu:
+                menu.menu_event_dict.get(menu.buttons[menu.index])(direction=1)
+
+            elif menu is self.controls_menu:
+                btn = menu.buttons[menu.index]
+                menu.menu_event_dict.get(btn)(
+                    btn,
+                    menu.key_buttons.get(btn),
                 )
-        elif self.state.state == self.state.CONTROLSMENU:
-            if event.button == self.BTN_A:
-                self.sound.play_sfx("options_menu")
-                self.options_menu.enter_pressed = True
-                self.controls_menu.menu_event_dict.get(
-                    self.controls_menu.buttons[self.controls_menu.index]
-                )(
-                    self.controls_menu.buttons[self.controls_menu.index],
-                    self.controls_menu.key_buttons.get(
-                        self.controls_menu.buttons[self.controls_menu.index]
-                    ),
-                )
-        elif self.state.state == self.state.HELPMENU:
-            if event.button == self.BTN_A:
-                self.sound.play_sfx("options_menu")
-                self.help_menu.enter_pressed = True
-                self.help_menu.menu_event_dict.get(self.help_menu.buttons[self.help_menu.index])()
-        elif self.state.state == self.state.CREDITSMENU:
-            if event.button == self.BTN_A:
-                self.sound.play_sfx("options_menu")
-                self.credits_menu.enter_pressed = True
-                self.credits_menu.menu_event_dict.get(
-                    self.credits_menu.func_buttons[self.credits_menu.index]
-                )()
-        elif self.state.state == self.state.GAMEOVER:
-            if event.button == self.BTN_A:
-                self.sound.play_sfx("options_menu")
-                self.go_menu.enter_pressed = True
-                self.go_menu.menu_event_dict.get(self.go_menu.buttons[self.go_menu.index])()
-        if event.button == self.BTN_B and self.state.state is not (
-            self.state.GAMEPLAY or self.state.PAUSE
+            elif menu is self.credits_menu:
+                menu.menu_event_dict.get(menu.func_buttons[menu.index])()
+
+            else:
+                menu.menu_event_dict.get(menu.buttons[menu.index])()
+
+        if event.button == self.BTN_B and self.state.state not in (
+            self.state.GAMEPLAY,
+            self.state.PAUSE,
         ):
             self.game._check_exit()
 
@@ -127,22 +109,22 @@ class Controller:
         if not menu:
             return
 
-        direction = self._get_direction(event)
+        direction = self._get_menu_direction(event)
         if direction:
             menu.update_cursor(direction=direction)
-      
+
     def _get_current_menu(self):
         """Indexes into a dictionary to get the current menu state"""
-        return { 
-                self.state.MAINMENU: self.main_menu,
-                self.state.OPTIONSMENU: self.options_menu,
-                self.state.HELPMENU: self.help_menu,
-                self.state.CONTROLSMENU: self.controls_menu,
-                self.state.CREDITSMENU: self.credits_menu,
-                self.state.GAMEOVER: self.go_menu,
+        return {
+            self.state.MAINMENU: self.main_menu,
+            self.state.OPTIONSMENU: self.options_menu,
+            self.state.HELPMENU: self.help_menu,
+            self.state.CONTROLSMENU: self.controls_menu,
+            self.state.CREDITSMENU: self.credits_menu,
+            self.state.GAMEOVER: self.go_menu,
         }.get(self.state.state)
 
-    def _get_direction(self, event):
+    def _get_menu_direction(self, event):
         """Define d-pad behavior for menus"""
         if self.state.state == self.state.GAMEOVER:
             if event.value[0] == 1:
@@ -154,6 +136,9 @@ class Controller:
                 return 1
             elif event.value[1] == -1:
                 return -1
+
+    def _get_menu_button(self, event):
+        """Defined button behavior for menus"""
 
     def check_joyaxismotion_events(self, event):
         """Respond to analogue stick input."""
