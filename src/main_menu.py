@@ -85,7 +85,7 @@ class MainMenu(Menu):
     def prep_name(self):
         """Displays the author's name on the bottom right of the main menu."""
         name_str = "a game by Mike Mooc"
-        self.name_image = self.font.render(name_str, True, (255,255,255))
+        self.name_image = self.font.render(name_str, True, (255, 255, 255))
         self.name_rect = self.name_image.get_rect()
         self.name_rect.x = self.screen_rect.right / 1.75
         self.name_rect.y = self.screen_rect.bottom - 50

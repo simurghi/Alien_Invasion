@@ -10,7 +10,7 @@ class GunnerBullet(Sprite):
         super().__init__()
         self.screen = ai_game.screen
         self.settings = ai_game.settings
-        self.image = pygame.image.load('assets/images/thiccmissile.png').convert_alpha()
+        self.image = pygame.image.load("assets/images/thiccmissile.png").convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.center = gunner.rect.center
         self.x = float(self.rect.x)
@@ -25,6 +25,6 @@ class GunnerBullet(Sprite):
     def draw_bullet(self):
         """Draw the bullet at the current position."""
         self.screen.blit(self.image, self.rect)
-        
+
     def draw_hitbox(self):
-        pygame.draw.rect(self.screen, (255,0,0), self.rect)
+        pygame.draw.rect(self.screen, (255, 0, 0), self.rect)

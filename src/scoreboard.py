@@ -30,7 +30,8 @@ class Scoreboard:
         """Create countdown text for the game."""
         self.countdown_image = self.font.render(text, True, self.text_color)
         self.screen.blit(
-            self.countdown_image, (self.screen_rect.centerx + x_offset, self.screen_rect.centery + y_offset)
+            self.countdown_image,
+            (self.screen_rect.centerx + x_offset, self.screen_rect.centery + y_offset),
         )
 
     def update_prep(self):
@@ -51,14 +52,20 @@ class Scoreboard:
         """Get the rect and positions of the score."""
         self.score_rect = self.score_image.get_rect()
         if self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[0]:
-            self.score_rect.x, y = self.high_score_rect.left - self.high_score_rect.left / 6, self.screen_rect.top
+            self.score_rect.x, y = (
+                self.high_score_rect.left - self.high_score_rect.left / 6,
+                self.screen_rect.top,
+            )
         elif self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[1]:
             self.score_rect.x, self.score_rect.y = (
                 self.high_score_rect.left - self.high_score_rect.left / 6,
                 self.high_score_rect.y,
             )
         else:
-            self.score_rect.x, y = self.high_score_rect.left - self.high_score_rect.left / 6, self.screen_rect.top
+            self.score_rect.x, y = (
+                self.high_score_rect.left - self.high_score_rect.left / 6,
+                self.screen_rect.top,
+            )
 
     def prep_high_score(self):
         """Turn the high score into a rendered image."""
@@ -145,7 +152,9 @@ class Scoreboard:
         """For the game over screen, turn the high score into a rendered image."""
         end_font = pygame.font.Font("assets/fonts/m5x7.ttf", 48)
         max_score = str(self.stats.high_score)
-        self.high_score_image_mm = end_font.render(f"HIGH SCORE: {max_score}", True, self.text_color)
+        self.high_score_image_mm = end_font.render(
+            f"HIGH SCORE: {max_score}", True, self.text_color
+        )
         self.high_score_rect_mm = self.high_score_image_mm.get_rect()
         self.high_score_rect_mm.x = self.screen_rect.centerx / 6
         self.high_score_rect_mm.y = self.screen_rect.bottom - 50

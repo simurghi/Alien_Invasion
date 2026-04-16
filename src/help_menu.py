@@ -36,9 +36,13 @@ class HelpMenu(Menu):
         self.basic_enemy_desc0 = "Mobs will spawn from the right of the screen and move left"
         self.basic_enemy_desc1 = "Mines spawn from the non-right edges of the screen and chase you"
         self.basic_enemy_desc2 = "Mines will blink faster if near a player and play a sound"
-        self.basic_enemy_desc3 = "Gunners will spawn from the right center and follow your ship's y-pos"
+        self.basic_enemy_desc3 = (
+            "Gunners will spawn from the right center and follow your ship's y-pos"
+        )
         self.basic_enemy_desc4 = "Gunners will fire a missile at your current y-pos on cooldown"
-        self.basic_enemy_desc5 = "If there are no mobs on the screen, the game will spawn a new wave"
+        self.basic_enemy_desc5 = (
+            "If there are no mobs on the screen, the game will spawn a new wave"
+        )
         self.adv_enemy_desc0 = "Enemies have circular hitboxes, allowing for minor collisions"
         self.adv_enemy_desc1 = "Gunners missiles have rectangular hitboxes."
         self.adv_enemy_desc2 = "Mobs will spawn and despawn offscreen to give you reaction time"
@@ -93,19 +97,54 @@ class HelpMenu(Menu):
         """Create the tutorial buttons for the game's basic controls."""
         # TODO: Update help to display current key mappings, not just defaults.
         self.basic_control_window0 = Button(
-            ai_game, self.basic_control_desc0, -175, 240, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_control_desc0,
+            -175,
+            240,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_control_window1 = Button(
-            ai_game, self.basic_control_desc1, -175, 200, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_control_desc1,
+            -175,
+            200,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_control_window2 = Button(
-            ai_game, self.basic_control_desc2, -175, 160, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_control_desc2,
+            -175,
+            160,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_control_window3 = Button(
-            ai_game, self.basic_control_desc3, -175, 120, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_control_desc3,
+            -175,
+            120,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_control_window4 = Button(
-            ai_game, self.basic_control_desc4, -175, 80, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_control_desc4,
+            -175,
+            80,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_control_windows = (
             self.basic_control_window0,
@@ -118,25 +157,74 @@ class HelpMenu(Menu):
     def _create_score_windows(self, ai_game):
         """Create tutorial buttons for the game's basic score tutorial."""
         self.basic_score_window0 = Button(
-            ai_game, self.basic_score_desc0, -175, 200, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_score_desc0,
+            -175,
+            200,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_score_window1 = Button(
-            ai_game, self.basic_score_desc1, -175, 160, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_score_desc1,
+            -175,
+            160,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_score_window2 = Button(
-            ai_game, self.basic_score_desc2, -175, 120, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_score_desc2,
+            -175,
+            120,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_score_window3 = Button(
-            ai_game, self.basic_score_desc3, -175, 80, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_score_desc3,
+            -175,
+            80,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_score_window4 = Button(
-            ai_game, self.basic_score_desc4, -175, 40, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_score_desc4,
+            -175,
+            40,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_score_window5 = Button(
-            ai_game, self.basic_score_desc5, -175, 00, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_score_desc5,
+            -175,
+            00,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_score_window6 = Button(
-            ai_game, self.basic_score_desc6, -175, -40, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_score_desc6,
+            -175,
+            -40,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_score_windows = (
             self.basic_score_window0,
@@ -151,22 +239,64 @@ class HelpMenu(Menu):
     def _create_misc_windows(self, ai_game):
         """Create tutorial buttons for the game's basic mechanics tutorials."""
         self.basic_misc_window0 = Button(
-            ai_game, self.basic_misc_desc0, -175, 220, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_misc_desc0,
+            -175,
+            220,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_misc_window1 = Button(
-            ai_game, self.basic_misc_desc1, -175, 180, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_misc_desc1,
+            -175,
+            180,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_misc_window2 = Button(
-            ai_game, self.basic_misc_desc2, -175, 140, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_misc_desc2,
+            -175,
+            140,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_misc_window3 = Button(
-            ai_game, self.basic_misc_desc3, -175, 100, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_misc_desc3,
+            -175,
+            100,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_misc_window4 = Button(
-            ai_game, self.basic_misc_desc4, -175, 60, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_misc_desc4,
+            -175,
+            60,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_misc_window5 = Button(
-            ai_game, self.basic_misc_desc5, -175, 20, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_misc_desc5,
+            -175,
+            20,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_misc_windows = (
             self.basic_misc_window0,
@@ -180,22 +310,64 @@ class HelpMenu(Menu):
     def _create_enemy_windows(self, ai_game):
         """Create basic tutorial buttons for the game's basic enemies tutorial."""
         self.basic_enemy_window0 = Button(
-            ai_game, self.basic_enemy_desc0, -175, 180, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_enemy_desc0,
+            -175,
+            180,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_enemy_window1 = Button(
-            ai_game, self.basic_enemy_desc1, -175, 140, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_enemy_desc1,
+            -175,
+            140,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_enemy_window2 = Button(
-            ai_game, self.basic_enemy_desc2, -175, 100, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_enemy_desc2,
+            -175,
+            100,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_enemy_window3 = Button(
-            ai_game, self.basic_enemy_desc3, -175, 60, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_enemy_desc3,
+            -175,
+            60,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_enemy_window4 = Button(
-            ai_game, self.basic_enemy_desc4, -175, 20, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_enemy_desc4,
+            -175,
+            20,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_enemy_window5 = Button(
-            ai_game, self.basic_enemy_desc5, -175, -20, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.basic_enemy_desc5,
+            -175,
+            -20,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.basic_enemy_windows = (
             self.basic_enemy_window0,
@@ -209,25 +381,94 @@ class HelpMenu(Menu):
     def _create_adv_enemy_windows(self, ai_game):
         """Create advanced tutorial buttons for the game's advanced enemies tutorial."""
         self.adv_enemy_window0 = Button(
-            ai_game, self.adv_enemy_desc0, -175, 160, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.adv_enemy_desc0,
+            -175,
+            160,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.adv_enemy_window1 = Button(
-            ai_game, self.adv_enemy_desc1, -175, 120, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.adv_enemy_desc1,
+            -175,
+            120,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
-        self.adv_enemy_window2 = Button(ai_game, self.adv_enemy_desc2, -175, 80, 580, 35, font_size=32, small_font=True)
-        self.adv_enemy_window3 = Button(ai_game, self.adv_enemy_desc3, -175, 40, 580, 35, font_size=32, small_font=True)
-        self.adv_enemy_window4 = Button(ai_game, self.adv_enemy_desc4, -175, 0, 580, 35, font_size=32, small_font=True)
+        self.adv_enemy_window2 = Button(
+            ai_game,
+            self.adv_enemy_desc2,
+            -175,
+            80,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
+        )
+        self.adv_enemy_window3 = Button(
+            ai_game,
+            self.adv_enemy_desc3,
+            -175,
+            40,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
+        )
+        self.adv_enemy_window4 = Button(
+            ai_game,
+            self.adv_enemy_desc4,
+            -175,
+            0,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
+        )
         self.adv_enemy_window5 = Button(
-            ai_game, self.adv_enemy_desc5, -175, -40, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.adv_enemy_desc5,
+            -175,
+            -40,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.adv_enemy_window6 = Button(
-            ai_game, self.adv_enemy_desc6, -175, -80, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.adv_enemy_desc6,
+            -175,
+            -80,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.adv_enemy_window7 = Button(
-            ai_game, self.adv_enemy_desc7, -175, -120, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.adv_enemy_desc7,
+            -175,
+            -120,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.adv_enemy_window8 = Button(
-            ai_game, self.adv_enemy_desc8, -175, -160, 580, 35, font_size=32, small_font=True
+            ai_game,
+            self.adv_enemy_desc8,
+            -175,
+            -160,
+            580,
+            35,
+            font_size=32,
+            small_font=True,
         )
         self.adv_enemy_windows = (
             self.adv_enemy_window0,
@@ -318,7 +559,9 @@ class HelpMenu(Menu):
             for button in button_list:
                 if button.display:
                     button.highlight_color(
-                        button.top_rect.collidepoint(pygame.mouse.get_pos()), msg_size=32, small_font=True
+                        button.top_rect.collidepoint(pygame.mouse.get_pos()),
+                        msg_size=32,
+                        small_font=True,
                     )
         for button in self.buttons:
             button.highlight_color(button.top_rect.collidepoint(pygame.mouse.get_pos()))

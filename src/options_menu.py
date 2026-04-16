@@ -51,15 +51,16 @@ class OptionsMenu(Menu):
             self.dirarrow_button,
             self.back_button,
         )
-        self.menu_event_dict = {self.turbo_button: self._change_difficulty,
-                                self.mute_button: self._change_music_volume,
-                                self.sfx_button: self._change_sound_volume,
-                                self.gfx_button: self._change_game_resolution,
-                                self.score_button: self._update_score_setting,
-                                self.HUD_button: self._change_game_HUD,
-                                self.dirarrow_button: self._change_game_arrow,
-                                self.back_button: self._change_back_state,
-                                }
+        self.menu_event_dict = {
+            self.turbo_button: self._change_difficulty,
+            self.mute_button: self._change_music_volume,
+            self.sfx_button: self._change_sound_volume,
+            self.gfx_button: self._change_game_resolution,
+            self.score_button: self._update_score_setting,
+            self.HUD_button: self._change_game_HUD,
+            self.dirarrow_button: self._change_game_arrow,
+            self.back_button: self._change_back_state,
+        }
 
     def _check_button(self, button):
         """Respond to button press and performs an action based on collision type."""
@@ -67,7 +68,7 @@ class OptionsMenu(Menu):
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
             if button is not self.back_button:
                 self.sound.play_sfx("options_menu")
-            if (button.lmb_pressed and not button.rmb_pressed):
+            if button.lmb_pressed and not button.rmb_pressed:
                 direction = 1
             elif button.rmb_pressed and not button.lmb_pressed:
                 direction = -1
@@ -86,7 +87,10 @@ class OptionsMenu(Menu):
 
     def _change_difficulty(self, direction):
         """Change the difficulty of the game when a button is clicked."""
-        if self.game.settings.speed_counter < len(self.game.settings.GAME_SPEEDS) - 1 and direction > 0:
+        if (
+            self.game.settings.speed_counter < len(self.game.settings.GAME_SPEEDS) - 1
+            and direction > 0
+        ):
             self.game.settings.speed_counter += 1
         elif self.game.settings.speed_counter > 0 and direction < 0:
             self.game.settings.speed_counter -= 1
@@ -124,7 +128,10 @@ class OptionsMenu(Menu):
 
     def _change_game_resolution(self, direction):
         """Change the game's resolution scale when button is clicked."""
-        if self.game.settings.gfx_counter < len(self.game.settings.GFX_SETTINGS) - 1 and direction > 0:
+        if (
+            self.game.settings.gfx_counter < len(self.game.settings.GFX_SETTINGS) - 1
+            and direction > 0
+        ):
             self.game.settings.gfx_counter += 1
         elif self.game.settings.gfx_counter > 0 and direction < 0:
             self.game.settings.gfx_counter -= 1
@@ -133,13 +140,18 @@ class OptionsMenu(Menu):
                 self.game.settings.gfx_counter = 0
             elif direction < 0:
                 self.game.settings.gfx_counter = len(self.game.settings.GFX_SETTINGS) - 1
-        self.game.settings.gfx_mode = self.game.settings.GFX_SETTINGS[self.game.settings.gfx_counter]
+        self.game.settings.gfx_mode = self.game.settings.GFX_SETTINGS[
+            self.game.settings.gfx_counter
+        ]
         self._change_gfx_text()
         self._change_window_size()
 
     def _change_game_HUD(self, direction):
         """Change the in-game combat HUD when button is clicked."""
-        if self.game.settings.HUD_counter < len(self.game.settings.HUD_SETTINGS) - 1 and direction > 0:
+        if (
+            self.game.settings.HUD_counter < len(self.game.settings.HUD_SETTINGS) - 1
+            and direction > 0
+        ):
             self.game.settings.HUD_counter += 1
         elif self.game.settings.HUD_counter > 0 and direction < 0:
             self.game.settings.HUD_counter -= 1
@@ -154,7 +166,10 @@ class OptionsMenu(Menu):
 
     def _change_game_arrow(self, direction):
         """Change the in-game arrow indicators when button is clicked."""
-        if self.game.settings.arrow_counter < len(self.game.settings.ARROW_SETTINGS) - 1 and direction > 0:
+        if (
+            self.game.settings.arrow_counter < len(self.game.settings.ARROW_SETTINGS) - 1
+            and direction > 0
+        ):
             self.game.settings.arrow_counter += 1
         elif self.game.settings.arrow_counter > 0 and direction < 0:
             self.game.settings.arrow_counter -= 1
@@ -163,12 +178,17 @@ class OptionsMenu(Menu):
                 self.game.settings.arrow_counter = 0
             elif direction < 0:
                 self.game.settings.arrow_counter = len(self.game.settings.ARROW_SETTINGS) - 1
-        self.game.settings.arrow_mode = self.game.settings.ARROW_SETTINGS[self.game.settings.arrow_counter]
+        self.game.settings.arrow_mode = self.game.settings.ARROW_SETTINGS[
+            self.game.settings.arrow_counter
+        ]
         self._change_dirarrow_text()
 
     def _change_game_score(self, direction):
         """Change the in-game and menu score displays when button is clicked."""
-        if self.game.settings.score_counter < len(self.game.settings.SCORE_SETTINGS) - 1 and direction > 0:
+        if (
+            self.game.settings.score_counter < len(self.game.settings.SCORE_SETTINGS) - 1
+            and direction > 0
+        ):
             self.game.settings.score_counter += 1
         elif self.game.settings.score_counter > 0 and direction < 0:
             self.game.settings.score_counter -= 1
@@ -177,7 +197,9 @@ class OptionsMenu(Menu):
                 self.game.settings.score_counter = 0
             elif direction < 0:
                 self.game.settings.score_counter = len(self.game.settings.SCORE_SETTINGS) - 1
-        self.game.settings.score_mode = self.game.settings.SCORE_SETTINGS[self.game.settings.score_counter]
+        self.game.settings.score_mode = self.game.settings.SCORE_SETTINGS[
+            self.game.settings.score_counter
+        ]
         self.game.scoreboard.update_prep()
         self._change_HUD_text()
 
@@ -212,10 +234,13 @@ class OptionsMenu(Menu):
     def _change_window_size(self):
         """Change the size of the game window based on user setting."""
         if self.game.settings.gfx_mode == self.game.settings.GFX_SETTINGS[0]:
-            self.screen = pygame.display.set_mode((self.game.settings.screen_width, self.game.settings.screen_height))
+            self.screen = pygame.display.set_mode(
+                (self.game.settings.screen_width, self.game.settings.screen_height)
+            )
         elif self.game.settings.gfx_mode == self.game.settings.GFX_SETTINGS[1]:
             self.screen = pygame.display.set_mode(
-                (self.game.settings.screen_width, self.game.settings.screen_height), pygame.SCALED + pygame.RESIZABLE
+                (self.game.settings.screen_width, self.game.settings.screen_height),
+                pygame.SCALED + pygame.RESIZABLE,
             )
         elif self.game.settings.gfx_mode == self.game.settings.GFX_SETTINGS[2]:
             self.screen = pygame.display.set_mode(

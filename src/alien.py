@@ -13,7 +13,7 @@ class Alien(Sprite):
         self.random_y = random.randint(-5, 5) * 5
         self.settings = ai_game.settings
         self.screen_rect = ai_game.screen.get_rect()
-        self.image = pygame.image.load('assets/images/alien_med.bmp')
+        self.image = pygame.image.load("assets/images/alien_med.bmp")
         self.rect = self.image.get_rect()
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
@@ -31,7 +31,7 @@ class ChonkyAlien(Alien):
     def __init__(self, ai_game):
         """Initialize the champion trash mob and set its starting position."""
         super().__init__(ai_game)
-        self.image = pygame.image.load('assets/images/bigboi.bmp')
+        self.image = pygame.image.load("assets/images/bigboi.bmp")
         self.rect = self.image.get_rect()
         self.radius = 15
         self.hitpoints = 4

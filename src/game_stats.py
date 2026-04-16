@@ -53,7 +53,7 @@ class GameStats:
     def _read_stats_json(self):
         """Read the score.json file and sees if we already have a high score."""
         try:
-            with open('stats/score.json') as f:
+            with open("stats/score.json") as f:
                 data = json.load(f)
                 return data["high_score"]
         except FileNotFoundError:
@@ -66,7 +66,7 @@ class GameStats:
     def _read_options_json(self):
         """Read the settings.json file and loads data if found."""
         try:
-            with open('stats/settings.json') as f:
+            with open("stats/settings.json") as f:
                 data = json.load(f)
                 return data
         except FileNotFoundError:
@@ -237,9 +237,9 @@ class GameStats:
 
     def dump_stats_json(self):
         """Dump score and key game settings to a JSON file."""
-        with open("stats/score.json", 'w') as f:
+        with open("stats/score.json", "w") as f:
             json.dump({"high_score": self.game.stats.high_score}, f)
-        with open("stats/settings.json", 'w') as f:
+        with open("stats/settings.json", "w") as f:
             json.dump(
                 {
                     "game_speed": self.settings.speed,

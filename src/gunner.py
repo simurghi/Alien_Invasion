@@ -17,10 +17,9 @@ class Gunner(Sprite):
         self._set_gunner_stats()
         self._set_initial_coordinates()
 
-
     def _set_assets(self, ai_game):
         """Load the audio and images for the gunner and sets their properties."""
-        self.image = pygame.image.load('assets/images/alien.bmp')
+        self.image = pygame.image.load("assets/images/alien.bmp")
         self.fire_sfx = ai_game.sound.gunner_sfx
 
     def _make_game_objects(self, ai_game):

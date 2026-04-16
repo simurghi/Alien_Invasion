@@ -11,7 +11,7 @@ class Menu:
         self.screen = ai_game.screen
         self.screen_rect = ai_game.screen.get_rect()
         self.sound = ai_game.sound
-        self.cursor_image = pygame.image.load('assets/images/menu_arrow.png').convert_alpha()
+        self.cursor_image = pygame.image.load("assets/images/menu_arrow.png").convert_alpha()
         self._set_cursor()
         self.index = 0
         self.buttons = []

@@ -13,9 +13,9 @@ class Bullet(Sprite):
         self.direction = direction
         self.ship = ship
         if not hud_scale:
-            self.image = pygame.image.load('assets/images/missile.bmp')
+            self.image = pygame.image.load("assets/images/missile.bmp")
         else:
-            self.image = pygame.image.load('assets/images/missile_hud.bmp')
+            self.image = pygame.image.load("assets/images/missile_hud.bmp")
         self.rect = self.image.get_rect()
         self.rect.midright = ship.rect.midright
         self.x = float(self.rect.x)

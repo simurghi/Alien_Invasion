@@ -114,10 +114,12 @@ class Mine(Sprite):
         Additionally, the mine's blinking animation will be faster.
         """
         formula_x = sqrt(
-            (self.ship.rect.centerx - self.rect.centerx) ** 2 + (self.ship.rect.centerx - self.rect.centerx) ** 2
+            (self.ship.rect.centerx - self.rect.centerx) ** 2
+            + (self.ship.rect.centerx - self.rect.centerx) ** 2
         )
         formula_y = sqrt(
-            (self.ship.rect.centery - self.rect.centery) ** 2 + (self.ship.rect.centery - self.rect.centery) ** 2
+            (self.ship.rect.centery - self.rect.centery) ** 2
+            + (self.ship.rect.centery - self.rect.centery) ** 2
         )
         now = pygame.time.get_ticks()
         if formula_x < 201 and formula_y < 201 and now - self.last_warning > self.audio_delay:

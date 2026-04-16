@@ -13,8 +13,10 @@ class GameOverMenu(Menu):
         self.menu_button = Button(self, "Menu", -150, -50)
         self.restart_button = Button(self, "Restart", 150, -50)
         self.buttons = [self.restart_button, self.menu_button]
-        self.menu_event_dict = {self.restart_button: self._check_restart_button,
-                                self.menu_button: self._check_main_menu_button}
+        self.menu_event_dict = {
+            self.restart_button: self._check_restart_button,
+            self.menu_button: self._check_main_menu_button,
+        }
         self._create_go_menu_properties()
         self._set_cursor()
 
@@ -29,7 +31,10 @@ class GameOverMenu(Menu):
         self.game_over_font = pygame.font.Font("assets/fonts/m5x7.ttf", 128)
         self.game_over_image = self.game_over_font.render("GAME OVER", True, (255, 255, 255))
         self.game_over_rect = self.game_over_image.get_rect()
-        self.game_over_rect.center = (self.screen_rect.centerx, self.screen_rect.centery - 100)
+        self.game_over_rect.center = (
+            self.screen_rect.centerx,
+            self.screen_rect.centery - 100,
+        )
 
     def _check_button(self, button):
         button_clicked = button.check_mouse_click()

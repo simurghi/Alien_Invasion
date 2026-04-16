@@ -39,7 +39,11 @@ class CreditsMenu(Menu):
         self.code_button1 = Button(ai_game, self.code_credit_text1, -25, -50, 800, 50, 16)
         self.code_button2 = Button(ai_game, self.code_credit_text2, -25, -125, 800, 50, 16)
         self.code_button3 = Button(ai_game, self.code_credit_text3, -25, -200, 800, 50, 16)
-        self.code_button_credits = (self.code_button1, self.code_button2, self.code_button3)
+        self.code_button_credits = (
+            self.code_button1,
+            self.code_button2,
+            self.code_button3,
+        )
         self.back_button = Button(ai_game, "Back", 250, -275)
         self.buttons = (
             self.art_button0,

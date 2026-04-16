@@ -33,7 +33,7 @@ class Ship(Sprite):
         self.stats = ai_game.stats
         self.game = ai_game
         self.sound = ai_game.sound
-        self.image = pygame.image.load('assets/images/ship.bmp')
+        self.image = pygame.image.load("assets/images/ship.bmp")
 
     def _create_movement_flags(self):
         """Create the movement flags for the ship for smooth movement."""
@@ -92,7 +92,7 @@ class Ship(Sprite):
 
     def reset_ship_flip(self):
         """Reset the orientation of the ship on each new game."""
-        self.image = pygame.image.load('assets/images/ship.bmp')
+        self.image = pygame.image.load("assets/images/ship.bmp")
         self.arrow.reset_arrow()
         self.is_flipped = False
         self._create_movement_flags()
@@ -101,7 +101,10 @@ class Ship(Sprite):
         """Create a new bullet and add it to the bullets group."""
         if self.state.state == self.state.GAMEPLAY:
             now = pygame.time.get_ticks()
-            if len(self.game.bullets) < self.settings.bullets_allowed and now - self.last_shot > self.fire_delay:
+            if (
+                len(self.game.bullets) < self.settings.bullets_allowed
+                and now - self.last_shot > self.fire_delay
+            ):
                 self.last_shot = now
                 new_bullet = Bullet(self.game, self)
                 if self.is_flipped:
@@ -123,4 +126,4 @@ class Ship(Sprite):
 
     def draw_hitbox(self):
         """Draw a blank black bar."""
-        pygame.draw.rect(self.screen, (255,0,0), self.rect)
+        pygame.draw.rect(self.screen, (255, 0, 0), self.rect)

@@ -14,7 +14,7 @@ class ControlsMenu(Menu):
         self.screen_rect = self.screen.get_rect()
         self.keybinds = ai_game.keybinds
         self._create_controls_buttons()
-        #self.enter_pressed = False
+        # self.enter_pressed = False
         self._set_cursor()
 
     def _set_cursor(self):
@@ -43,18 +43,28 @@ class ControlsMenu(Menu):
             self.flip_button: self.keybinds.FLIPSHIP,
             self.missile_button: self.keybinds.MISSILEATTACK,
         }
-        self.buttons = [self.left_button, self.right_button, self.up_button, self.down_button, self.beam_button, self.flip_button, self.missile_button, self.reset_button, self.back_button]
+        self.buttons = [
+            self.left_button,
+            self.right_button,
+            self.up_button,
+            self.down_button,
+            self.beam_button,
+            self.flip_button,
+            self.missile_button,
+            self.reset_button,
+            self.back_button,
+        ]
         self.menu_event_dict = {
-                self.left_button: self._check_keybind_button,
-                self.right_button: self._check_keybind_button,
-                self.up_button: self._check_keybind_button,
-                self.down_button: self._check_keybind_button,
-                self.beam_button: self._check_keybind_button,
-                self.flip_button: self._check_keybind_button,
-                self.missile_button: self._check_keybind_button,
-                self.reset_button: self._check_reset_button,
-                self.back_button: self._check_back_button,
-                }
+            self.left_button: self._check_keybind_button,
+            self.right_button: self._check_keybind_button,
+            self.up_button: self._check_keybind_button,
+            self.down_button: self._check_keybind_button,
+            self.beam_button: self._check_keybind_button,
+            self.flip_button: self._check_keybind_button,
+            self.missile_button: self._check_keybind_button,
+            self.reset_button: self._check_reset_button,
+            self.back_button: self._check_back_button,
+        }
 
     def draw_buttons(self):
         """Draw buttons to the screen."""
@@ -80,7 +90,7 @@ class ControlsMenu(Menu):
 
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""
-        for button in self.buttons: 
+        for button in self.buttons:
             self._check_button(button)
 
     def _highlight_keybind_colors(self):
@@ -110,9 +120,9 @@ class ControlsMenu(Menu):
                             pygame.quit()
                             sys.exit()
                         elif (
-                                event.key not in self.keybinds.controls.values() and
-                                event.key not in self.keybinds.reserved_keys
-                             ):
+                            event.key not in self.keybinds.controls.values()
+                            and event.key not in self.keybinds.reserved_keys
+                        ):
                             self.keybinds.controls[mapping] = event.key
                             done = True
 
@@ -137,7 +147,10 @@ class ControlsMenu(Menu):
     def _toggle_colors(self):
         """Toggle colors for buttons that have on/off states."""
         for button, mapping in self.key_buttons.items():
-            button.toggle_color(button.top_rect.collidepoint(pygame.mouse.get_pos()), self._check_empty_key(mapping))
+            button.toggle_color(
+                button.top_rect.collidepoint(pygame.mouse.get_pos()),
+                self._check_empty_key(mapping),
+            )
 
     def _check_empty_key(self, mapping):
         """Check if a key is empty or not."""
@@ -146,13 +159,15 @@ class ControlsMenu(Menu):
         else:
             return True
 
-    def _check_back_button(self, button = None, mapping = None):
+    def _check_back_button(self, button=None, mapping=None):
         """Enter the main menu from the options menu screen once clicked."""
-        if ( pygame.K_UNDERSCORE not in self.keybinds.controls.values() and
-            self.game.state.state is self.game.state.CONTROLSMENU):
-                self.game.state.state = self.game.state.MAINMENU
+        if (
+            pygame.K_UNDERSCORE not in self.keybinds.controls.values()
+            and self.game.state.state is self.game.state.CONTROLSMENU
+        ):
+            self.game.state.state = self.game.state.MAINMENU
 
-    def _check_reset_button(self, button = None, mapping = None):
+    def _check_reset_button(self, button=None, mapping=None):
         """Clear the custom keybinds and resets to initial options."""
         if self.game.state.state is self.game.state.CONTROLSMENU:
             self.keybinds.controls = {

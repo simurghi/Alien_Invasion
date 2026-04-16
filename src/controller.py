@@ -64,9 +64,9 @@ class Controller:
             if event.button == self.BTN_X and event.type == pygame.JOYBUTTONDOWN:
                 self.ship.fire_beam()
         if (
-            event.button == self.BTN_START and
-            event.type == pygame.JOYBUTTONDOWN and
-            (self.state.state is self.state.GAMEPLAY or self.state.state is self.state.PAUSE)
+            event.button == self.BTN_START
+            and event.type == pygame.JOYBUTTONDOWN
+            and (self.state.state is self.state.GAMEPLAY or self.state.state is self.state.PAUSE)
         ):
             self.sound.play_sfx("options_menu")
             self.game.pause.check_pause()
@@ -82,13 +82,23 @@ class Controller:
             if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
                 self.options_menu.enter_pressed = True
-                (self.options_menu.menu_event_dict.get(self.options_menu.buttons[self.options_menu.index])
-                 (direction=1))
+                (
+                    self.options_menu.menu_event_dict.get(
+                        self.options_menu.buttons[self.options_menu.index]
+                    )(direction=1)
+                )
         elif self.state.state == self.state.CONTROLSMENU:
             if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
                 self.options_menu.enter_pressed = True
-                self.controls_menu.menu_event_dict.get(self.controls_menu.buttons[self.controls_menu.index])(self.controls_menu.buttons[self.controls_menu.index], self.controls_menu.key_buttons.get(self.controls_menu.buttons[self.controls_menu.index]))
+                self.controls_menu.menu_event_dict.get(
+                    self.controls_menu.buttons[self.controls_menu.index]
+                )(
+                    self.controls_menu.buttons[self.controls_menu.index],
+                    self.controls_menu.key_buttons.get(
+                        self.controls_menu.buttons[self.controls_menu.index]
+                    ),
+                )
         elif self.state.state == self.state.HELPMENU:
             if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
@@ -98,13 +108,17 @@ class Controller:
             if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
                 self.credits_menu.enter_pressed = True
-                self.credits_menu.menu_event_dict.get(self.credits_menu.func_buttons[self.credits_menu.index])()
+                self.credits_menu.menu_event_dict.get(
+                    self.credits_menu.func_buttons[self.credits_menu.index]
+                )()
         elif self.state.state == self.state.GAMEOVER:
             if event.button == self.BTN_A:
                 self.sound.play_sfx("options_menu")
                 self.go_menu.enter_pressed = True
                 self.go_menu.menu_event_dict.get(self.go_menu.buttons[self.go_menu.index])()
-        if event.button == self.BTN_B and self.state.state is not (self.state.GAMEPLAY or self.state.PAUSE):
+        if event.button == self.BTN_B and self.state.state is not (
+            self.state.GAMEPLAY or self.state.PAUSE
+        ):
             self.game._check_exit()
 
     def _check_menu_controls_dpad(self, event):

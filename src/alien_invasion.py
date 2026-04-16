@@ -45,14 +45,18 @@ class AlienInvasion:
     def _load_images(self):
         """Load menu and game background images."""
         self.menu_image = pygame.image.load("assets/images/background.png").convert()
-        self.background_image = pygame.image.load("assets/images/parallax_scrolling_background.png").convert()
+        self.background_image = pygame.image.load(
+            "assets/images/parallax_scrolling_background.png"
+        ).convert()
 
     def _make_game_objects(self):
         """Create all of the necessary game objects for the game to run."""
         self.previous_time = time.time()
         self.time_game = time.time()
         self.settings = Settings()
-        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height), pygame.SCALED)
+        self.screen = pygame.display.set_mode(
+            (self.settings.screen_width, self.settings.screen_height), pygame.SCALED
+        )
         self.screen_rect = self.screen.get_rect()
         self.keybinds = Keybinds()
         self.state = GameState()
@@ -245,7 +249,9 @@ class AlienInvasion:
         if collisions:
             for alien_index, bullet_indexes in collisions.items():
                 if enemy_list is self.aliens or enemy_list is self.mines:
-                    self._process_trash_and_mines(alien_index, bullet_indexes, score_multiplier, is_beam)
+                    self._process_trash_and_mines(
+                        alien_index, bullet_indexes, score_multiplier, is_beam
+                    )
                 elif enemy_list is self.gunners:
                     if self.gunners and self.gunners.sprite.hitpoints > 0:
                         self._damage_gunner(alien_index, bullet_indexes, is_beam)
@@ -306,7 +312,9 @@ class AlienInvasion:
         cqc_mult = self._check_cqc_distance(alien_index)
         backstab_mult = self._check_backstab(projectile_index)
         bonus_mult = 1.25 if (cqc_mult > 1 and backstab_mult > 1) else 1
-        self.stats.score += round(self.settings.alien_points * (cqc_mult + backstab_mult) * bonus_mult * enemy_mult)
+        self.stats.score += round(
+            self.settings.alien_points * (cqc_mult + backstab_mult) * bonus_mult * enemy_mult
+        )
         self.stats.hidden_score += round(
             self.settings.alien_points * (cqc_mult + backstab_mult) * bonus_mult * enemy_mult
         )
@@ -343,7 +351,8 @@ class AlienInvasion:
     def _check_cqc_distance(self, alien):
         """Check to see if the distance between the ship and alien is eligible for a score bonus."""
         formula = sqrt(
-            (self.ship.rect.centerx - alien.rect.centerx) ** 2 + (self.ship.rect.centerx - alien.rect.centerx) ** 2
+            (self.ship.rect.centerx - alien.rect.centerx) ** 2
+            + (self.ship.rect.centerx - alien.rect.centerx) ** 2
         )
         if formula < 201:
             return 4
@@ -369,11 +378,19 @@ class AlienInvasion:
             self._ship_hit()
         if pygame.sprite.spritecollide(self.ship, self.mines, False, pygame.sprite.collide_circle):
             self._ship_hit()
-        if pygame.sprite.spritecollide(self.ship, self.gunners, False, pygame.sprite.collide_circle):
+        if pygame.sprite.spritecollide(
+            self.ship, self.gunners, False, pygame.sprite.collide_circle
+        ):
             self._ship_hit()
         if (
-            self.gunners and self.gunners.sprite.gunner_bullets and pygame.sprite.spritecollide
-            (self.ship, self.gunners.sprite.gunner_bullets, False, pygame.sprite.collide_rect_ratio(0.8))
+            self.gunners
+            and self.gunners.sprite.gunner_bullets
+            and pygame.sprite.spritecollide(
+                self.ship,
+                self.gunners.sprite.gunner_bullets,
+                False,
+                pygame.sprite.collide_rect_ratio(0.8),
+            )
         ):
             self._ship_hit()
         for alien in self.aliens.copy():
@@ -383,7 +400,10 @@ class AlienInvasion:
     def _scroll_background(self, dt):
         """Smoothly scrolls the background image on the screen to give illusion of movement."""
         self.rel_background_x = self.settings.background_x % self.background_image.get_rect().width
-        self.screen.blit(self.background_image, (self.rel_background_x - self.background_image.get_rect().width, 0))
+        self.screen.blit(
+            self.background_image,
+            (self.rel_background_x - self.background_image.get_rect().width, 0),
+        )
         if self.rel_background_x < self.settings.screen_width:
             self.screen.blit(self.background_image, (self.rel_background_x, 0))
         self.settings.background_x += floor((self.settings.scroll_speed * dt * 10) / 10)
@@ -407,8 +427,11 @@ class AlienInvasion:
             elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
                 self.options_menu.enter_pressed = True
-                (self.options_menu.menu_event_dict.get(self.options_menu.buttons[self.options_menu.index])
-                 (direction=1))
+                (
+                    self.options_menu.menu_event_dict.get(
+                        self.options_menu.buttons[self.options_menu.index]
+                    )(direction=1)
+                )
         elif self.state.state == self.state.HELPMENU:
             if event.key == pygame.K_UP:
                 self.help_menu.update_cursor(direction=1)
@@ -426,7 +449,14 @@ class AlienInvasion:
             elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
                 self.controls_menu.enter_pressed = True
-                self.controls_menu.menu_event_dict.get(self.controls_menu.buttons[self.controls_menu.index])(self.controls_menu.buttons[self.controls_menu.index], self.controls_menu.key_buttons.get(self.controls_menu.buttons[self.controls_menu.index]))
+                self.controls_menu.menu_event_dict.get(
+                    self.controls_menu.buttons[self.controls_menu.index]
+                )(
+                    self.controls_menu.buttons[self.controls_menu.index],
+                    self.controls_menu.key_buttons.get(
+                        self.controls_menu.buttons[self.controls_menu.index]
+                    ),
+                )
         elif self.state.state == self.state.CREDITSMENU:
             if event.key == pygame.K_UP:
                 self.credits_menu.update_cursor(direction=1)
@@ -435,7 +465,9 @@ class AlienInvasion:
             elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
                 self.credits_menu.enter_pressed = True
-                self.credits_menu.menu_event_dict.get(self.credits_menu.func_buttons[self.credits_menu.index])()
+                self.credits_menu.menu_event_dict.get(
+                    self.credits_menu.func_buttons[self.credits_menu.index]
+                )()
         elif self.state.state == self.state.GAMEOVER:
             if event.key == pygame.K_LEFT:
                 self.go_menu.update_cursor(direction=1)
@@ -529,10 +561,16 @@ class AlienInvasion:
 
     def _check_exit(self):
         """Check to see if hitting ESC should exit the game."""
-        if (self.state.state == self.state.OPTIONSMENU or self.state.state == self.state.HELPMENU
-                or self.state.state == self.state.CREDITSMENU):
+        if (
+            self.state.state == self.state.OPTIONSMENU
+            or self.state.state == self.state.HELPMENU
+            or self.state.state == self.state.CREDITSMENU
+        ):
             self.state.state = self.state.MAINMENU
-        elif self.state.state == self.state.CONTROLSMENU and pygame.K_UNDERSCORE not in self.keybinds.controls.values():
+        elif (
+            self.state.state == self.state.CONTROLSMENU
+            and pygame.K_UNDERSCORE not in self.keybinds.controls.values()
+        ):
             self.state.state = self.state.MAINMENU
         elif self.state.state == self.state.MAINMENU or self.state.state == self.state.GAMEOVER:
             self.stats.dump_stats_json()
@@ -630,7 +668,11 @@ class AlienInvasion:
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
         alien.rect.y = alien_height + (1.65 * alien_height * alien_number) + alien.random_y
-        alien.rect.x = (self.settings.screen_width + 100) + alien_width + int((2.25 * alien_width * col_number))
+        alien.rect.x = (
+            (self.settings.screen_width + 100)
+            + alien_width
+            + int((2.25 * alien_width * col_number))
+        )
         alien.x = float(alien.rect.x)
         alien.y = float(alien.rect.y)
         self.aliens.add(alien)
@@ -709,7 +751,7 @@ class AlienInvasion:
             self.last_count = count_timer
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     """Logs traceback in case of crash/unexcepted application exit."""
     ai = AlienInvasion()
     try:
@@ -717,5 +759,5 @@ if __name__ == '__main__':
     except SystemExit:
         pass
     except:
-        logging.basicConfig(filename="ERROR.log", filemode='w', level=logging.ERROR)
-        logging.exception('')
+        logging.basicConfig(filename="ERROR.log", filemode="w", level=logging.ERROR)
+        logging.exception("")

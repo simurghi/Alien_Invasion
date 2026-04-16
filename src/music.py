@@ -21,19 +21,19 @@ class Music:
             self._clear_music_state()
             self.state.music_state["MENU"] = True
         elif (
-                self.state.state is self.state.GAMEPLAY and
-                self.game.countdown > 0 and
-                not self.state.music_state["COUNTDOWN"]
-            ):
+            self.state.state is self.state.GAMEPLAY
+            and self.game.countdown > 0
+            and not self.state.music_state["COUNTDOWN"]
+        ):
             pygame.mixer.music.load("assets/audio/start-level.wav")
             pygame.mixer.music.play(1, start=0, fade_ms=100)
             self._clear_music_state()
             self.state.music_state["COUNTDOWN"] = True
         elif (
-                self.state.state is self.state.GAMEPLAY and
-                self.game.countdown <= 0 and
-                not self.state.music_state["GAMEPLAY"]
-            ):
+            self.state.state is self.state.GAMEPLAY
+            and self.game.countdown <= 0
+            and not self.state.music_state["GAMEPLAY"]
+        ):
             pygame.mixer.music.load("assets/audio/battle.wav")
             pygame.mixer.music.play(-1)
             self._clear_music_state()
