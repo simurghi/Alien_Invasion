@@ -412,95 +412,79 @@ class AlienInvasion:
 
     def _check_keydown_events(self, event):
         """Respond to keypresses."""
-        if self.state.state == self.state.MAINMENU:
-            if event.key == pygame.K_UP:
-                self.main_menu.update_cursor(direction=1)
-            elif event.key == pygame.K_DOWN:
-                self.main_menu.update_cursor(direction=-1)
+        menu_map = {
+            self.state.MAINMENU: self.main_menu,
+            self.state.OPTIONSMENU: self.options_menu,
+            self.state.HELPMENU: self.help_menu,
+            self.state.CONTROLSMENU: self.controls_menu,
+            self.state.CREDITSMENU: self.credits_menu,
+            self.state.GAMEOVER: self.go_menu,
+        }
+
+        # --- MENU HANDLING ---
+        if self.state.state in menu_map:
+            menu = menu_map[self.state.state]
+
+            # Direction keys
+            if event.key in (pygame.K_UP, pygame.K_LEFT):
+                menu.update_cursor(direction=1)
+            elif event.key in (pygame.K_DOWN, pygame.K_RIGHT):
+                menu.update_cursor(direction=-1)
+
+            # Enter key
             elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
-                self.main_menu.enter_pressed = True
-                self.main_menu.menu_event_dict.get(self.main_menu.buttons[self.main_menu.index])()
-        elif self.state.state == self.state.OPTIONSMENU:
-            if event.key == pygame.K_UP:
-                self.options_menu.update_cursor(direction=1)
-            elif event.key == pygame.K_DOWN:
-                self.options_menu.update_cursor(direction=-1)
-            elif event.key == pygame.K_RETURN:
-                self.sound.play_sfx("options_menu")
-                self.options_menu.enter_pressed = True
-                (
-                    self.options_menu.menu_event_dict.get(
-                        self.options_menu.buttons[self.options_menu.index]
-                    )(direction=1)
-                )
-        elif self.state.state == self.state.HELPMENU:
-            if event.key == pygame.K_UP:
-                self.help_menu.update_cursor(direction=1)
-            elif event.key == pygame.K_DOWN:
-                self.help_menu.update_cursor(direction=-1)
-            elif event.key == pygame.K_RETURN:
-                self.sound.play_sfx("options_menu")
-                self.help_menu.enter_pressed = True
-                self.help_menu.menu_event_dict.get(self.help_menu.buttons[self.help_menu.index])()
-        elif self.state.state == self.state.CONTROLSMENU:
-            if event.key == pygame.K_UP:
-                self.controls_menu.update_cursor(direction=1)
-            elif event.key == pygame.K_DOWN:
-                self.controls_menu.update_cursor(direction=-1)
-            elif event.key == pygame.K_RETURN:
-                self.sound.play_sfx("options_menu")
-                self.controls_menu.enter_pressed = True
-                self.controls_menu.menu_event_dict.get(
-                    self.controls_menu.buttons[self.controls_menu.index]
-                )(
-                    self.controls_menu.buttons[self.controls_menu.index],
-                    self.controls_menu.key_buttons.get(
-                        self.controls_menu.buttons[self.controls_menu.index]
-                    ),
-                )
-        elif self.state.state == self.state.CREDITSMENU:
-            if event.key == pygame.K_UP:
-                self.credits_menu.update_cursor(direction=1)
-            elif event.key == pygame.K_DOWN:
-                self.credits_menu.update_cursor(direction=-1)
-            elif event.key == pygame.K_RETURN:
-                self.sound.play_sfx("options_menu")
-                self.credits_menu.enter_pressed = True
-                self.credits_menu.menu_event_dict.get(
-                    self.credits_menu.func_buttons[self.credits_menu.index]
-                )()
-        elif self.state.state == self.state.GAMEOVER:
-            if event.key == pygame.K_LEFT:
-                self.go_menu.update_cursor(direction=1)
-            elif event.key == pygame.K_RIGHT:
-                self.go_menu.update_cursor(direction=-1)
-            elif event.key == pygame.K_RETURN:
-                self.sound.play_sfx("options_menu")
-                self.go_menu.enter_pressed = True
-                self.go_menu.menu_event_dict.get(self.go_menu.buttons[self.go_menu.index])()
+                menu.enter_pressed = True
+
+                self._handle_menu_enter(menu, self.state.state)
+
+        # --- GAMEPLAY ---
         elif self.state.state == self.state.GAMEPLAY:
-            if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
+            controls = self.keybinds.controls
+
+            if event.key == controls.get(self.keybinds.MOVEUP):
                 self.ship.moving_up = True
-            elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):
+            elif event.key == controls.get(self.keybinds.MOVEDOWN):
                 self.ship.moving_down = True
-            if event.key == self.keybinds.controls.get(self.keybinds.MOVELEFT):
+
+            if event.key == controls.get(self.keybinds.MOVELEFT):
                 self.ship.moving_left = True
-            elif event.key == self.keybinds.controls.get(self.keybinds.MOVERIGHT):
+            elif event.key == controls.get(self.keybinds.MOVERIGHT):
                 self.ship.moving_right = True
-            if event.key == self.keybinds.controls.get(self.keybinds.MISSILEATTACK):
+
+            if event.key == controls.get(self.keybinds.MISSILEATTACK):
                 self.ship.is_firing = True
-            if event.key == self.keybinds.controls.get(self.keybinds.BEAMATTACK):
+            if event.key == controls.get(self.keybinds.BEAMATTACK):
                 self.ship.fire_beam()
-            if event.key == self.keybinds.controls.get(self.keybinds.FLIPSHIP):
+            if event.key == controls.get(self.keybinds.FLIPSHIP):
                 self.ship.flip_ship()
-        if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+
+        # --- GLOBAL KEYS ---
+        if event.key in (pygame.K_ESCAPE, pygame.K_BACKSPACE):
             self.pause.check_pause()
             self._check_exit()
+
         if event.key == pygame.K_DELETE:
             self.stats.dump_stats_json()
             pygame.quit()
             sys.exit()
+    
+    def _handle_menu_enter(self, menu, state):
+        if state == self.state.CONTROLSMENU:
+            key = menu.buttons[menu.index]
+            menu.menu_event_dict.get(key)(
+                key,
+                menu.key_buttons.get(key),
+            )
+
+        elif state == self.state.OPTIONSMENU:
+            menu.menu_event_dict.get(menu.buttons[menu.index])(direction=1)
+
+        elif state == self.state.CREDITSMENU:
+            menu.menu_event_dict.get(menu.func_buttons[menu.index])()
+
+        else:
+            menu.menu_event_dict.get(menu.buttons[menu.index])()
 
     def _check_mousedown_events(self):
         """Respond to mouse clicks."""

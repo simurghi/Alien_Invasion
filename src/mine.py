@@ -82,21 +82,20 @@ class Mine(Sprite):
         """Set a random position on spawn."""
 
         pos_map = {
-                1: {"topleft": self.screen_rect.topleft},
-                2: {"bottomleft": self.screen_rect.bottomleft},
-                3: {"midtop": self.screen_rect.midtop},
-                4: {"midbottom": self.screen_rect.midbottom},
-                5: {"centerx": self.screen_rect.centerx / 3, "y": self.screen_rect.top},
-                6: {"centerx": self.screen_rect.centerx / 3, "y": self.screen_rect.bottom},
-                7: {"centerx": self.screen_rect.centerx * 2 / 3, "y": self.screen_rect.top},
-                8: {"centerx": self.screen_rect.centerx * 2 / 3, "y": self.screen_rect.bottom},
-                9: {"centerx": self.screen_rect.centerx, "y": self.screen_rect.top}, 
-                10: {"centerx": self.screen_rect.centerx, "y": self.screen_rect.bottom}, 
-            }
+            1: {"topleft": self.screen_rect.topleft},
+            2: {"bottomleft": self.screen_rect.bottomleft},
+            3: {"midtop": self.screen_rect.midtop},
+            4: {"midbottom": self.screen_rect.midbottom},
+            5: {"centerx": self.screen_rect.centerx / 3, "y": self.screen_rect.top},
+            6: {"centerx": self.screen_rect.centerx / 3, "y": self.screen_rect.bottom},
+            7: {"centerx": self.screen_rect.centerx * 2 / 3, "y": self.screen_rect.top},
+            8: {"centerx": self.screen_rect.centerx * 2 / 3, "y": self.screen_rect.bottom},
+            9: {"centerx": self.screen_rect.centerx, "y": self.screen_rect.top},
+            10: {"centerx": self.screen_rect.centerx, "y": self.screen_rect.bottom},
+        }
         if self.random_pos in pos_map:
             for attr, value in pos_map[self.random_pos].items():
                 setattr(self.rect, attr, value)
-
 
     def _cqc_warning(self):
         """If a mine is close to the player ship, they will receive a warning.
