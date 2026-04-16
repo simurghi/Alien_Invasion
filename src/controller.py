@@ -123,36 +123,37 @@ class Controller:
 
     def _check_menu_controls_dpad(self, event):
         """Handle DPAD input while in any menu."""
-        if self.state.state == self.state.MAINMENU:
+        menu = self._get_current_menu()
+        if not menu:
+            return
+
+        direction = self._get_direction(event)
+        if direction:
+            menu.update_cursor(direction=direction)
+      
+    def _get_current_menu(self):
+        """Indexes into a dictionary to get the current menu state"""
+        return { 
+                self.state.MAINMENU: self.main_menu,
+                self.state.OPTIONSMENU: self.options_menu,
+                self.state.HELPMENU: self.help_menu,
+                self.state.CONTROLSMENU: self.controls_menu,
+                self.state.CREDITSMENU: self.credits_menu,
+                self.state.GAMEOVER: self.go_menu,
+        }.get(self.state.state)
+
+    def _get_direction(self, event):
+        """Define d-pad behavior for menus"""
+        if self.state.state == self.state.GAMEOVER:
+            if event.value[0] == 1:
+                return 1
+            elif event.value[0] == -1:
+                return -1
+        else:
             if event.value[1] == 1:
-                self.main_menu.update_cursor(direction=1)
+                return 1
             elif event.value[1] == -1:
-                self.main_menu.update_cursor(direction=-1)
-        elif self.state.state == self.state.OPTIONSMENU:
-            if event.value[1] == 1:
-                self.options_menu.update_cursor(direction=1)
-            elif event.value[1] == -1:
-                self.options_menu.update_cursor(direction=-1)
-        elif self.state.state == self.state.HELPMENU:
-            if event.value[1] == 1:
-                self.help_menu.update_cursor(direction=1)
-            elif event.value[1] == -1:
-                self.help_menu.update_cursor(direction=-1)
-        elif self.state.state == self.state.CONTROLSMENU:
-            if event.value[1] == 1:
-                self.controls_menu.update_cursor(direction=1)
-            elif event.value[1] == -1:
-                self.controls_menu.update_cursor(direction=-1)
-        elif self.state.state == self.state.CREDITSMENU:
-            if event.value[1] == 1:
-                self.credits_menu.update_cursor(direction=1)
-            elif event.value[1] == -1:
-                self.credits_menu.update_cursor(direction=-1)
-        elif self.state.state == self.state.GAMEOVER:
-            if event.value[0] == -1:
-                self.go_menu.update_cursor(direction=1)
-            elif event.value[0] == 1:
-                self.go_menu.update_cursor(direction=-1)
+                return -1
 
     def check_joyaxismotion_events(self, event):
         """Respond to analogue stick input."""

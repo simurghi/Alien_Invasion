@@ -52,7 +52,7 @@ class Scoreboard:
         """Get the rect and positions of the score."""
         self.score_rect = self.score_image.get_rect()
         if self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[0]:
-            self.score_rect.x, y = (
+            self.score_rect.x, self.score_rect.y = (
                 self.high_score_rect.left - self.high_score_rect.left / 6,
                 self.screen_rect.top,
             )
@@ -62,7 +62,7 @@ class Scoreboard:
                 self.high_score_rect.y,
             )
         else:
-            self.score_rect.x, y = (
+            self.score_rect.x, self.score_rect.y = (
                 self.high_score_rect.left - self.high_score_rect.left / 6,
                 self.screen_rect.top,
             )

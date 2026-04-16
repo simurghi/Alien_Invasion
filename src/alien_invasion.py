@@ -758,6 +758,6 @@ if __name__ == "__main__":
         ai.run_game()
     except SystemExit:
         pass
-    except:
+    except Exception:
         logging.basicConfig(filename="ERROR.log", filemode="w", level=logging.ERROR)
         logging.exception("")
