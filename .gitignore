@@ -2,3 +2,5 @@
 *.json
 # ignore all log files
 *.log
+# ignore python venv
+venv/
