@@ -80,8 +80,6 @@ class Controller:
             if not menu:
                 return
 
-            menu.enter_pressed = True
-
             if menu is self.options_menu:
                 menu.menu_event_dict.get(menu.buttons[menu.index])(direction=1)
 

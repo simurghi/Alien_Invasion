@@ -14,7 +14,6 @@ class ControlsMenu(Menu):
         self.screen_rect = self.screen.get_rect()
         self.keybinds = ai_game.keybinds
         self._create_controls_buttons()
-        # self.enter_pressed = False
         self._set_cursor()
 
     def _set_cursor(self):
@@ -76,17 +75,16 @@ class ControlsMenu(Menu):
             button.draw_button()
         self.screen.blit(self.cursor_image, self.cursor_rect)
 
-    def _check_button(self, button):
+    def _check_button(self, button, enter_pressed = False):
         """Respond to a button press and performans an action based on collision type."""
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.CONTROLSMENU:
-            if button.lmb_pressed or button.enter_pressed:
+            if button.lmb_pressed or enter_pressed:
                 self.sound.play_sfx("options_menu")
                 if button in self.key_buttons:
                     self.menu_event_dict.get(button)(button, self.key_buttons.get(button))
                 else:
                     self.menu_event_dict.get(button)()
-                self.enter_pressed = False
 
     def check_controls_menu_buttons(self, mouse_pos):
         """Check main menu buttons for clicks."""

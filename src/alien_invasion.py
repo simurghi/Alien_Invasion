@@ -421,24 +421,18 @@ class AlienInvasion:
             self.state.GAMEOVER: self.go_menu,
         }
 
-        # --- MENU HANDLING ---
         if self.state.state in menu_map:
             menu = menu_map[self.state.state]
 
-            # Direction keys
             if event.key in (pygame.K_UP, pygame.K_LEFT):
                 menu.update_cursor(direction=1)
             elif event.key in (pygame.K_DOWN, pygame.K_RIGHT):
                 menu.update_cursor(direction=-1)
 
-            # Enter key
             elif event.key == pygame.K_RETURN:
                 self.sound.play_sfx("options_menu")
-                menu.enter_pressed = True
+                self._handle_menu_enter(menu, self.state.state, enter_pressed=True)
 
-                self._handle_menu_enter(menu, self.state.state)
-
-        # --- GAMEPLAY ---
         elif self.state.state == self.state.GAMEPLAY:
             controls = self.keybinds.controls
 
@@ -459,7 +453,6 @@ class AlienInvasion:
             if event.key == controls.get(self.keybinds.FLIPSHIP):
                 self.ship.flip_ship()
 
-        # --- GLOBAL KEYS ---
         if event.key in (pygame.K_ESCAPE, pygame.K_BACKSPACE):
             self.pause.check_pause()
             self._check_exit()
@@ -468,8 +461,8 @@ class AlienInvasion:
             self.stats.dump_stats_json()
             pygame.quit()
             sys.exit()
-    
-    def _handle_menu_enter(self, menu, state):
+
+    def _handle_menu_enter(self, menu, state, enter_pressed=False):
         if state == self.state.CONTROLSMENU:
             key = menu.buttons[menu.index]
             menu.menu_event_dict.get(key)(
@@ -488,33 +481,38 @@ class AlienInvasion:
 
     def _check_mousedown_events(self):
         """Respond to mouse clicks."""
-        mouse_buttons = pygame.mouse.get_pressed(num_buttons=3)
+        mouse_buttons = pygame.mouse.get_pressed(3)
         mouse_pos = pygame.mouse.get_pos()
-        if mouse_buttons[0] and self.state.state == self.state.CONTROLSMENU:
-            self.controls_menu.check_controls_menu_buttons(mouse_pos)
-        if mouse_buttons[2] and self.state.state == self.state.CONTROLSMENU:
-            self.controls_menu.clear_keybind_button(mouse_pos)
-        elif (mouse_buttons[0] or mouse_buttons[2]) and (
-            self.state.state != self.state.GAMEPLAY
-            or self.state.state != self.state.PAUSE
-            or self.state.state != self.state.CONTROLSMENU
-        ):
-            if self.state.state == self.state.MAINMENU:
-                self.main_menu.check_menu_buttons()
-            elif self.state.state == self.state.OPTIONSMENU:
-                self.options_menu.check_menu_buttons()
-            elif self.state.state == self.state.GAMEOVER:
-                self.go_menu.check_menu_buttons()
-            elif self.state.state == self.state.HELPMENU:
-                self.help_menu.check_menu_buttons()
-            elif self.state.state == self.state.CREDITSMENU:
-                self.credits_menu.check_menu_buttons()
+
+        left, middle, right = mouse_buttons
+
+        # --- CONTROLS MENU (special case) ---
+        if self.state.state == self.state.CONTROLSMENU:
+            if left:
+                self.controls_menu.check_controls_menu_buttons(mouse_pos)
+            if right:
+                self.controls_menu.clear_keybind_button(mouse_pos)
+            return  # stop here (prevents falling through)
+
+        # --- MENUS ---
+        menu_map = {
+            self.state.MAINMENU: self.main_menu,
+            self.state.OPTIONSMENU: self.options_menu,
+            self.state.GAMEOVER: self.go_menu,
+            self.state.HELPMENU: self.help_menu,
+            self.state.CREDITSMENU: self.credits_menu,
+        }
+
+        if self.state.state in menu_map and (left or right):
+            menu_map[self.state.state].check_menu_buttons()
+
+        # --- GAMEPLAY ---
         if self.state.state == self.state.GAMEPLAY:
-            if mouse_buttons[0]:
+            if left:
                 self.ship.is_firing = True
-            if mouse_buttons[1]:
+            if middle:
                 self.ship.fire_beam()
-            if mouse_buttons[2]:
+            if right:
                 self.ship.flip_ship()
 
     def _check_mouseup_events(self):
@@ -527,13 +525,7 @@ class AlienInvasion:
 
     def _check_keyup_events(self, event):
         """Respond to key releases."""
-        if self.state.state == self.state.MAINMENU:
-            if event.key == pygame.K_RETURN:
-                self.main_menu.enter_pressed = False
-        if self.state.state == self.state.OPTIONSMENU:
-            if event.key == pygame.K_RETURN:
-                self.options_menu.enter_pressed = False
-        elif self.state.state == self.state.GAMEPLAY:
+        if self.state.state == self.state.GAMEPLAY:
             if event.key == self.keybinds.controls.get(self.keybinds.MOVEUP):
                 self.ship.moving_up = False
             elif event.key == self.keybinds.controls.get(self.keybinds.MOVEDOWN):

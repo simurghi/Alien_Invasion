@@ -66,15 +66,14 @@ class CreditsMenu(Menu):
             self.back_button: self._check_back_button,
         }
 
-    def _check_button(self, button):
+    def _check_button(self, button, enter_pressed = False):
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.CREDITSMENU:
             if button not in self.func_buttons:
                 pass
-            elif button.lmb_pressed or button.enter_pressed:
+            elif button.lmb_pressed or enter_pressed:
                 self.sound.play_sfx("options_menu")
                 self.menu_event_dict.get(button)()
-                self.enter_pressed = False
 
     def _check_back_button(self):
         """Hide all tutorial prompts and returns to the main menu when clicked."""

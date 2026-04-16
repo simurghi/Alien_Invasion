@@ -10,7 +10,6 @@ class OptionsMenu(Menu):
     def __init__(self, ai_game):
         """Initialize button attributes."""
         super().__init__(ai_game)
-        self.enter_pressed = False
         self.index = 0
         self._set_cursor()
         self._set_initial_text()
@@ -62,7 +61,7 @@ class OptionsMenu(Menu):
             self.back_button: self._change_back_state,
         }
 
-    def _check_button(self, button):
+    def _check_button(self, button, enter_pressed = False):
         """Respond to button press and performs an action based on collision type."""
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.OPTIONSMENU:
@@ -74,7 +73,6 @@ class OptionsMenu(Menu):
                 direction = -1
             if direction:
                 self.menu_event_dict.get(button)(direction)
-            self.enter_pressed = False
 
     def _update_score_setting(self, direction):
         """Update score and its display text."""

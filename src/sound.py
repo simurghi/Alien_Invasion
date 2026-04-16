@@ -21,8 +21,26 @@ class Sound:
             "damage": 0.55,
             "beam_damage": 0.60,
             "gunner": 0.40,
-            "withmine": 0.75,
+            "mine": 0.75,
         }
+        self.sound_map = {
+            # Gameplay (scaled)
+            "explosion": ({self.state.GAMEPLAY}, self.explosion_sfx),
+            "bullet": ({self.state.GAMEPLAY}, self.bullet_sfx),
+            "beam": ({self.state.GAMEPLAY}, self.beam_sfx),
+            "flip": ({self.state.GAMEPLAY}, self.flip_sfx),
+            "gunner": ({self.state.GAMEPLAY}, self.gunner_sfx),
+            "mine": ({self.state.GAMEPLAY}, self.mine_sfx),
+
+            # Menu (no scaling)
+            "options_menu": (self.state.MENU_STATES, self.menu_sfx),
+            "options_menu_unselect": (self.state.MENU_STATES, self.menu_unselect_sfx),
+            "options_menu_denied": (self.state.MENU_STATES, self.menu_denied_sfx),
+
+            # Game over
+            "game_over": ({self.state.GAMEOVER}, self.menu_sfx),
+        }
+
         self._set_volume()
 
     def _load_sfx(self):
@@ -37,55 +55,25 @@ class Sound:
         self.damage_sfx = pygame.mixer.Sound("assets/audio/MiniHitImpact.wav")
         self.beam_damage_sfx = pygame.mixer.Sound("assets/audio/HitOnEnergeticShield.wav")
         self.gunner_sfx = pygame.mixer.Sound("assets/audio/SingleShot2.wav")
-        self.detect_sfx = pygame.mixer.Sound("assets/audio/MineDetected.wav")
+        self.mine_sfx = pygame.mixer.Sound("assets/audio/MineDetected.wav")
 
     def _set_volume(self):
         """Set the volumes for the game sounds."""
-        self.bullet_sfx.set_volume(self._base_volumes["bullet"] * self.settings.sound_volume)
-        self.beam_sfx.set_volume(self._base_volumes["beam"] * self.settings.sound_volume)
-        self.explosion_sfx.set_volume(self._base_volumes["explosion"] * self.settings.sound_volume)
-        self.menu_sfx.set_volume(self._base_volumes["menu"] * self.settings.sound_volume)
-        self.menu_denied_sfx.set_volume(
-            self._base_volumes["menu_denied"] * self.settings.sound_volume
-        )
-        self.menu_unselect_sfx.set_volume(
-            self._base_volumes["menu_unselect"] * self.settings.sound_volume
-        )
-        self.flip_sfx.set_volume(self._base_volumes["flip"] * self.settings.sound_volume)
-        self.damage_sfx.set_volume(self._base_volumes["damage"] * self.settings.sound_volume)
-        self.beam_damage_sfx.set_volume(
-            self._base_volumes["beam_damage"] * self.settings.sound_volume
-        )
-        self.gunner_sfx.set_volume(self._base_volumes["gunner"] * self.settings.sound_volume)
-        self.detect_sfx.set_volume(self._base_volumes["withmine"] * self.settings.sound_volume)
-
+        for name, base in self._base_volumes.items():
+            getattr(self, f"{name}_sfx").set_volume(
+                base * self.settings.sound_volume
+            )
+       
     def play_sfx(self, sound_event):
         """Play sound effects based on game state and event."""
         if not self.settings.sound_volume:
             return
 
-        sound_map = {
-            # Gameplay (scaled)
-            "explosion": ({self.state.GAMEPLAY}, self.explosion_sfx),
-            "bullet": ({self.state.GAMEPLAY}, self.bullet_sfx),
-            "beam": ({self.state.GAMEPLAY}, self.beam_sfx),
-            "flip": ({self.state.GAMEPLAY}, self.flip_sfx),
-            "gunner": ({self.state.GAMEPLAY}, self.gunner_sfx),
-            "mine": ({self.state.GAMEPLAY}, self.detect_sfx),
-
-            # Menu (no scaling)
-            "options_menu": (self.state.MENU_STATES, self.menu_sfx),
-            "options_menu_unselect": (self.state.MENU_STATES, self.menu_unselect_sfx),
-            "options_menu_denied": (self.state.MENU_STATES, self.menu_denied_sfx),
-
-            # Game over
-            "game_over": ({self.state.GAMEOVER}, self.menu_sfx),
-        }
-
-        if sound_event not in sound_map:
+      
+        if sound_event not in self.sound_map:
             return
 
-        required_states, sound = sound_map[sound_event]
+        required_states, sound = self.sound_map[sound_event]
 
         if self.state.state not in required_states:
             return
@@ -93,7 +81,7 @@ class Sound:
         # --- Gameplay sounds: apply scaling ---
 
         if sound_event in {
-            "explosion", "bullet", "beam", "flip", "gunner", "withmine"
+            "explosion", "bullet", "beam", "flip", "gunner", "mine"
         }:
             count = self._sound_counts.get(sound_event, 0)
             scale = max(0.2, 1.0 / (count + 1))

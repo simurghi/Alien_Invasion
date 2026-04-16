@@ -11,7 +11,6 @@ class MainMenu(Menu):
     def __init__(self, ai_game):
         """Initialize button attributes."""
         super().__init__(ai_game)
-        self.enter_pressed = False
         self.index = 0
         self.font = pygame.font.Font("assets/fonts/m5x7.ttf", 48)
         self._create_main_buttons(ai_game)
@@ -42,14 +41,13 @@ class MainMenu(Menu):
             self.exit_button: self._exit_action,
         }
 
-    def _check_button(self, button):
+    def _check_button(self, button, enter_pressed = False):
         """Respond to mouse clicks on buttons."""
         button_clicked = button.check_mouse_click()
         if button_clicked and self.game.state.state is self.game.state.MAINMENU:
-            if button.lmb_pressed or button.enter_pressed:
+            if button.lmb_pressed or enter_pressed:
                 self.sound.play_sfx("options_menu")
                 self.menu_event_dict.get(button)()
-                self.enter_pressed = False
 
     def _play_action(self):
         self.game._clear_state()
