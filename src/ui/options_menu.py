@@ -1,7 +1,7 @@
 import pygame.font
 import pygame
-from button import Button
-from menu import Menu
+from ui.button import Button
+from ui.menu import Menu
 
 
 class OptionsMenu(Menu):

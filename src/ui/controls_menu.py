@@ -1,8 +1,8 @@
 import pygame.font
 import sys
 import pygame
-from button import Button
-from menu import Menu
+from ui.button import Button
+from ui.menu import Menu
 
 
 class ControlsMenu(Menu):

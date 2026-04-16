@@ -1,7 +1,7 @@
 import pygame
 from pygame.sprite import Sprite
 from random import randint
-from arrow import WarningArrow
+from entities.arrow import WarningArrow
 
 
 class Mine(Sprite):

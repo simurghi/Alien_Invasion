@@ -1,9 +1,4 @@
 import pygame.font
-from pygame.sprite import Group
-from ship import Ship
-from beam import Beam
-from bullet import Bullet
-
 
 class Scoreboard:
     """A class to report scoring information."""
@@ -11,11 +6,15 @@ class Scoreboard:
     def __init__(self, ai_game):
         """Initialize scorekeeping attributes."""
         self.ai_game = ai_game
+        self.settings = ai_game.settings
         self.screen = ai_game.screen
         self.screen_rect = self.screen.get_rect()
         self.stats = ai_game.stats
         self.text_color = (255, 255, 255)
         self.font = pygame.font.Font("assets/fonts/m5x7.ttf", 48)
+        self.ship_image = ai_game.ship.image
+        self.beam_image = pygame.image.load("assets/images/bolt1.png").convert_alpha()
+        self.bullet_image = pygame.image.load("assets/images/missile_hud.bmp").convert_alpha()
         self._initialize_prep()
 
     def _initialize_prep(self):
@@ -83,16 +82,20 @@ class Scoreboard:
 
     def show_score(self):
         """Draw score and lives to the screen."""
-        if (
-            self.ai_game.settings.score_mode == self.ai_game.settings.SCORE_SETTINGS[0]
-            or self.ai_game.settings.score_mode == self.ai_game.settings.SCORE_SETTINGS[1]
-        ):
-            self.screen.blit(self.score_image, self.score_rect)
-            self.screen.blit(self.high_score_image, self.high_score_rect)
-        if self.ai_game.settings.HUD != self.ai_game.settings.HUD_SETTINGS[2]:
-            self.ships.draw(self.screen)
-            self.beams.draw(self.screen)
-            self.bullets.draw(self.screen)
+        self.screen.blit(self.score_image, self.score_rect)
+        self.screen.blit(self.high_score_image, self.high_score_rect)
+
+        # ships
+        for x, y in self.ship_icons:
+            self.screen.blit(self.ship_image, (x, y))
+
+        # beams
+        for x, y in self.beam_icons:
+            self.screen.blit(self.beam_image, (x, y))
+
+        # bullets
+        for x, y in self.bullet_icons:
+            self.screen.blit(self.bullet_image, (x, y))
 
     def check_high_score(self):
         """Check to see if there's a new high score."""
@@ -102,51 +105,45 @@ class Scoreboard:
 
     def prep_ships(self):
         """Show how many lives the player has left."""
-        self.ships = Group()
-        for life in range(self.stats.ships_remaining):
-            ship = Ship(self.ai_game)
-            if self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[0]:
-                ship.rect.x = 10 + life * ship.rect.width
-                ship.rect.y = 10
-            elif self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[1]:
-                ship.rect.x = 10 + life * ship.rect.width
-                ship.rect.y = self.screen_rect.bottom - ship.rect.height - 10
+        self.ship_icons = []
+        for i in range(self.stats.ships_remaining):
+            x = 10 + i * self.ship_image.get_width()
+
+            if self.settings.HUD == self.settings.HUD_SETTINGS[0]:
+                y = 10
             else:
-                ship.rect.x = 10 + life * ship.rect.width
-                ship.rect.y = self.screen_rect.bottom - ship.rect.height - 10
-            self.ships.add(ship)
+                y = self.screen_rect.bottom - 40
+
+            self.ship_icons.append((x, y))
 
     def prep_beams(self):
         """Show how many beams the player has left."""
-        self.beams = Group()
-        for charge in range(self.stats.charges_remaining):
-            beam = Beam(self.ai_game, self.ai_game.ship)
-            if self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[0]:
-                beam.rect.x = (320) - charge * beam.rect.width
-                beam.rect.y = 10
-            elif self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[1]:
-                beam.rect.x = (320) - charge * beam.rect.width
-                beam.rect.y = self.screen_rect.bottom - 10 - beam.rect.height
+        self.beam_icons = []
+        for i in range(self.stats.charges_remaining):
+            x = 300 - i * self.beam_image.get_width()
+
+            if self.settings.HUD == self.settings.HUD_SETTINGS[0]:
+                y = 10
             else:
-                beam.rect.x = (320) - charge * beam.rect.width
-                beam.rect.y = self.screen_rect.bottom - 10 - beam.rect.height
-            self.beams.add(beam)
+                y = self.screen_rect.bottom - 40
+
+            self.beam_icons.append((x, y))
 
     def prep_missiles(self):
         """Show how many missiles the player has left."""
-        self.bullets = Group()
-        for missile in range(self.ai_game.settings.bullets_allowed - len(self.ai_game.bullets)):
-            bullet = Bullet(self.ai_game, self.ai_game.ship, hud_scale=True)
-            if self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[0]:
-                bullet.rect.x = 180 - missile * bullet.rect.width
-                bullet.rect.y = 15
-            elif self.ai_game.settings.HUD == self.ai_game.settings.HUD_SETTINGS[1]:
-                bullet.rect.x = 180 - missile * bullet.rect.width
-                bullet.rect.y = self.screen_rect.bottom - 15 - bullet.rect.height
+        self.bullet_icons = []
+
+        remaining = self.settings.bullets_allowed - len(self.ai_game.bullets)
+
+        for i in range(remaining):
+            x = 174 - i * self.bullet_image.get_width()
+
+            if self.settings.HUD == self.settings.HUD_SETTINGS[0]:
+                y = 10
             else:
-                bullet.rect.x = 180 - missile * bullet.rect.width
-                bullet.rect.y = self.screen_rect.bottom - 15 - bullet.rect.height
-            self.bullets.add(bullet)
+                y = self.screen_rect.bottom - 40
+
+            self.bullet_icons.append((x, y))
 
     def prep_high_score_main_menu(self):
         """For the game over screen, turn the high score into a rendered image."""

@@ -1,6 +1,6 @@
 import pygame
 from pygame.sprite import Sprite
-from gunner_bullet import GunnerBullet
+from entities.gunner_bullet import GunnerBullet
 
 
 class Gunner(Sprite):
@@ -19,7 +19,7 @@ class Gunner(Sprite):
 
     def _set_assets(self, ai_game):
         """Load the audio and images for the gunner and sets their properties."""
-        self.image = pygame.image.load("assets/images/alien.bmp")
+        self.image = pygame.image.load("assets/images/alien.bmp").convert_alpha()
         self.fire_sfx = ai_game.sound.gunner_sfx
 
     def _make_game_objects(self, ai_game):

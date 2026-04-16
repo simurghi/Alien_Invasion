@@ -1,8 +1,8 @@
 import pygame
 from pygame.sprite import Sprite
-from arrow import Arrow
-from beam import Beam
-from bullet import Bullet
+from entities.arrow import Arrow
+from entities.beam import Beam
+from entities.bullet import Bullet
 
 
 class Ship(Sprite):
@@ -33,7 +33,7 @@ class Ship(Sprite):
         self.stats = ai_game.stats
         self.game = ai_game
         self.sound = ai_game.sound
-        self.image = pygame.image.load("assets/images/ship.bmp")
+        self.image = pygame.image.load("assets/images/ship.bmp").convert_alpha()
 
     def _create_movement_flags(self):
         """Create the movement flags for the ship for smooth movement."""
@@ -60,7 +60,6 @@ class Ship(Sprite):
             self._fire_bullet()
         self.rect.y = self.y
         self.rect.x = self.x
-        self.game.scoreboard.prep_missiles()
 
     def position_ship(self):
         """Position the ship on the midleft portion of the screen."""

@@ -1,31 +1,46 @@
-import pygame
+# stdlib
 import sys
 import time
 import logging
-
-from alien import Alien
-from aspect_ratio import AspectRatio
-from controller import Controller
-from controls_menu import ControlsMenu
-from credits_menu import CreditsMenu
-from explosion import Explosion
-from game_stats import GameStats
-from gunner import Gunner
-from help_menu import HelpMenu
-from keybinds import Keybinds
 from math import sqrt, floor
-from mine import Mine
-from gameover_menu import GameOverMenu
-from main_menu import MainMenu
-from music import Music
-from options_menu import OptionsMenu
-from pause_menu import PauseMenu
 from random import randint
-from scoreboard import Scoreboard
-from ship import Ship
-from settings import Settings
-from sound import Sound
-from states import GameState
+
+# third-party
+import pygame
+
+# config
+from config.settings import Settings
+from config.states import GameState
+from config.keybinds import Keybinds
+
+# entities
+from entities.ship import Ship
+from entities.alien import Alien
+from entities.mine import Mine
+from entities.gunner import Gunner
+from entities.bullet import Bullet
+from entities.beam import Beam
+from entities.arrow import Arrow
+from entities.gunner_bullet import GunnerBullet
+from entities.explosion import Explosion   # <- moved from assets
+
+# managers
+from managers.music import Music
+from managers.sound import Sound
+from managers.controller import Controller
+from managers.game_stats import GameStats   # <- moved out of ui
+
+# ui
+from ui.scoreboard import Scoreboard
+from ui.aspect_ratio import AspectRatio
+
+from ui.main_menu import MainMenu
+from ui.options_menu import OptionsMenu
+from ui.controls_menu import ControlsMenu
+from ui.help_menu import HelpMenu
+from ui.credits_menu import CreditsMenu
+from ui.pause_menu import PauseMenu
+from ui.gameover_menu import GameOverMenu
 
 
 class AlienInvasion:
@@ -39,7 +54,6 @@ class AlienInvasion:
         self.last_count = pygame.time.get_ticks()
         self._create_sprite_groups()
         self._make_game_objects()
-        self._make_logic_dictionaries()
         self._load_images()
 
     def _load_images(self):
@@ -76,10 +90,6 @@ class AlienInvasion:
         self.top_bar = AspectRatio(self)
         self.bot_bar = AspectRatio(self, self.settings.screen_height - 50)
 
-    def _make_logic_dictionaries(self):
-        """Create the dictionaries to process logic to replace if/elif statements."""
-        pass
-
     def _create_sprite_groups(self):
         """Create sprite group containers for objects."""
         self.bullets = pygame.sprite.Group()
@@ -98,6 +108,8 @@ class AlienInvasion:
             self.start_countdown()
             if self.state.state is self.state.GAMEPLAY and self.countdown <= 0:
                 self.ship.update(dt)
+                self.scoreboard.prep_missiles()
+                self.scoreboard.prep_beams()
                 self.ship.arrow.update()
                 self._update_bullets(dt)
                 self._update_beams(dt)

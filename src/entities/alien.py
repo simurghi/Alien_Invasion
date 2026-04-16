@@ -13,7 +13,7 @@ class Alien(Sprite):
         self.random_y = random.randint(-5, 5) * 5
         self.settings = ai_game.settings
         self.screen_rect = ai_game.screen.get_rect()
-        self.image = pygame.image.load("assets/images/alien_med.bmp")
+        self.image = pygame.image.load("assets/images/alien_med.bmp").convert_alpha()
         self.rect = self.image.get_rect()
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
