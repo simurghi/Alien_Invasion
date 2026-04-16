@@ -1,6 +1,5 @@
 import pygame
 from pygame.sprite import Sprite
-from math import sqrt
 from random import randint
 from arrow import WarningArrow
 
@@ -81,32 +80,23 @@ class Mine(Sprite):
 
     def set_random_position(self):
         """Set a random position on spawn."""
-        if self.random_pos == 1:
-            self.rect.topleft = self.screen_rect.topleft
-        elif self.random_pos == 2:
-            self.rect.bottomleft = self.screen_rect.bottomleft
-        elif self.random_pos == 3:
-            self.rect.midtop = self.screen_rect.midtop
-        elif self.random_pos == 4:
-            self.rect.midbottom = self.screen_rect.midtop
-        elif self.random_pos == 5:
-            self.rect.centerx = self.screen_rect.centerx / 3
-            self.rect.y = self.screen_rect.top
-        elif self.random_pos == 6:
-            self.rect.centerx = self.screen_rect.centerx / 3
-            self.rect.y = self.screen_rect.bottom
-        elif self.random_pos == 7:
-            self.rect.centerx = self.screen_rect.centerx * 2 / 3
-            self.rect.y = self.screen_rect.top
-        elif self.random_pos == 8:
-            self.rect.centerx = self.screen_rect.centerx * 2 / 3
-            self.rect.y = self.screen_rect.top
-        elif self.random_pos == 9:
-            self.rect.centerx = self.screen_rect.centerx
-            self.rect.y = self.screen_rect.top
-        elif self.random_pos == 10:
-            self.rect.centerx = self.screen_rect.centerx
-            self.rect.y = self.screen_rect.bottom
+
+        pos_map = {
+                1: {"topleft": self.screen_rect.topleft},
+                2: {"bottomleft": self.screen_rect.bottomleft},
+                3: {"midtop": self.screen_rect.midtop},
+                4: {"midbottom": self.screen_rect.midbottom},
+                5: {"centerx": self.screen_rect.centerx / 3, "y": self.screen_rect.top},
+                6: {"centerx": self.screen_rect.centerx / 3, "y": self.screen_rect.bottom},
+                7: {"centerx": self.screen_rect.centerx * 2 / 3, "y": self.screen_rect.top},
+                8: {"centerx": self.screen_rect.centerx * 2 / 3, "y": self.screen_rect.bottom},
+                9: {"centerx": self.screen_rect.centerx, "y": self.screen_rect.top}, 
+                10: {"centerx": self.screen_rect.centerx, "y": self.screen_rect.bottom}, 
+            }
+        if self.random_pos in pos_map:
+            for attr, value in pos_map[self.random_pos].items():
+                setattr(self.rect, attr, value)
+
 
     def _cqc_warning(self):
         """If a mine is close to the player ship, they will receive a warning.

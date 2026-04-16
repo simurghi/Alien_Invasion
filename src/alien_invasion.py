@@ -78,6 +78,7 @@ class AlienInvasion:
 
     def _make_logic_dictionaries(self):
         """Create the dictionaries to process logic to replace if/elif statements."""
+        pass
 
     def _create_sprite_groups(self):
         """Create sprite group containers for objects."""
