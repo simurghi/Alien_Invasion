@@ -9,6 +9,20 @@ class Sound:
         self.settings = ai_game.settings
         self.state = ai_game.state
         self._load_sfx()
+        self._sound_counts = {}
+        self._base_volumes = {
+            "bullet": 0.40,
+            "beam": 0.80,
+            "explosion": 0.40,
+            "menu": 0.40,
+            "menu_denied": 0.40,
+            "menu_unselect": 0.40,
+            "flip": 0.40,
+            "damage": 0.55,
+            "beam_damage": 0.60,
+            "gunner": 0.40,
+            "withmine": 0.75,
+        }
         self._set_volume()
 
     def _load_sfx(self):
@@ -27,49 +41,68 @@ class Sound:
 
     def _set_volume(self):
         """Set the volumes for the game sounds."""
-        self.bullet_sfx.set_volume(0.40 * self.settings.sound_volume)
-        self.beam_sfx.set_volume(0.80 * self.settings.sound_volume)
-        self.explosion_sfx.set_volume(0.40 * self.settings.sound_volume)
-        self.menu_sfx.set_volume(0.40 * self.settings.sound_volume)
-        self.menu_denied_sfx.set_volume(0.40 * self.settings.sound_volume)
-        self.menu_unselect_sfx.set_volume(0.40 * self.settings.sound_volume)
-        self.flip_sfx.set_volume(0.40 * self.settings.sound_volume)
-        self.damage_sfx.set_volume(0.55 * self.settings.sound_volume)
-        self.beam_damage_sfx.set_volume(0.60 * self.settings.sound_volume)
-        self.gunner_sfx.set_volume(0.40 * self.settings.sound_volume)
-        self.detect_sfx.set_volume(0.75 * self.settings.sound_volume)
+        self.bullet_sfx.set_volume(self._base_volumes["bullet"] * self.settings.sound_volume)
+        self.beam_sfx.set_volume(self._base_volumes["beam"] * self.settings.sound_volume)
+        self.explosion_sfx.set_volume(self._base_volumes["explosion"] * self.settings.sound_volume)
+        self.menu_sfx.set_volume(self._base_volumes["menu"] * self.settings.sound_volume)
+        self.menu_denied_sfx.set_volume(
+            self._base_volumes["menu_denied"] * self.settings.sound_volume
+        )
+        self.menu_unselect_sfx.set_volume(
+            self._base_volumes["menu_unselect"] * self.settings.sound_volume
+        )
+        self.flip_sfx.set_volume(self._base_volumes["flip"] * self.settings.sound_volume)
+        self.damage_sfx.set_volume(self._base_volumes["damage"] * self.settings.sound_volume)
+        self.beam_damage_sfx.set_volume(
+            self._base_volumes["beam_damage"] * self.settings.sound_volume
+        )
+        self.gunner_sfx.set_volume(self._base_volumes["gunner"] * self.settings.sound_volume)
+        self.detect_sfx.set_volume(self._base_volumes["withmine"] * self.settings.sound_volume)
 
     def play_sfx(self, sound_event):
-        """Check to see if the game should play explosion SFX."""
-        if self.settings.sound_volume:
-            self._set_volume()
-            if sound_event == "explosion" and self.state.state is self.state.GAMEPLAY:
-                self.explosion_sfx.play()
-            elif sound_event == "bullet" and self.state.state is self.state.GAMEPLAY:
-                self.bullet_sfx.play()
-            elif sound_event == "beam" and self.state.state is self.state.GAMEPLAY:
-                self.beam_sfx.play()
-            elif sound_event == "flip" and self.state.state is self.state.GAMEPLAY:
-                self.flip_sfx.play()
-            elif sound_event == "gunner" and self.state.state is self.state.GAMEPLAY:
-                self.gunner_sfx.play()
-            elif sound_event == "mine" and self.state.state is self.state.GAMEPLAY:
-                self.detect_sfx.play()
-            elif sound_event == "options_menu" and self.state.state is not self.state.GAMEOVER:
-                self.menu_sfx.play()
-            elif (
-                sound_event == "options_menu_unselect"
-                and self.state.state is not self.state.GAMEOVER
-            ):
-                self.menu_unselect_sfx.play()
-            elif (
-                sound_event == "options_menu_denied" and self.state.state is not self.state.GAMEOVER
-            ):
-                self.menu_denied_sfx.play()
-            elif sound_event == "game_over" and self.state.state is self.state.GAMEOVER:
-                self.menu_sfx.play()
-            else:
-                pass
+        """Play sound effects based on game state and event."""
+        if not self.settings.sound_volume:
+            return
+
+        sound_map = {
+            # Gameplay (scaled)
+            "explosion": ({self.state.GAMEPLAY}, self.explosion_sfx),
+            "bullet": ({self.state.GAMEPLAY}, self.bullet_sfx),
+            "beam": ({self.state.GAMEPLAY}, self.beam_sfx),
+            "flip": ({self.state.GAMEPLAY}, self.flip_sfx),
+            "gunner": ({self.state.GAMEPLAY}, self.gunner_sfx),
+            "mine": ({self.state.GAMEPLAY}, self.detect_sfx),
+
+            # Menu (no scaling)
+            "options_menu": (self.state.MENU_STATES, self.menu_sfx),
+            "options_menu_unselect": (self.state.MENU_STATES, self.menu_unselect_sfx),
+            "options_menu_denied": (self.state.MENU_STATES, self.menu_denied_sfx),
+
+            # Game over
+            "game_over": ({self.state.GAMEOVER}, self.menu_sfx),
+        }
+
+        if sound_event not in sound_map:
+            return
+
+        required_states, sound = sound_map[sound_event]
+
+        if self.state.state not in required_states:
+            return
+
+        # --- Gameplay sounds: apply scaling ---
+
+        if sound_event in {
+            "explosion", "bullet", "beam", "flip", "gunner", "withmine"
+        }:
+            count = self._sound_counts.get(sound_event, 0)
+            scale = max(0.2, 1.0 / (count + 1))
+            base_volume = self._base_volumes.get(sound_event, 0.4)
+
+            sound.set_volume(base_volume * self.settings.sound_volume * scale)
+            self._sound_counts[sound_event] = count + 1
+
+        sound.play()
 
     def play_impact_sfx(self, beam_impact):
         """Check to see if the game should play damage SFX and play beam or bullet sounds."""
@@ -81,3 +114,6 @@ class Sound:
             self.damage_sfx.play()
         elif self.settings.sound_volume and self.state.state is self.state.GAMEPLAY and beam_impact:
             self.beam_damage_sfx.play()
+
+    def reset_frame(self):
+        self._sound_counts.clear()

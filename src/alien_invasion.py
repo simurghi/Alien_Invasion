@@ -108,6 +108,7 @@ class AlienInvasion:
                 self._adjust_difficulty(dt)
             self._check_mouse_visible()
             self._update_screen(dt)
+            self.sound.reset_frame()
             self.set_fps_cap()
 
     def calculate_delta_time(self):

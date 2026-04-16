@@ -16,6 +16,7 @@ class GameState:
         self.CONTROLSMENU = 6
         self.HELPMENU = 7
         self.CREDITSMENU = 8
+        self.MENU_STATES = {self.MAINMENU, self.OPTIONSMENU, self.CONTROLSMENU, self.HELPMENU, self.CREDITSMENU}
 
     def _set_dynamic_states(self):
         """Create the game states that game be changed throughout the game."""
